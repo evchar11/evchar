@@ -26,7 +26,7 @@
 		<servlet-api.version>2.5</servlet-api.version>
 		<jsp-api.version>2.0</jsp-api.version>
 		<mysql.version>5.1.21</mysql.version>
-		<c3p0.version>0.9.2.1</c3p0.version>
+		<druid-version>1.0.11</druid-version>
 		<commons-lang3.version>3.4</commons-lang3.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 		<validation-api.version>1.0.0.GA</validation-api.version>
@@ -90,10 +90,10 @@
 			</dependency>
 			<!--database -->
 			<dependency>
-				<groupId>com.mchange</groupId>
-				<artifactId>c3p0</artifactId>
-				<version>${c3p0.version}</version>
-			</dependency>
+        		<groupId>com.alibaba</groupId>
+        		<artifactId>druid</artifactId>
+        		<version>${druid-version}</version>
+    		</dependency>
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
