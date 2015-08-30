@@ -34,7 +34,7 @@ public abstract class AbstractController{
 			EvcharException ex, 
 			HttpServletResponse response){
 		String requestParam = generateRequestParamStr(request);
-		logger.info("erp throw Exception: " + requestParam);
+		logger.info("throw Exception: " + requestParam);
 		//TODO log exception and return json
 		return null;
 	}
