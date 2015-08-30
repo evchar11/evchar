@@ -6,14 +6,6 @@
   <packaging>pom</packaging>
   <description>慧充电项目</description>
 
-  	<repositories>
-		<repository>
-			<id>com.qiyi.servicecloud</id>
-			<url>http://maven.qiyi.virtual/a/repository</url>
-		</repository>
-  	</repositories> 
-  	
-  	
 	<properties>
 		<evchar.version>0.0.1</evchar.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

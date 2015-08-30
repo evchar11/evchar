@@ -21,11 +21,11 @@ import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
  
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class AbstractBaseDao<T, ID extends Serializable> {
+public class AbstractBaseDao<T, PK extends Serializable> {
      
     @Autowired
     private SessionFactory sessionFactory;
-    protected Class<T> entityClass;
+    private Class<T> entityClass;
  
     public AbstractBaseDao() {
  
@@ -64,7 +64,7 @@ public class AbstractBaseDao<T, ID extends Serializable> {
      * @return 查询出来的实体
      * @see com.itv.launcher.util.IBaseDao#load(java.io.Serializable)
      */
-    public T load(ID id) {
+    public T load(PK id) {
         T load = (T) this.getSession().load(getEntityClass(), id);
         return load;
     }
@@ -76,7 +76,7 @@ public class AbstractBaseDao<T, ID extends Serializable> {
      * @return 查询出来的实体
      * @see com.itv.launcher.util.IBaseDao#get(java.io.Serializable)
      */
-    public T get(ID id) {
+    public T get(PK id) {
         T load = (T) this.getSession().get(getEntityClass(), id);
         return load;
     }
@@ -107,7 +107,7 @@ public class AbstractBaseDao<T, ID extends Serializable> {
      * @return 是否删除成功
      * @see com.itv.launcher.util.IBaseDao#deleteById(java.io.Serializable)
      */
-    public boolean deleteById(ID Id) {
+    public boolean deleteById(PK Id) {
          T t = get(Id);
          if(t == null){
              return false;
