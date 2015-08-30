@@ -43,6 +43,18 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- testing end -->
+
+		<!-- evchar dependences-->
+		<dependency>
+			<groupId>cn.evchar</groupId>
+			<artifactId>evchar-common</artifactId>
+			<version>${evchar.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.evchar</groupId>
+			<artifactId>evchar-dao</artifactId>
+			<version>${evchar.version}</version>
+		</dependency>
 	</dependencies>
 	<artifactId>evchar-service</artifactId>
 </project>

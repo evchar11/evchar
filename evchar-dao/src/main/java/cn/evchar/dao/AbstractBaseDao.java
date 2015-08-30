@@ -44,8 +44,8 @@ public class AbstractBaseDao<T, PK extends Serializable> {
      * @param t 实体参数
      * @see com.itv.launcher.util.IBaseDao#save(java.lang.Object)
      */
-    public void save(T t) {
-        this.getSession().save(t);
+    public PK save(T t) {
+        return (PK) this.getSession().save(t);
     }
      
     /**

@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +30,30 @@ public class UserDaoTest extends AbstractDaoTest{
 
 	@Test
 	public void testSaveUser() {
+
+		Long userId = saveUser();
+
+		//数据清理
+		userDao.deleteById(userId);
 		
+	}
+
+	@Test
+	public void testGetByNickName(){
+		Long userId = saveUser();
+
+		String nickName1 = "wangfeng1";
+		User user1 = userDao.getByNickName(nickName1);
+		Assert.assertTrue(user1 != null);
+		String nickName2 = "notexist";
+		User user2 = userDao.getByNickName(nickName2);
+		Assert.assertTrue(user2 == null);
+
+		//数据清理
+		userDao.deleteById(userId);
+	}
+
+	private Long saveUser() {
 		User user = new User();
 		user.setMacId("11111111");
 		user.setCreateTime(now);
@@ -38,11 +62,9 @@ public class UserDaoTest extends AbstractDaoTest{
 		user.setUpdateTime(now);
 		user.setWechatId("222221");
 		user.authCustomer();
-		userDao.save(user);;
-		
-//		userDao.queryHql("select", values);
-//		Assert.assertTrue(userId != null && userId != 0);
-		
+		Long userId = userDao.save(user);
+		Assert.assertTrue(userId != null && userId != 0);
+		return userId;
 	}
 
 }

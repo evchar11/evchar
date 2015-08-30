@@ -13,28 +13,22 @@
       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
       http://www.springframework.org/schema/tx
       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
-     
-    	
- 	
-	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" > 
-		<property name="url" value="${jdbc.connection.url}" />
-		<property name="username" value="${jdbc.connection.username}" />
-		<property name="password" value="${jdbc.connection.password}" />
-		<property name="initialSize" value="${jdbc.initialPoolSize}" />
-		<property name="minIdle" value="${jdbc.minPoolSize}" /> 
-		<property name="maxActive" value="${jdbc.maxPoolSize}" />
-		<property name="maxWait"  value="${jdbc.checkoutTimeout}"/>
-		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.idleConnectionTestPeriod}"/>
-		<property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
-		<property name="validationQuery"><value>SELECT 'x'</value></property>
-		<property name="testWhileIdle" value="true"/>
-		<property name="testOnBorrow" value="false"/>
-		<property name="testOnReturn" value="false"/>
-		<property name="poolPreparedStatements" value="false"/>
-		<property name="maxOpenPreparedStatements" value="20"/>
-   </bean>
- 
 
+	<import resource="classpath:datasource.xml" />
+ 	<context:component-scan base-package="cn.evchar" />
+	<context:annotation-config />
+	
+	<!--  测试用例， 引入配置文件 -->
+
+
+ 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative
+		to JTA) -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+      
     <bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -52,5 +46,11 @@
 			</list>
 		</property>
 	</bean>
+
+
+	<!-- 注解实现事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	
+	 
  
 </beans>
