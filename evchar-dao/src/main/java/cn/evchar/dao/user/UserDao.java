@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 @Repository
 public class UserDao extends AbstractBaseDao<User, Long>{
     public static final String GET_BY_NICKNAME_HQL = "from User where nickName = ?" ;
+    public static final String GET_BY_WECHATID_HQL = "from User where wechatId = ?" ;
 	
 	@Autowired
     private SessionFactory sessionFactory;
@@ -19,6 +20,11 @@ public class UserDao extends AbstractBaseDao<User, Long>{
     public User getByNickName(String nickName){
         Assert.isTrue(StringUtils.isNotBlank(nickName));
         return getByHQL(GET_BY_NICKNAME_HQL, nickName);
+    }
+    
+    public User getByWechatId(String wechatId){
+        Assert.isTrue(StringUtils.isNotBlank(wechatId));
+        return getByHQL(GET_BY_WECHATID_HQL, wechatId);
     }
 
 }

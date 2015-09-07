@@ -7,6 +7,10 @@ package cn.evchar.common;
  *		A01：用户；A02：设备；A03：订单        A00：未知及一般
  */
 public class ApiCode {
+	//----------------------------通用错误-------------------------
+	public static final String SUCCESS =		"A00000";//成功
+	public static final String ERR_WRONG_PARAMS ="A00001";//参数错误
+	
 
 	//----------------------------用户错误码------------------------
 	public static final String ERR_USER_NOT_FOUND = "A01404"; //用户不存在

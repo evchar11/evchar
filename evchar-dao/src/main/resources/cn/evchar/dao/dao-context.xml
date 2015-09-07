@@ -15,7 +15,7 @@
       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
      
     	
- 	
+ 	<context:component-scan base-package="cn.evchar.dao" />
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" > 
 		<property name="url" value="${jdbc.connection.url}" />
 		<property name="username" value="${jdbc.connection.username}" />

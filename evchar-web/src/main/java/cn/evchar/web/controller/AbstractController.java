@@ -1,28 +1,40 @@
 package cn.evchar.web.controller;
 
-import cn.evchar.common.exception.EvcharException;
-import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
+import cn.evchar.common.ApiCode;
+import cn.evchar.common.exception.EvcharException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 
 public abstract class AbstractController{
+	@Autowired
+	ObjectMapper jacksonObjectMapper;
 
 	private static final Logger logger=LoggerFactory.getLogger(AbstractController.class);
 	
@@ -93,5 +105,33 @@ public abstract class AbstractController{
 		}
 		String requestParam = sb.toString();
 		return requestParam;
+	}
+	
+	/**
+	 * 处理参数验证错误信息
+	 * @param errors
+	 */
+	public void handleValidFieldError(Errors errors) {
+		if(errors.hasErrors()){
+			FieldError error = (FieldError) errors.getAllErrors().get(0);
+			StringBuilder sb = new StringBuilder("参数错误:");
+			String errorMessage = sb.append(error.getField()).append(" ").append(error.getDefaultMessage()).toString();
+			throw new EvcharException(ApiCode.ERR_WRONG_PARAMS, errorMessage); 
+		}
+	}
+	
+	protected String createJsonResponse(String code, Object data, String msg){
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("code", code);
+		result.put("msg", msg);
+		result.put("data", data);
+		String json = "";
+		try {
+			json=this.jacksonObjectMapper.writeValueAsString(result);
+		}catch (IOException e) {
+			logger.error("Json转换失败",e);
+		}
+		return json;
 	}
 }

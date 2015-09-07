@@ -10,7 +10,8 @@
 			http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util-4.0.xsd
        		 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
        
-    <import resource="classpath:datasource.xml" />
+       <!-- json serializer -->
+	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
     
 	<context:component-scan base-package="cn.evchar.service" />
 	
