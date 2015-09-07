@@ -30,7 +30,7 @@ public class UserController extends AbstractController{
 	@RequestMapping("get.action")
 	@ResponseBody
 	public String getUser(String wechat_id, HttpServletRequest request, HttpServletResponse response){
-		return "test";
+		return "测试";
 	}
 
 	@RequestMapping("init.action")

@@ -47,8 +47,7 @@ public abstract class AbstractController{
 			HttpServletResponse response){
 		String requestParam = generateRequestParamStr(request);
 		logger.info("throw Exception: " + requestParam);
-		//TODO log exception and return json
-		return null;
+		return createJsonResponse(ex.getCode(), null, ex.getMessage());
 	}
 
 	
@@ -62,8 +61,7 @@ public abstract class AbstractController{
 		String requestParam = generateRequestParamStr(request);
 		logger.error("erp throw Exception: " + requestParam);
 		logger.error("未处理异常", ex);
-		//TODO log exception and return json
-		return null;
+		return createJsonResponse(ApiCode.ERR_WRONG_PARAMS, null, "系统错误");
 	}
 	
 	

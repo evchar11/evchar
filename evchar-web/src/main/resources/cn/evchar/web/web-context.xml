@@ -10,8 +10,7 @@
         http://www.springframework.org/schema/util/spring-util-3.0.xsd
         http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
-	<!-- 添加注解驱动 -->  
-    <mvc:annotation-driven /> 
+	
     
      <!-- 默认扫描的包路径 -->  
     <context:component-scan base-package="cn.evchar" /> 
@@ -25,10 +24,48 @@
 		<property name="cache" value="true" />
 	</bean>
 
+	<bean  class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >  
+        <property name="messageConverters">  
+             <list>  
+                 <bean class = "cn.evchar.web.controller.converts.UTF8StringHttpMessageConverter">  
+                    <property name = "supportedMediaTypes">  
+                         <list>  
+                             <value>text/plain;charset=UTF-8</value>
+                             <value>text/html;charset=UTF-8</value>
+                         </list>  
+                    </property>  
+                 </bean>
+                 <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+		            <property name="supportedMediaTypes">
+		                <list>
+		                    <value>image/jpeg</value>
+		                    <value>image/png</value>
+		                </list>
+		            </property>
+		         </bean>
+             </list>  
+        </property>  
+    </bean>  
+	<bean class="cn.evchar.web.controller.converts.UTF8StringBeanPostProcessor" />
+	<!-- 国际化的消息资源文件（本系统中主要用于显示/错误消息定制） -->  
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">  
+	    <property name="basenames">  
+	        <list>  
+	            <!-- 在web环境中一定要定位到classpath 否则默认到当前web应用下找  -->  
+	            <value>classpath:org/hibernate/validator/ValidationMessages</value>  
+	        </list>  
+	    </property>  
+	    <property name="useCodeAsDefaultMessage" value="false"/>  
+	    <property name="defaultEncoding" value="UTF-8"/>  
+	    <property name="cacheSeconds" value="60"/>  
+	</bean>  
 	<!-- 以下 validator ConversionService 在使用 mvc:annotation-driven 会 自动注册 -->
+	<!-- 添加注解驱动 -->  
+    <mvc:annotation-driven validator="validator"/> 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-		<!-- <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/> -->
+		<property name="validationMessageSource" ref="messageSource"/> 
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
 		<property name="validationPropertyMap">
 			<util:map>
 				<entry key="hibernate.validator.fail_fast" value="true" />
