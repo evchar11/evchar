@@ -33,6 +33,14 @@ public class UserController extends AbstractController{
 		return "测试";
 	}
 
+	/**
+	 * 用户注册
+	 * @param initUserRequestParam
+	 * @param request
+	 * @param response
+	 * @param errors
+	 * @return
+	 */
 	@RequestMapping("init.action")
 	@ResponseBody
 	public String initUser(InitUserRequestParam initUserRequestParam, HttpServletRequest request, HttpServletResponse response, Errors errors){
@@ -43,10 +51,5 @@ public class UserController extends AbstractController{
 		return createJsonResponse(ApiCode.SUCCESS, null, "注册成功");
 	}
 
-	@RequestMapping("test.action")
-	@ResponseBody
-	public String testUser(HttpServletRequest request, HttpServletResponse response){
-		return "test";
-	}
 
 }

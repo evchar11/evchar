@@ -72,6 +72,12 @@ public class User extends AbstractEntity{
 	private String macId;
 	
 	/**
+	 * 微信用户头像url
+	 */
+	@Column(name="mac_id")
+	private String headImgUrl;
+	
+	/**
 	 * 用户创建时间
 	 */
 	@Column(name="create_time")
@@ -106,6 +112,14 @@ public class User extends AbstractEntity{
 
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+
+	public String getHeadImgUrl() {
+		return headImgUrl;
+	}
+
+	public void setHeadImgUrl(String headImgUrl) {
+		this.headImgUrl = headImgUrl;
 	}
 
 	public String getMobile() {

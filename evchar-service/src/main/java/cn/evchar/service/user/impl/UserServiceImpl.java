@@ -84,6 +84,7 @@ public class UserServiceImpl implements IUserService{
         user.setMobile(initUserRequestParam.getMobile());
         user.setNickName(initUserRequestParam.getNickName());
         user.setWechatId(initUserRequestParam.getWechatId());
+        user.setHeadImgUrl(initUserRequestParam.getHeadImgUrl());
         user.setCreateTime(now);
         user.setUpdateTime(now);
         user.authCustomer();
@@ -116,4 +117,5 @@ public class UserServiceImpl implements IUserService{
 	public User findUserByWechatId(String wechatId) {
 		return userDao.getByWechatId(wechatId);
 	}
+
 }

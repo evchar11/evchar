@@ -44,4 +44,5 @@ public interface IUserService {
      */
     User findUserByWechatId(String wechatId);
 
+
 }

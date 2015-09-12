@@ -4,10 +4,13 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class InitUserRequestParam {
 	//用户昵称
+	@NotBlank
     private String nickName;
     //微信id
     @NotBlank
     private String wechatId;
+    //微信头像url
+    private String headImgUrl;
     //手机号
     @NotBlank
     private String mobile;
@@ -65,6 +68,11 @@ public class InitUserRequestParam {
 	public void setCarModel(String carModel) {
 		this.carModel = carModel;
 	}
-    
+	public String getHeadImgUrl() {
+		return headImgUrl;
+	}
+	public void setHeadImgUrl(String headImgUrl) {
+		this.headImgUrl = headImgUrl;
+	}
     
 }
