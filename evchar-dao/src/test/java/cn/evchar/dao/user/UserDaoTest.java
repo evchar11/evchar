@@ -33,8 +33,6 @@ public class UserDaoTest extends AbstractDaoTest{
 
 		Long userId = saveUser();
 
-		//数据清理
-		userDao.deleteById(userId);
 		
 	}
 
@@ -49,8 +47,6 @@ public class UserDaoTest extends AbstractDaoTest{
 		User user2 = userDao.getByNickName(nickName2);
 		Assert.assertTrue(user2 == null);
 
-		//数据清理
-		userDao.deleteById(userId);
 	}
 
 	private Long saveUser() {

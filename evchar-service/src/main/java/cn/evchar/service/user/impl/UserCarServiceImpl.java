@@ -13,7 +13,6 @@ import cn.evchar.common.entity.user.UserCar;
 import cn.evchar.dao.user.UserCarDao;
 import cn.evchar.service.user.IUserCarService;
 
-@Transactional
 @Service
 public class UserCarServiceImpl implements IUserCarService {
 	@Resource

@@ -23,12 +23,13 @@
         <commons-lang3.version>3.4</commons-lang3.version>
         <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
-        <hibernate-core.verison>4.3.10.Final</hibernate-core.verison>
+        <hibernate-core.verison>3.6.10.Final</hibernate-core.verison>
         <hibernate-commons-annotations.version>3.2.0.Final</hibernate-commons-annotations.version>
         <hibernate-annotations.version>3.5.6-Final</hibernate-annotations.version>
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <cglib.version>2.2.2</cglib.version>
         <jackson.version>2.0.0</jackson.version>
+        <javassist.version>3.18.1-GA</javassist.version>
     </properties>
 
 
@@ -76,6 +77,11 @@
                 <version>${spring.version}</version>
             </dependency>
 
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist.version}</version>
+			</dependency>
 
             <dependency>
                 <groupId>cglib</groupId>

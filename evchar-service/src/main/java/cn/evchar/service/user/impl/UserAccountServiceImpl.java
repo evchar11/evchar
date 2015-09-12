@@ -13,7 +13,6 @@ import java.util.Date;
 /**
  * Created by wangfeng on 15-8-30.
  */
-@Transactional
 @Service
 public class UserAccountServiceImpl implements IUserAccountService{
 

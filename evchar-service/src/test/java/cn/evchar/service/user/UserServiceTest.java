@@ -1,5 +1,7 @@
 package cn.evchar.service.user;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
@@ -23,7 +25,9 @@ public class UserServiceTest extends AbstractServiceTest {
         user.setMobile("13162951502");
         user.setNickName("wangfeng1");
         user.setWechatId("222221");
-
+        Date now = new Date();
+		user.setCreateTime(now );
+		user.setUpdateTime(now);
         //初次注册
         Long b = userService.saveUser(user);
         Assert.assertTrue(b != null && b > 0);

@@ -23,7 +23,6 @@ import cn.evchar.service.user.IUserService;
  * Created by wangfeng on 15-8-30.
  */
 @Service
-@Transactional
 public class UserServiceImpl implements IUserService{
     @Resource
     private UserDao userDao;
@@ -94,13 +93,11 @@ public class UserServiceImpl implements IUserService{
 	}
 
     @Override
-    @Transactional(readOnly = true)
     public User findUserById(Long id) {
         return userDao.get(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean checkNickName(String nickName) {
         User user = userDao.getByNickName(nickName);
         return user == null;
@@ -115,13 +112,11 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRED)
 	public User findUserByWechatId(String wechatId) {
 		return userDao.getByWechatId(wechatId);
 	}
 
 	@Override
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public UserInfoView getUserInfo(String wechatId) {
 		User user = findUserByWechatId(wechatId);
 		Long userId = user.getId();
