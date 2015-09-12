@@ -1,63 +1,30 @@
 package cn.evchar.common.view;
 
-import org.hibernate.validator.constraints.NotBlank;
+import java.util.List;
 
+import cn.evchar.common.entity.user.User;
+import cn.evchar.common.entity.user.UserCar;
+
+
+/**
+ * 用户详情信息
+ * @author wangfeng@evchar.cn
+ *
+ */
 public class UserInfoView {
-	//用户昵称
-    private String nickName;
-    //微信id
-    private String wechatId;
-    //手机号
-    private String mobile;
-    //注册时使用的设备id
-    private String macId;
-    //车牌号
-    private String carNo;
-    //车品牌
-    private String carBrand;
-    //车型号
-    private String carModel;
-	public String getNickName() {
-		return nickName;
+	private User user;
+	private List<UserCar> carList;
+	public User getUser() {
+		return user;
 	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setUser(User user) {
+		this.user = user;
 	}
-	public String getWechatId() {
-		return wechatId;
+	public List<UserCar> getCarList() {
+		return carList;
 	}
-	public void setWechatId(String wechatId) {
-		this.wechatId = wechatId;
+	public void setCarList(List<UserCar> carList) {
+		this.carList = carList;
 	}
-	public String getMobile() {
-		return mobile;
-	}
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-	public String getMacId() {
-		return macId;
-	}
-	public void setMacId(String macId) {
-		this.macId = macId;
-	}
-	public String getCarNo() {
-		return carNo;
-	}
-	public void setCarNo(String carNo) {
-		this.carNo = carNo;
-	}
-	public String getCarBrand() {
-		return carBrand;
-	}
-	public void setCarBrand(String carBrand) {
-		this.carBrand = carBrand;
-	}
-	public String getCarModel() {
-		return carModel;
-	}
-	public void setCarModel(String carModel) {
-		this.carModel = carModel;
-	}
-    
+	
 }

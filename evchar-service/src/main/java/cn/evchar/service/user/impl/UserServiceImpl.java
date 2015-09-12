@@ -1,6 +1,7 @@
 package cn.evchar.service.user.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -12,6 +13,7 @@ import org.springframework.util.Assert;
 import cn.evchar.common.entity.user.User;
 import cn.evchar.common.entity.user.UserCar;
 import cn.evchar.common.requestparam.InitUserRequestParam;
+import cn.evchar.common.view.UserInfoView;
 import cn.evchar.dao.user.UserDao;
 import cn.evchar.service.user.IUserAccountService;
 import cn.evchar.service.user.IUserCarService;
@@ -113,9 +115,22 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED)
 	public User findUserByWechatId(String wechatId) {
 		return userDao.getByWechatId(wechatId);
 	}
+
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+	public UserInfoView getUserInfo(String wechatId) {
+		User user = findUserByWechatId(wechatId);
+		Long userId = user.getId();
+		List<UserCar> userCarList = userCarService.findUserCarListByUserId(userId);
+		UserInfoView userInfoView = new UserInfoView();
+		userInfoView.setCarList(userCarList);
+		userInfoView.setUser(user);
+		return userInfoView;
+	}
+
 
 }

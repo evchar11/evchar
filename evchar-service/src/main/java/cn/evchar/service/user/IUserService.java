@@ -2,6 +2,7 @@ package cn.evchar.service.user;
 
 import cn.evchar.common.entity.user.User;
 import cn.evchar.common.requestparam.InitUserRequestParam;
+import cn.evchar.common.view.UserInfoView;
 
 /**
  * Created by wangfeng on 15-8-30.
@@ -43,6 +44,12 @@ public interface IUserService {
      * @return
      */
     User findUserByWechatId(String wechatId);
+
+	/**
+	 * 获取用的详细信息
+	 * @param wechatId
+	 */
+	UserInfoView getUserInfo(String wechatId);
 
 
 }

@@ -1,5 +1,7 @@
 package cn.evchar.service.user.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -24,6 +26,12 @@ public class UserCarServiceImpl implements IUserCarService {
 		Long userCarId = userCarDao.save(userCar);
 		Assert.state(userCarId != null && userCarId > 0, "保存用户车信息失败");
 		return true;
+	}
+
+
+	@Override
+	public List<UserCar> findUserCarListByUserId(Long userId) {
+		return userCarDao.findUserCarListByUserId(userId);
 	}
 
 }

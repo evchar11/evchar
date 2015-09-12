@@ -74,7 +74,7 @@ public class User extends AbstractEntity{
 	/**
 	 * 微信用户头像url
 	 */
-	@Column(name="mac_id")
+	@Column(name="head_img_url")
 	private String headImgUrl;
 	
 	/**
