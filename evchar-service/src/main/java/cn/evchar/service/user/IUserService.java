@@ -30,13 +30,6 @@ public interface IUserService {
      */
     User findUserById(Long id);
 
-    /**
-     * nickName唯一性校验
-     * @param nickName
-     * @return
-     */
-    boolean checkNickName(String nickName);
-    
     
     /**
      * 根据用户id 查询用户信息
