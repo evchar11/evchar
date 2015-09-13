@@ -13,7 +13,7 @@ public class UserCarDao extends AbstractBaseDao<UserCar, Long>{
 
 	
 	public List<UserCar> findUserCarListByUserId(Long userId) {
-		return findByHql(FIND_BY_USER_ID_HQL, userId);
+		return (List<UserCar>)findByHql(FIND_BY_USER_ID_HQL, userId);
 	}
 
 }

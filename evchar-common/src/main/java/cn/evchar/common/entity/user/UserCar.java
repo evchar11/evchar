@@ -8,7 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import cn.evchar.common.entity.AbstractEntity;
+import cn.evchar.common.util.serializer.CustomDateSerializer;
 
 /**
  * @author wangfeng@evchar.cn
@@ -54,12 +57,14 @@ public class UserCar extends AbstractEntity{
 	 * 生成时间
 	 */
 	@Column(name="create_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createTime;
 	
 	/**
 	 * 更新时间
 	 */
 	@Column(name="update_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date updateTime;
 
 	public Long getId() {

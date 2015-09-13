@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import cn.evchar.common.entity.user.User;
+import cn.evchar.common.entity.user.UserAccount;
 import cn.evchar.common.entity.user.UserCar;
 import cn.evchar.common.requestparam.InitUserRequestParam;
 import cn.evchar.common.view.UserInfoView;
@@ -119,12 +120,21 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public UserInfoView getUserInfo(String wechatId) {
 		User user = findUserByWechatId(wechatId);
+		Assert.state(user != null, "微信号未注册");
 		Long userId = user.getId();
 		List<UserCar> userCarList = userCarService.findUserCarListByUserId(userId);
 		UserInfoView userInfoView = new UserInfoView();
 		userInfoView.setCarList(userCarList);
 		userInfoView.setUser(user);
+		UserAccount userAccount = userAccountService.findByUserId(userId);
+		userInfoView.setUserAccount(userAccount);
 		return userInfoView;
+	}
+
+	@Override
+	public boolean checkUserExists(String wechatId) {
+		User user = findUserByWechatId(wechatId);
+		return user != null;
 	}
 
 

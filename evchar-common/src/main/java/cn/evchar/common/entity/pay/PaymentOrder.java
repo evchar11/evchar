@@ -9,7 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import cn.evchar.common.entity.AbstractEntity;
+import cn.evchar.common.util.serializer.CustomDateSerializer;
 
 /**
  * @author wangfeng@evchar.cn
@@ -55,18 +58,21 @@ public class PaymentOrder extends AbstractEntity{
 	 * 支付平台返回的用户支付的时间
 	 */
 	@Column(name="pay_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date payTime;
 	
 	/**
 	 * 支付凭据生成时间
 	 */
 	@Column(name="create_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createTime;
 	
 	/**
 	 * 更新时间
 	 */
 	@Column(name="update_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date updateTime;
 	
 	/**

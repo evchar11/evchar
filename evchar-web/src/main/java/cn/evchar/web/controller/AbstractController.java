@@ -49,6 +49,17 @@ public abstract class AbstractController{
 		logger.info("throw Exception: " + requestParam);
 		return createJsonResponse(ex.getCode(), null, ex.getMessage());
 	}
+	
+	@ExceptionHandler(IllegalStateException.class)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public String handleMessageIllegalStateException(HttpServletRequest request, 
+			IllegalStateException ex, 
+			HttpServletResponse response){
+		String requestParam = generateRequestParamStr(request);
+		logger.info("throw Exception: " + requestParam);
+		return createJsonResponse(ApiCode.ERR_SYSTEM, null, ex.getMessage());
+	}
 
 	
 	

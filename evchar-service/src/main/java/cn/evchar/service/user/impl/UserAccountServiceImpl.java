@@ -1,14 +1,16 @@
 package cn.evchar.service.user.impl;
 
-import cn.evchar.common.entity.user.UserAccount;
-import cn.evchar.dao.user.UserAccountDao;
-import cn.evchar.service.user.IUserAccountService;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.Date;
+import cn.evchar.common.entity.user.UserAccount;
+import cn.evchar.dao.user.UserAccountDao;
+import cn.evchar.service.user.IUserAccountService;
 
 /**
  * Created by wangfeng on 15-8-30.
@@ -31,4 +33,10 @@ public class UserAccountServiceImpl implements IUserAccountService{
         userAccount.setUserId(userId);
         userAccountDao.save(userAccount);
     }
+
+	@Override
+	public UserAccount findByUserId(Long userId) {
+		UserAccount userAccount = userAccountDao.findByUserId(userId);
+		return userAccount;
+	}
 }

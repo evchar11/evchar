@@ -10,10 +10,12 @@ public class ApiCode {
 	//----------------------------通用错误-------------------------
 	public static final String SUCCESS =		"A00000";//成功
 	public static final String ERR_WRONG_PARAMS ="A00001";//参数错误
+	public static final String ERR_SYSTEM = "A00002";//系统错误
 	
 
 	//----------------------------用户错误码------------------------
 	public static final String ERR_USER_NOT_FOUND = "A01404"; //用户不存在
+	public static final String ERR_USER_EXIST_ALREADY = "A01405"; //用户已注册
 	
 	
 	
