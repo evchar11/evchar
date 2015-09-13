@@ -10,6 +10,7 @@ public class ApiCode {
 	//----------------------------通用错误-------------------------
 	public static final String SUCCESS =		"A00000";//成功
 	public static final String ERR_WRONG_PARAMS ="A00001";//参数错误
+	public static final String ERR_SYSTEM = "A00002";//系统错误
 	
 
 	//----------------------------用户错误码------------------------

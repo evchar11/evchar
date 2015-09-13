@@ -56,6 +56,9 @@ public class UserController extends AbstractController{
 		// initUserRequestParam校验
 		validator.validate(initUserRequestParam, errors);
 		handleValidFieldError(errors);
+		if(userService.checkUserExists(initUserRequestParam.getWechatId())){
+			throw new EvcharException(ApiCode.ERR_USER_EXIST_ALREADY, "用户已注册");
+		}
 		userService.init(initUserRequestParam);
 		return createJsonResponse(ApiCode.SUCCESS, null, "注册成功");
 	}
