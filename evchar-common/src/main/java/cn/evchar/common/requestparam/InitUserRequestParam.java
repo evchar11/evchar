@@ -15,7 +15,6 @@ public class InitUserRequestParam {
     @NotBlank
     private String mobile;
     //注册时使用的设备id
-    @NotBlank
     private String macId;
     //车牌号
     @NotBlank
