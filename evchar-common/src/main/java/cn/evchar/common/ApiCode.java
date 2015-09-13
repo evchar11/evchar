@@ -14,6 +14,7 @@ public class ApiCode {
 
 	//----------------------------用户错误码------------------------
 	public static final String ERR_USER_NOT_FOUND = "A01404"; //用户不存在
+	public static final String ERR_USER_EXIST_ALREADY = "A01405"; //用户已注册
 	
 	
 	
