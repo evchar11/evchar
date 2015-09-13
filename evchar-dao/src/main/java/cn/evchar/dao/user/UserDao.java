@@ -11,9 +11,6 @@ import cn.evchar.dao.AbstractBaseDao;
 public class UserDao extends AbstractBaseDao<User, Long> {
 	public static final String GET_BY_WECHATID_HQL = "from User where wechatId = ?";
 
-	/**
-	 * 
-	 * */
 	public User getByWechatId(String wechatId) {
 		Assert.isTrue(StringUtils.isNotBlank(wechatId));
 		return unique(GET_BY_WECHATID_HQL, wechatId);
