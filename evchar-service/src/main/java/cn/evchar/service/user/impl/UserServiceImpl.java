@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import cn.evchar.common.entity.user.User;
+import cn.evchar.common.entity.user.UserAccount;
 import cn.evchar.common.entity.user.UserCar;
 import cn.evchar.common.requestparam.InitUserRequestParam;
 import cn.evchar.common.view.UserInfoView;
@@ -124,6 +125,8 @@ public class UserServiceImpl implements IUserService{
 		UserInfoView userInfoView = new UserInfoView();
 		userInfoView.setCarList(userCarList);
 		userInfoView.setUser(user);
+		UserAccount userAccount = userAccountService.findByUserId(userId);
+		userInfoView.setUserAccount(userAccount);
 		return userInfoView;
 	}
 

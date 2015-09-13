@@ -37,8 +37,7 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
     
     @SuppressWarnings("unchecked")
 	protected List<M> findByHql(String queryString, Object... value){
-    	String hql = "from " + entityName + queryString;
-    	return (List<M>)getHibernateTemplate().find(hql, value);
+    	return (List<M>)getHibernateTemplate().find(queryString, value);
     }
     protected String getListAllHql() {//获取查询所有记录的HQL  
         return HQL_LIST_ALL;  

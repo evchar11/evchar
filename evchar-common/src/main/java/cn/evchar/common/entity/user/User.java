@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import cn.evchar.common.entity.AbstractEntity;
+import cn.evchar.common.util.serializer.CustomDateSerializer;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * @author wangfeng@evchar.cn
@@ -81,12 +84,14 @@ public class User extends AbstractEntity{
 	 * 用户创建时间
 	 */
 	@Column(name="create_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createTime;
 	
 	/**
 	 * 更新时间
 	 */
 	@Column(name="update_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date updateTime;
 	
 

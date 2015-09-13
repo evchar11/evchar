@@ -3,6 +3,7 @@ package cn.evchar.common.view;
 import java.util.List;
 
 import cn.evchar.common.entity.user.User;
+import cn.evchar.common.entity.user.UserAccount;
 import cn.evchar.common.entity.user.UserCar;
 
 
@@ -13,6 +14,7 @@ import cn.evchar.common.entity.user.UserCar;
  */
 public class UserInfoView {
 	private User user;
+	private UserAccount userAccount;
 	private List<UserCar> carList;
 	public User getUser() {
 		return user;
@@ -26,5 +28,13 @@ public class UserInfoView {
 	public void setCarList(List<UserCar> carList) {
 		this.carList = carList;
 	}
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
+	}
+	
+	
 	
 }
