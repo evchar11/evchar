@@ -120,6 +120,7 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public UserInfoView getUserInfo(String wechatId) {
 		User user = findUserByWechatId(wechatId);
+		Assert.state(user != null, "微信号未注册");
 		Long userId = user.getId();
 		List<UserCar> userCarList = userCarService.findUserCarListByUserId(userId);
 		UserInfoView userInfoView = new UserInfoView();
@@ -128,6 +129,12 @@ public class UserServiceImpl implements IUserService{
 		UserAccount userAccount = userAccountService.findByUserId(userId);
 		userInfoView.setUserAccount(userAccount);
 		return userInfoView;
+	}
+
+	@Override
+	public boolean checkUserExists(String wechatId) {
+		User user = findUserByWechatId(wechatId);
+		return user != null;
 	}
 
 

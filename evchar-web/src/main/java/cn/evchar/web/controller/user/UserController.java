@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
+import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.requestparam.InitUserRequestParam;
 import cn.evchar.common.view.UserInfoView;
 import cn.evchar.service.user.IUserService;
@@ -34,6 +35,9 @@ public class UserController extends AbstractController{
 	@ResponseBody
 	public String getUserInfo(String wechatId, HttpServletRequest request, HttpServletResponse response){
 		Assert.state(StringUtils.isNotBlank(wechatId), "微信id为空");
+		if(!userService.checkUserExists(wechatId)){
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+		}
 		UserInfoView userInfoView = userService.getUserInfo(wechatId);
 		return createJsonResponse(ApiCode.SUCCESS, userInfoView, null);
 	}
@@ -55,6 +59,8 @@ public class UserController extends AbstractController{
 		userService.init(initUserRequestParam);
 		return createJsonResponse(ApiCode.SUCCESS, null, "注册成功");
 	}
+	
+	
 
 
 }

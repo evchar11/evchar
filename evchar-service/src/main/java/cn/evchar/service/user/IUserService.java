@@ -50,6 +50,13 @@ public interface IUserService {
 	 * @param wechatId
 	 */
 	UserInfoView getUserInfo(String wechatId);
+	
+	/**
+	 * 判断微信openId是否已经注册
+	 * @param wechatId
+	 * @return
+	 */
+	boolean checkUserExists(String wechatId);
 
 
 }
