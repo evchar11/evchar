@@ -332,5 +332,6 @@
         <module>evchar-service</module>
         <module>evchar-web</module>
         <module>evchar-cms</module>
+        <module>evchar-device</module>
     </modules>
 </project>
