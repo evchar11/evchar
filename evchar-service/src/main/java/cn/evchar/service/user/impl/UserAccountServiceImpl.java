@@ -39,4 +39,16 @@ public class UserAccountServiceImpl implements IUserAccountService{
 		UserAccount userAccount = userAccountDao.findByUserId(userId);
 		return userAccount;
 	}
+
+	@Override
+	public boolean checkAccount(Long userId, Long money) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Long usefulAccount(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

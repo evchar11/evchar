@@ -49,6 +49,12 @@ public class Order extends AbstractEntity{
 	private Long deviceId;
 	
 	/**
+	 * 车id
+	 */
+	@Column(name="car_id")
+	private Long carId;
+	
+	/**
 	 * 订单状态
 	 */
 	@Column(name="status")
@@ -74,6 +80,7 @@ public class Order extends AbstractEntity{
 	@Column(name="update_time")
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date updateTime;
+
 	
 	/**
 	 * 版本号，乐观锁事务控制
@@ -153,6 +160,14 @@ public class Order extends AbstractEntity{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public Long getCarId() {
+		return carId;
+	}
+
+	public void setCarId(Long carId) {
+		this.carId = carId;
 	}
 
 }

@@ -22,7 +22,7 @@ public class ApiCode {
 	
 	//----------------------------设备错误码------------------------
 	public static final String ERR_DEVICE_NOT_FOUND = "A02404"; //设备不存在
-	
+	public static final String ERR_DEVICE_APPOINT = "A02405"; //设备预约失败
 	
 	
 	

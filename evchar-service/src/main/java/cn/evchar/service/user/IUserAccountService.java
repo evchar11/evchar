@@ -20,4 +20,19 @@ public interface IUserAccountService {
      * @return
      */
     UserAccount findByUserId(Long userId);
+
+	/**
+	 * 校验用户帐户余额是否可用
+	 * @param userId
+	 * @param money
+	 * @return
+	 */
+	boolean checkAccount(Long userId, Long money);
+	
+	/**
+	 * 用户当前可用余额
+	 * @param userId
+	 * @return
+	 */
+	Long usefulAccount(Long userId);
 }
