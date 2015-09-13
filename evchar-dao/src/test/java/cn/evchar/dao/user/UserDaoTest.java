@@ -36,18 +36,6 @@ public class UserDaoTest extends AbstractDaoTest{
 		
 	}
 
-	@Test
-	public void testGetByNickName(){
-		Long userId = saveUser();
-
-		String nickName1 = "wangfeng1";
-		User user1 = userDao.getByNickName(nickName1);
-		Assert.assertTrue(user1 != null);
-		String nickName2 = "notexist";
-		User user2 = userDao.getByNickName(nickName2);
-		Assert.assertTrue(user2 == null);
-
-	}
 
 	private Long saveUser() {
 		User user = new User();

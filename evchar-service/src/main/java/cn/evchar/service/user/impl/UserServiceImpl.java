@@ -98,11 +98,6 @@ public class UserServiceImpl implements IUserService{
         return userDao.get(id);
     }
 
-    @Override
-    public boolean checkNickName(String nickName) {
-        User user = userDao.getByNickName(nickName);
-        return user == null;
-    }
 
 	@Override
 	@Transactional(rollbackFor = Exception.class ,propagation = Propagation.REQUIRED)

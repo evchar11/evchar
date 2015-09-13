@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.evchar</groupId>
+    <artifactId>evchar</artifactId>
+    <version>${evchar.version}</version>
+  </parent>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>${netty.version}</version>
+		</dependency>
+		<!-- evchar dependences-->
+		<dependency>
+			<groupId>cn.evchar</groupId>
+			<artifactId>evchar-common</artifactId>
+			<version>${evchar.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.evchar</groupId>
+			<artifactId>evchar-dao</artifactId>
+			<version>${evchar.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.evchar</groupId>
+			<artifactId>evchar-dao</artifactId>
+			<version>${evchar.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.evchar</groupId>
+			<artifactId>evchar-service</artifactId>
+			<version>${evchar.version}</version>
+		</dependency>
+	</dependencies>
+  <artifactId>evchar-device</artifactId>
+</project>

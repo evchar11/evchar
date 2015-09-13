@@ -55,11 +55,4 @@ public class UserServiceTest extends AbstractServiceTest {
 		userService.init(initUserRequestParam);
     }
 
-    @Test
-    public void testCheckNickName() throws Exception {
-        boolean b1 = userService.checkNickName("wangfeng1");
-        boolean b2 = userService.checkNickName("wangfeng2");
-        Assert.assertTrue(!b1);
-        Assert.assertTrue(b2);
-    }
 }
