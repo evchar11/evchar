@@ -9,10 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import cn.evchar.common.entity.AbstractEntity;
 import cn.evchar.common.util.serializer.CustomDateSerializer;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 
 /**
@@ -55,7 +55,7 @@ public class Order extends AbstractEntity{
 	private Long carId;
 	
 	/**
-	 * 订单状态
+	 * 订单状态; 0:已预约状态,1:已匹配设备状态,2:手动取消预约（终态）,3:超时自动取消预约（终态）,4:正在使用,5:订单完成
 	 */
 	@Column(name="status")
 	private int status;
@@ -165,9 +165,53 @@ public class Order extends AbstractEntity{
 	public Long getCarId() {
 		return carId;
 	}
+	
 
 	public void setCarId(Long carId) {
 		this.carId = carId;
 	}
 
+	 public static enum OrderStatus{
+	        APPOINT((byte)0,"已预约"),
+	        DEVICE_MATCH((byte)1,"已适配设备"),
+	        CANCEL_BY_USER((byte)2,"手动取消预约"),
+	        CANCEL_AUTO((byte)3,"超时自动取消预约"),  
+	        CHARGING((byte)4,"正在充电"),
+	        COMPLETE((byte)5,"订单完成"),
+	        UNKNOWN((byte)-1,"未知状态");
+	        private byte code;
+	        private String msg;
+	        OrderStatus(byte code,String msg){
+	            this.code = code;
+	            this.msg = msg;
+	        }
+	        public int code(){
+	            return this.code;
+	        }
+	        public String msg(){
+	            return this.msg;
+	        }
+	        public String getMsg(){
+	            return this.msg;
+	        }
+
+
+	        public static OrderStatus valueOf(Integer code){
+	            if(null==code){
+	                return UNKNOWN;
+	            }
+	            for(OrderStatus status :values()){
+	                if(status.code == code){
+	                    return status;
+	                }
+	            }
+	            return UNKNOWN;
+	        }
+
+
+	        public boolean isUnknown() {
+	            return equals(UNKNOWN);
+	        }
+	    }
+	
 }

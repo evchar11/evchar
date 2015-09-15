@@ -42,8 +42,18 @@ public class UserAccountServiceImpl implements IUserAccountService{
 
 	@Override
 	public boolean checkAccount(Long userId, Long money) {
-		// TODO Auto-generated method stub
-		return false;
+		UserAccount account = userAccountDao.findByUserId(userId);
+		Long usefulAmount = getAccountUsefulAmount(account);
+		return money >= usefulAmount;
+	}
+
+	/**
+	 * 查看用户所有可用余额（余额+积分）
+	 * @param account
+	 * @return
+	 */
+	private Long getAccountUsefulAmount(UserAccount account) {
+		return account.getBalance() + account.getPoint();
 	}
 
 	@Override

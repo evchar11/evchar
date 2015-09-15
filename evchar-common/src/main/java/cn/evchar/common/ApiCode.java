@@ -16,7 +16,8 @@ public class ApiCode {
 	//----------------------------用户错误码------------------------
 	public static final String ERR_USER_NOT_FOUND = "A01404"; //用户不存在
 	public static final String ERR_USER_EXIST_ALREADY = "A01405"; //用户已注册
-	
+	public static final String ERR_USER_HAS_ORDER_APPOINTED = "A01406";//已经有预约的订单
+	public static final String ERR_USER_HAS_ENOUGH_MONEY = "A01407";//用户余额不足
 	
 	
 	
@@ -26,6 +27,12 @@ public class ApiCode {
 	
 	
 	
-	//----------------------------订单交易错误码------------------------
+	//----------------------------订单错误码------------------------
 	public static final String ERR_ORDER_NOT_FOUND = "A03404"; //订单不存在
+	
+	
+	
+	
+	
+	//----------------------------交易订单错误码------------------------
 }

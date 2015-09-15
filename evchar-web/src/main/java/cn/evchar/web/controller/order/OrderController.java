@@ -4,14 +4,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
+import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
+import cn.evchar.common.requestparam.AppointRequestParam;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.web.controller.AbstractController;
 @Controller
@@ -22,6 +22,8 @@ public class OrderController extends AbstractController{
 	private Validator validator;
 	@Resource
 	private IOrderService orderService;
+	//默认10元提示用户余额不足
+	private static final Long default_money = 1000L;
 	
 	
 	/**
@@ -29,12 +31,17 @@ public class OrderController extends AbstractController{
 	 */
 	@RequestMapping("appoint.action")
 	@ResponseBody
-	public String appointOrder(String wechatId, Long deviceId, HttpServletRequest request, HttpServletResponse response){
-		Assert.state(StringUtils.isNotBlank(wechatId), "wechatId为空");
-		Assert.state(deviceId != null && deviceId >0, "deviceId不能为空");
+	public String appointOrder(AppointRequestParam appointRequestParam, HttpServletRequest request, HttpServletResponse response, Errors errors){
+		// initUserRequestParam校验
+		validator.validate(appointRequestParam, errors);
+		handleValidFieldError(errors);
+		Long money = appointRequestParam.getMoney();
+		if(money == null || money == 0){
+			money = default_money;
+		}
 		//预约
-		orderService.appoint(wechatId, deviceId);
-		return createJsonResponse(ApiCode.SUCCESS, userInfoView, null);
+		Long orderId = orderService.appoint(appointRequestParam.getWechatId(), appointRequestParam.getDeviceId(), appointRequestParam.getCarId(), money, appointRequestParam.getMacId());
+		return createJsonResponse(ApiCode.SUCCESS, orderId, "预约成功");
 	}
 
 
