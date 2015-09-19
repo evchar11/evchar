@@ -26,15 +26,15 @@ public class DeviceController extends AbstractController {
 	/**
 	 * 用户预约订单
 	 */
-//	@RequestMapping("get.action")
-//	@ResponseBody
-//	public String getDeviceList(DeviceListRequestParam param,
-//			HttpServletRequest request, HttpServletResponse response,
-//			Errors errors) {
-//		String longitude;
+	@RequestMapping("get.action")
+	@ResponseBody
+	public String getDeviceList(DeviceListRequestParam param,
+			HttpServletRequest request, HttpServletResponse response,
+			Errors errors) {
+//		String longitude = param;
 //		String latitude;
 //		String car ;
-//		
-//		return createJsonResponse(ApiCode.SUCCESS, , "预约成功");
-//	}
+		
+		return createJsonResponse(ApiCode.SUCCESS, , "预约成功");
+	}
 }

@@ -6,6 +6,10 @@ public enum DeviceManager {
 	
 	INSANCE;
 	
+	DeviceManager(){
+		
+	}
+	
 	private ConcurrentHashMap<String, DeviceLived> devices = new ConcurrentHashMap<>();
 
 	public void addDevice(DeviceLived device) {
@@ -17,5 +21,6 @@ public enum DeviceManager {
 		devices.remove(sn);
 	}
 	
-	public void updateDevice(String sn, )
+	public Device
+	
 }
