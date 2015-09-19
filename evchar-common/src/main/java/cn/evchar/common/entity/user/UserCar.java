@@ -8,12 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import cn.evchar.common.entity.AbstractEntity;
 import cn.evchar.common.util.serializer.CustomDateSerializer;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * @author wangfeng@evchar.cn
