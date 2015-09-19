@@ -22,4 +22,11 @@ public interface IOrderService {
 	 * @return 订单号
 	 */
 	Long appoint(String wechatId, Long deviceId, Long carId, String macId, boolean force);
+	
+	/**
+	 * @param wechatId
+	 * @param deviceId
+	 * @param type 0:用户自动取消，1:超时自动取消
+	 */
+	void appointCancel(String wechatId, Long deviceId, int type);
 }

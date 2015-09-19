@@ -72,6 +72,8 @@ public class OrderServiceImpl implements IOrderService {
 		return generateOrder(userId, deviceId, carId, macId, price);
 		
 	}
+	
+	
 
 	/**
 	 * 查找用户已预约的订单
@@ -106,5 +108,13 @@ public class OrderServiceImpl implements IOrderService {
 		order.setPrice(price);
 		Long orderId = orderDao.save(order);
 		return orderId;
+	}
+
+
+
+	@Override
+	public void appointCancel(String wechatId, Long deviceId, int type) {
+		
+		
 	}
 }
