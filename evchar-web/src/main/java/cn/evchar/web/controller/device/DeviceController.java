@@ -35,6 +35,6 @@ public class DeviceController extends AbstractController {
 //		String latitude;
 //		String car ;
 		
-		return createJsonResponse(ApiCode.SUCCESS, , "预约成功");
+		return createJsonResponse(ApiCode.SUCCESS, new Object(), "预约成功");
 	}
 }

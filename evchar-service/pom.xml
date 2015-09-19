@@ -55,6 +55,11 @@
 			<artifactId>evchar-dao</artifactId>
 			<version>${evchar.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>cn.evchar</groupId>
+			<artifactId>evchar-device</artifactId>
+			<version>${evchar.version}</version>
+		</dependency>
 	</dependencies>
 	<artifactId>evchar-service</artifactId>
 </project>

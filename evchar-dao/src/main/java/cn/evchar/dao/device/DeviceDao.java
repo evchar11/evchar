@@ -7,5 +7,5 @@ import cn.evchar.dao.AbstractBaseDao;
 
 @Repository
 public class DeviceDao extends AbstractBaseDao<Device, Long> {
-	public 
+
 }
