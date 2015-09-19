@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cn.evchar.common.entity.AbstractEntity;
@@ -35,17 +37,9 @@ public class UserCar extends AbstractEntity{
 	@Column(name="user_id")
 	private Long userId;
 	
-	/**
-	 * 车品牌
-	 */
-	@Column(name="brand")
-	private String brand; 
-	
-	/**
-	 * 车型号
-	 */
-	@Column(name="type")
-	private String type;
+	//车模型id
+	@Column(name="car_model_id")
+    private String carModelId;
 	
 	/**
 	 * 车牌号
@@ -83,20 +77,12 @@ public class UserCar extends AbstractEntity{
 		this.userId = userId;
 	}
 
-	public String getBrand() {
-		return brand;
+	public String getCarModelId() {
+		return carModelId;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
+	public void setCarModelId(String carModelId) {
+		this.carModelId = carModelId;
 	}
 
 	public String getCarNo() {
@@ -122,5 +108,5 @@ public class UserCar extends AbstractEntity{
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	
+
 }

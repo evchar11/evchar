@@ -18,12 +18,9 @@ public class InitUserRequestParam {
     //车牌号
     @NotBlank
     private String carNo;
-    //车品牌
+    //车模型id
     @NotBlank
-    private String carBrand;
-    //车型号
-    @NotBlank
-    private String carModel;
+    private String carModelId;
 	public String getNickName() {
 		return nickName;
 	}
@@ -35,6 +32,12 @@ public class InitUserRequestParam {
 	}
 	public void setWechatId(String wechatId) {
 		this.wechatId = wechatId;
+	}
+	public String getHeadImgUrl() {
+		return headImgUrl;
+	}
+	public void setHeadImgUrl(String headImgUrl) {
+		this.headImgUrl = headImgUrl;
 	}
 	public String getMobile() {
 		return mobile;
@@ -54,23 +57,11 @@ public class InitUserRequestParam {
 	public void setCarNo(String carNo) {
 		this.carNo = carNo;
 	}
-	public String getCarBrand() {
-		return carBrand;
+	public String getCarModelId() {
+		return carModelId;
 	}
-	public void setCarBrand(String carBrand) {
-		this.carBrand = carBrand;
-	}
-	public String getCarModel() {
-		return carModel;
-	}
-	public void setCarModel(String carModel) {
-		this.carModel = carModel;
-	}
-	public String getHeadImgUrl() {
-		return headImgUrl;
-	}
-	public void setHeadImgUrl(String headImgUrl) {
-		this.headImgUrl = headImgUrl;
+	public void setCarModelId(String carModelId) {
+		this.carModelId = carModelId;
 	}
     
 }

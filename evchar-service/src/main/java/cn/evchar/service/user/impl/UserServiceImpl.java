@@ -65,9 +65,8 @@ public class UserServiceImpl implements IUserService{
 	private UserCar generateUserCar(InitUserRequestParam initUserRequestParam,
 			Date now, Long userId) {
 		UserCar userCar = new UserCar();
-        userCar.setBrand(initUserRequestParam.getCarBrand());
+        userCar.setCarModelId(initUserRequestParam.getCarModelId());
         userCar.setCarNo(initUserRequestParam.getCarNo());
-        userCar.setType(initUserRequestParam.getCarModel());
         userCar.setUserId(userId);
         userCar.setCreateTime(now);
         userCar.setUpdateTime(now);
