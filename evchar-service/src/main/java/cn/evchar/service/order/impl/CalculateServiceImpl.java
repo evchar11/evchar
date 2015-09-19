@@ -6,7 +6,8 @@ import cn.evchar.service.order.ICalculateService;
 
 @Service
 public class CalculateServiceImpl implements ICalculateService{
-	public static final double DEFAULT_PRICE_PER_KILOWATT = 1;
+	//1块钱1度
+	public static final double DEFAULT_PRICE_PER_KILOWATT = 100;
 
 	@Override
 	public double generateDegree(Long money) {

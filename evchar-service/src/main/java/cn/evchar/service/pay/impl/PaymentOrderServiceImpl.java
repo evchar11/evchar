@@ -52,7 +52,7 @@ public class PaymentOrderServiceImpl implements IPaymentOrderService{
 		Date now = new Date();
 		PaymentOrder paymentOrder = paymentOrderDao.get(paymentOrderCallbackRequestParam.getPaymentOrderId());
 		Long money = paymentOrderCallbackRequestParam.getMoney();
-		Assert.state(paymentOrder.getMoney() == money, "充值金额与回调金额不匹配");
+		Assert.state(paymentOrder.getMoney().longValue() == money.longValue(), "充值金额与回调金额不匹配");
 		Assert.state(paymentOrder.getStatus() == PaymentOrderStatus.NOT_PAY.getValue(), "状态异常");
 		paymentOrder.setStatus(PaymentOrderStatus.PAY.getValue());
 		paymentOrder.setUserId(userId);

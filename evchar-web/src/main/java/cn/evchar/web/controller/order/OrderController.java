@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.requestparam.AppointRequestParam;
+import cn.evchar.common.requestparam.DeviceMatchUserRequestParam;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.web.controller.AbstractController;
 @Controller
@@ -38,6 +39,18 @@ public class OrderController extends AbstractController{
 		Long orderId = orderService.appoint(appointRequestParam.getWechatId(), appointRequestParam.getDeviceId(), appointRequestParam.getCarId(), appointRequestParam.getMacId(), appointRequestParam.isForce());
 		return createJsonResponse(ApiCode.SUCCESS, orderId, "预约成功");
 	}
-
+	
+	/**
+	 * 设备匹配用户
+	 */
+	@RequestMapping("deviceMatchUser.action")
+	@ResponseBody
+	public String deviceMatchUser(DeviceMatchUserRequestParam deviceMatchUserRequestParam, HttpServletRequest request, HttpServletResponse response, Errors errors){
+		// initUserRequestParam校验
+		validator.validate(deviceMatchUserRequestParam, errors);
+		handleValidFieldError(errors);
+		orderService.deviceMatchUser(deviceMatchUserRequestParam.getWechatId(), deviceMatchUserRequestParam.getDeviceId(), deviceMatchUserRequestParam.getMacId(), deviceMatchUserRequestParam.getCarId());
+		return createJsonResponse(ApiCode.SUCCESS, null, "匹配成功");
+	}
 
 }

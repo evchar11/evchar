@@ -66,11 +66,11 @@ public class OrderServiceImpl implements IOrderService {
 		}
 		Long usefulAccount = userAccountService.usefulAccount(userId);
 		//校验余额是否充足
-		if(usefulAccount <= DEFAULT_MONEY_LIMIT){
+		if(usefulAccount < DEFAULT_MONEY_LIMIT){
 			throw new EvcharException(ApiCode.ERR_USER_HAS_ENOUGH_MONEY, "用户余额不足");
 		}
 		//余额不足，warn用户可充值电量
-		if(usefulAccount <= DEFAULT_MONEY_WARN_LIMIT && !force){
+		if(usefulAccount < DEFAULT_MONEY_WARN_LIMIT && !force){
 			double degree = calculateService.generateDegree(usefulAccount);
 			throw new EvcharException(degree, ApiCode.ERR_USER_MONEY_WARN, "用户余额不足");
 		}
