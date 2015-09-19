@@ -7,7 +7,7 @@ package cn.evchar.common.exception;
 public class EvcharException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	
+	private Object data;
 	private String code;
 	private String message;
 	
@@ -22,6 +22,13 @@ public class EvcharException extends RuntimeException {
 		this.code = code;
 		this.message = message;
 	}
+	
+	public EvcharException(Object data, String code, String message) {
+		super();
+		this.data = data;
+		this.code = code;
+		this.message = message;
+	}
 
 	public String getCode() {
 		return code;
@@ -30,6 +37,11 @@ public class EvcharException extends RuntimeException {
 	public String getMessage() {
 		return message;
 	}
+
+	public Object getData() {
+		return data;
+	}
+	
 	
 	
 	

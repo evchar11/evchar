@@ -17,9 +17,9 @@ public interface IOrderService {
 	 * @param wechatId 微信openid
 	 * @param deviceId 设备id
 	 * @param carId
-	 * @param money 需要金额
 	 * @param macId 设备号
+	 * @param force 是否强制预约（不校验是否满足DEFAULT_MONEY_WARN_LIMIT）
 	 * @return 订单号
 	 */
-	Long appoint(String wechatId, Long deviceId, Long carId, Long money, String macId);
+	Long appoint(String wechatId, Long deviceId, Long carId, String macId, boolean force);
 }

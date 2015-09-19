@@ -14,12 +14,17 @@ import cn.evchar.common.entity.user.User;
 import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.util.Result;
 import cn.evchar.dao.order.OrderDao;
+import cn.evchar.service.order.ICalculateService;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.service.user.IUserAccountService;
 import cn.evchar.service.user.IUserService;
 
 public class OrderServiceImpl implements IOrderService {
-
+	//默认2元提示用户余额不足
+	private static final Long DEFAULT_MONEY_LIMIT = 200L;
+	//默认10元提示用户
+	private static final Long DEFAULT_MONEY_WARN_LIMIT = 1000L;
+	
 
 	@Resource
 	private OrderDao orderDao;
@@ -27,10 +32,12 @@ public class OrderServiceImpl implements IOrderService {
 	private IUserService userService;
 	@Resource
 	private IUserAccountService userAccountService;
+	@Resource
+	private ICalculateService calculateService;
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRES_NEW)
-	public Long  appoint(String wechatId, Long deviceId, Long carId, Long money, String macId) {
+	public Long  appoint(String wechatId, Long deviceId, Long carId, String macId, boolean force) {
 		User user = userService.findUserByWechatId(wechatId);
 		if(user == null){
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
@@ -40,9 +47,15 @@ public class OrderServiceImpl implements IOrderService {
 		if(findAppointedOrder(userId) != null){
 			throw new EvcharException(ApiCode.ERR_USER_HAS_ORDER_APPOINTED, "已存在预约订单，请先取消");
 		}
-		//校验余额是否可以支持这次预约
-		if(!userAccountService.checkAccount(userId, money)){
+		Long usefulAccount = userAccountService.usefulAccount(userId);
+		//校验余额是否充足
+		if(usefulAccount <= DEFAULT_MONEY_LIMIT){
 			throw new EvcharException(ApiCode.ERR_USER_HAS_ENOUGH_MONEY, "用户余额不足");
+		}
+		//余额不足，warn用户可充值电量
+		if(usefulAccount <= DEFAULT_MONEY_WARN_LIMIT && !force){
+			double degree = calculateService.generateDegree(usefulAccount);
+			throw new EvcharException(degree, ApiCode.ERR_USER_MONEY_WARN, "用户余额不足");
 		}
 		Result<Object> result = new Result<Object>();
 		//TODO 预约设备，返回对应
@@ -51,7 +64,7 @@ public class OrderServiceImpl implements IOrderService {
 			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT, result.getMessage());
 		}
 		
-		return generateOrder(userId, deviceId, carId, money, macId);
+		return generateOrder(userId, deviceId, carId, macId);
 		
 	}
 
@@ -74,7 +87,7 @@ public class OrderServiceImpl implements IOrderService {
 	 */
 	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRED)
 	public Long generateOrder(Long userId, Long deviceId, Long carId,
-			Long money, String macId) {
+			String macId) {
 		Date now = new Date();
 		Order order = new Order();
 		order.setCarId(carId);
@@ -82,7 +95,6 @@ public class OrderServiceImpl implements IOrderService {
 		order.setUpdateTime(now);
 		order.setDeviceId(deviceId);
 		order.setUserId(userId);
-		order.setTotalPrice(money);
 		order.setStatus(OrderStatus.APPOINT.code());
 		order.setMacId(macId);
 		Long orderId = orderDao.save(order);

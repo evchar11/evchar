@@ -14,10 +14,10 @@ public class AppointRequestParam {
 	//用户carid
 	@NotNull
 	private Long carId;
-	//余额金额（不足多少提示）
-	private Long money;
 	//设备id
 	private String macId;
+	//余额不足10元是否强制充电（已询问）
+	private boolean force = false;
 	public String getWechatId() {
 		return wechatId;
 	}
@@ -36,17 +36,17 @@ public class AppointRequestParam {
 	public void setCarId(Long carId) {
 		this.carId = carId;
 	}
-	public Long getMoney() {
-		return money;
-	}
-	public void setMoney(Long money) {
-		this.money = money;
-	}
 	public String getMacId() {
 		return macId;
 	}
 	public void setMacId(String macId) {
 		this.macId = macId;
+	}
+	public boolean isForce() {
+		return force;
+	}
+	public void setForce(boolean force) {
+		this.force = force;
 	}
 	
 }

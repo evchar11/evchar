@@ -18,6 +18,7 @@ public class ApiCode {
 	public static final String ERR_USER_EXIST_ALREADY = "A01405"; //用户已注册
 	public static final String ERR_USER_HAS_ORDER_APPOINTED = "A01406";//已经有预约的订单
 	public static final String ERR_USER_HAS_ENOUGH_MONEY = "A01407";//用户余额不足
+	public static final String ERR_USER_MONEY_WARN = "A01408";//用户余额不足
 	
 	
 	
