@@ -43,7 +43,8 @@ public interface IOrderService {
 	 * 设备匹配到用户
 	 * @param wechatId
 	 * @param deviceId
+	 * @param carId
 	 */
-	void deviceMatchUser(String wechatId, Long deviceId);
+	void deviceMatchUser(String wechatId, Long deviceId,String macId,  Long carId);
 	
 }

@@ -13,14 +13,18 @@ import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.order.Order;
 import cn.evchar.common.entity.order.Order.OrderStatus;
 import cn.evchar.common.entity.user.User;
+import cn.evchar.common.entity.user.UserCar;
 import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.util.Result;
 import cn.evchar.dao.order.OrderDao;
+import cn.evchar.service.car.ICarDeviceMatchService;
+import cn.evchar.service.device.IDevicePriceService;
 import cn.evchar.service.device.IDeviceService;
 import cn.evchar.service.hardware.DeviceManager;
 import cn.evchar.service.order.ICalculateService;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.service.user.IUserAccountService;
+import cn.evchar.service.user.IUserCarService;
 import cn.evchar.service.user.IUserService;
 
 @Service
@@ -41,6 +45,12 @@ public class OrderServiceImpl implements IOrderService {
 	private ICalculateService calculateService;
 	@Resource
 	private IDeviceService deviceService;
+	@Resource
+	private ICarDeviceMatchService carDeviceMatchService;
+	@Resource
+	private IUserCarService userCarService;
+	@Resource
+	private IDevicePriceService devicePriceService;
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRES_NEW)
@@ -70,8 +80,9 @@ public class OrderServiceImpl implements IOrderService {
 		if(!result.isSuccess()){
 			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT, result.getMessage());
 		}
-		Long price = 10L;
-		return generateOrder(userId, deviceId, carId, macId, price);
+		
+		Long price = devicePriceService.getDevicePrice(deviceId);
+		return generateOrder(userId, deviceId, carId, macId, price, OrderStatus.APPOINT.code());
 		
 	}
 	
@@ -97,7 +108,7 @@ public class OrderServiceImpl implements IOrderService {
 	 */
 	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRED)
 	public Long generateOrder(Long userId, Long deviceId, Long carId,
-			String macId, Long price) {
+			String macId, Long price, Integer status) {
 		Date now = new Date();
 		Order order = new Order();
 		order.setCarId(carId);
@@ -105,7 +116,7 @@ public class OrderServiceImpl implements IOrderService {
 		order.setUpdateTime(now);
 		order.setDeviceId(deviceId);
 		order.setUserId(userId);
-		order.setStatus(OrderStatus.APPOINT.code());
+		order.setStatus(status);
 		order.setMacId(macId);
 		order.setPrice(price);
 		Long orderId = orderDao.save(order);
@@ -138,15 +149,38 @@ public class OrderServiceImpl implements IOrderService {
 
 
 	@Override
-	public void deviceMatchUser(String wechatId, Long deviceId) {
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void deviceMatchUser(String wechatId, Long deviceId, String macId, Long carId) {
 		User user = userService.findUserByWechatId(wechatId);
 		if(user == null){
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
 		}
 		Long userId = user.getId();
 		Order order = findAppointedOrder(userId);
+		//1. 预约匹配
 		if(order != null){
 			Assert.state(order.getDeviceId() == deviceId, "不是你预约的设备");
+			Assert.state(order.getStatus() == OrderStatus.APPOINT.code(), "订单状态异常");
+			order.setStatus(OrderStatus.DEVICE_MATCH.code());
+			orderDao.update(order);
+			boolean result = DeviceManager.INSANCE.energize(deviceId);
+			if(!result){
+				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
+			}
+			
+		}else{//2. 非预约直接充电
+			//2.1校验设备是否可用
+			Assert.state(DeviceManager.INSANCE.isIdle(deviceId), "设备不可用");
+			//2.2校验是否匹配
+			UserCar userCar = userCarService.getById(carId);
+			boolean match = carDeviceMatchService.match(userCar.getCarModelId(), deviceId);
+			Assert.state(match, "设备不匹配");
+			Long price = devicePriceService.getDevicePrice(deviceId);
+			generateOrder(userId, deviceId, carId, macId, price, OrderStatus.DEVICE_MATCH.code());
+			boolean result = DeviceManager.INSANCE.energize(deviceId);
+			if(!result){
+				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
+			}
 		}
 	}
 	

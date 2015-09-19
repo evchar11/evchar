@@ -18,4 +18,6 @@ public interface IUserCarService {
 	 * @return
 	 */
 	List<UserCar> findUserCarListByUserId(Long userId);
+
+	UserCar getById(Long carId);
 }

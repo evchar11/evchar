@@ -43,4 +43,22 @@ public enum DeviceManager {
 		
 	}
 
+	/**
+	 * 设备上电
+	 * @param deviceId
+	 * @return
+	 */
+	public boolean energize(Long deviceId) {
+		return true;
+	}
+
+	/**
+	 * 设备是否为空闲状态
+	 * @param deviceId
+	 * @return
+	 */
+	public boolean isIdle(Long deviceId) {
+		return true;
+	}
+
 }

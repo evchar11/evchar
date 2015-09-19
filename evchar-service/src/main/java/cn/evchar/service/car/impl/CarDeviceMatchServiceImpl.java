@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import cn.evchar.common.entity.car.CarDeviceMatch;
 import cn.evchar.common.entity.car.CarModel;
@@ -31,7 +32,8 @@ public class CarDeviceMatchServiceImpl implements ICarDeviceMatchService {
 		Device device = carDeviceMatchDao.get(Device.class, deviceId);
 		CarDeviceMatch match = new CarDeviceMatch();
 		match.setCarModel(carModelId);
-		match.setDeviceModel(device.);
-		Long carModelId
+		match.setDeviceModel(device.getModel());
+		List<CarDeviceMatch> matchList = carDeviceMatchDao.findByExample(CarDeviceMatch.class, match);
+		return !CollectionUtils.isEmpty(matchList);
 	}
 }
