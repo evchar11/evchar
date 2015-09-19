@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.hibernate.Criteria;
@@ -32,6 +33,7 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 	}
 
 	@SuppressWarnings("unchecked")
+	@PostConstruct
 	public void init() {// 通过初始化方法在依赖注入完毕时生成HQL
 		// 1、通过反射获取注解“M”（即模型对象）的类类型
 		this.entityClass = (Class<M>) ((ParameterizedType) getClass()

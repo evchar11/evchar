@@ -45,9 +45,8 @@ public class UserServiceTest extends AbstractServiceTest {
     @Test
     public void testInit() throws Exception {
         InitUserRequestParam initUserRequestParam = new InitUserRequestParam();
-        initUserRequestParam.setCarBrand("比亚迪");
-        initUserRequestParam.setCarModel("秦");
         initUserRequestParam.setCarNo("豫N9999");
+        initUserRequestParam.setCarModelId(1L);
         initUserRequestParam.setMacId("2222222222");
         initUserRequestParam.setMobile("13162951502");
         initUserRequestParam.setNickName("wangfeng");

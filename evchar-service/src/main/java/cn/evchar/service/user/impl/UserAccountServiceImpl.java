@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import cn.evchar.common.entity.user.UserAccount;
 import cn.evchar.dao.user.UserAccountDao;
@@ -17,6 +18,8 @@ import cn.evchar.service.user.IUserAccountService;
  */
 @Service
 public class UserAccountServiceImpl implements IUserAccountService{
+	
+	
 
     @Resource
     private UserAccountDao userAccountDao;
@@ -58,7 +61,29 @@ public class UserAccountServiceImpl implements IUserAccountService{
 
 	@Override
 	public Long usefulAccount(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
+		UserAccount userAccount = findByUserId(userId);
+		return getAccountUsefulAmount(userAccount);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void updateAccountAdd(Long userId, Long money, byte balanceType) {
+		Assert.state(money > 0, "增加金额必须为正");
+		Date now = new Date();
+		UserAccount userAccount = findByUserId(userId);
+		Long balance = userAccount.getBalance();
+		Long point = userAccount.getPoint();
+		if(balanceType == BALANCE_TYPE){
+			balance += money;
+			userAccount.setBalance(balance);
+		}
+		if(balanceType == POINT_TYPE){
+			point += money;
+			userAccount.setPoint(point);
+		}
+		userAccount.setUpdateTime(now);
+		
+		userAccountDao.update(userAccount);
+		
 	}
 }

@@ -1,10 +1,12 @@
 package cn.evchar.common.requestparam;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 public class InitUserRequestParam {
 	//用户昵称
-	@NotBlank
     private String nickName;
     //微信id
     @NotBlank
@@ -19,12 +21,10 @@ public class InitUserRequestParam {
     //车牌号
     @NotBlank
     private String carNo;
-    //车品牌
-    @NotBlank
-    private String carBrand;
-    //车型号
-    @NotBlank
-    private String carModel;
+    //车模型id
+    @NotNull
+    @Min(1)
+    private Long carModelId;
 	public String getNickName() {
 		return nickName;
 	}
@@ -36,6 +36,12 @@ public class InitUserRequestParam {
 	}
 	public void setWechatId(String wechatId) {
 		this.wechatId = wechatId;
+	}
+	public String getHeadImgUrl() {
+		return headImgUrl;
+	}
+	public void setHeadImgUrl(String headImgUrl) {
+		this.headImgUrl = headImgUrl;
 	}
 	public String getMobile() {
 		return mobile;
@@ -55,23 +61,12 @@ public class InitUserRequestParam {
 	public void setCarNo(String carNo) {
 		this.carNo = carNo;
 	}
-	public String getCarBrand() {
-		return carBrand;
+	public Long getCarModelId() {
+		return carModelId;
 	}
-	public void setCarBrand(String carBrand) {
-		this.carBrand = carBrand;
+	public void setCarModelId(Long carModelId) {
+		this.carModelId = carModelId;
 	}
-	public String getCarModel() {
-		return carModel;
-	}
-	public void setCarModel(String carModel) {
-		this.carModel = carModel;
-	}
-	public String getHeadImgUrl() {
-		return headImgUrl;
-	}
-	public void setHeadImgUrl(String headImgUrl) {
-		this.headImgUrl = headImgUrl;
-	}
+	
     
 }
