@@ -18,4 +18,6 @@ public interface IDeviceService {
 
 	List<Device> getDeviceList(String longitude, String latitude,
 			Long carModelId);
+	
+	Device getDevice(Long deviceId);
 }

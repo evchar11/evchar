@@ -40,10 +40,7 @@ public class DeviceController extends AbstractController {
 		}
 		List<Device> deviceList = deviceService.getDeviceList(
 				param.getLongitude(), param.getLatitude(), carModelId);
-		// String longitude = param;
-		// String latitude;
-		// String car ;
 
-		return createJsonResponse(ApiCode.SUCCESS, new Object(), "预约成功");
+		return createJsonResponse(ApiCode.SUCCESS, deviceList, "预约成功");
 	}
 }

@@ -1,13 +1,17 @@
 package cn.evchar.service.device.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import cn.evchar.common.entity.car.CarDeviceMatch;
+import cn.evchar.common.entity.car.CarModel;
 import cn.evchar.common.entity.device.Device;
+import cn.evchar.common.entity.device.DeviceModel;
 import cn.evchar.common.util.Result;
 import cn.evchar.dao.car.CarDeviceMatchDao;
 import cn.evchar.dao.device.DeviceDao;
@@ -41,11 +45,30 @@ public class DeviceServiceImpl implements IDeviceService {
 		Device device = new Device();
 		device.setLongitude(longitude);
 		device.setLatitude(latitude);
+
+		List<Device> deviceList = new ArrayList<Device>();
 		if (carModelId != null) {
-			CarDeviceMatch match = carDeviceMatchDao.get(carModelId);
-			Long deviceModel = match.getDeviceModel();
-			device.setModel(deviceModel);
+			CarModel carModel = deviceDao.get(CarModel.class, carModelId);
+			if (carModel != null) {
+				List<DeviceModel> deviceModelList = carDeviceMatchDao
+						.findMatchDeviceModel(carModel);
+				for (DeviceModel deviceModel : deviceModelList) {
+					Device modelDevice = new Device();
+					modelDevice.setModel(deviceModel.getId());
+					deviceList.addAll(deviceDao.findByExample(Device.class,
+							modelDevice));
+				}
+			} else {
+				return deviceList;// 没有匹配的设备，返回空列表
+			}
 		}
-		return null;
+		// TODO:需要一个根据经纬度取出附近Device的方法
+		return deviceList;
+	}
+
+	@Override
+	public Device getDevice(Long deviceId) {
+		Device device = deviceDao.get(Device.class, deviceId);
+		return device;
 	}
 }
