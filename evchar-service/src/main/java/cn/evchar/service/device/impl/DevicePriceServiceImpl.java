@@ -23,8 +23,10 @@ public class DevicePriceServiceImpl implements IDevicePriceService {
 		if (deviceId == null) {
 			throw new IllegalArgumentException("device id can't be null");
 		} else {
+			DevicePrice devicePrice = new DevicePrice();
+			devicePrice.setDeviceId(deviceId);
 			List<DevicePrice> priceList = devicePriceDao.findByExample(
-					DevicePrice.class, deviceId);
+					DevicePrice.class, devicePrice);
 			if (priceList == null || priceList.size() == 0) {
 				return DEFAULT_PRICE;
 			} else {
