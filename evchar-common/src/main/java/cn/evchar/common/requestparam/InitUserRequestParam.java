@@ -1,5 +1,8 @@
 package cn.evchar.common.requestparam;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 public class InitUserRequestParam {
@@ -19,8 +22,9 @@ public class InitUserRequestParam {
     @NotBlank
     private String carNo;
     //车模型id
-    @NotBlank
-    private String carModelId;
+    @NotNull
+    @Min(1)
+    private Long carModelId;
 	public String getNickName() {
 		return nickName;
 	}
@@ -57,11 +61,12 @@ public class InitUserRequestParam {
 	public void setCarNo(String carNo) {
 		this.carNo = carNo;
 	}
-	public String getCarModelId() {
+	public Long getCarModelId() {
 		return carModelId;
 	}
-	public void setCarModelId(String carModelId) {
+	public void setCarModelId(Long carModelId) {
 		this.carModelId = carModelId;
 	}
+	
     
 }

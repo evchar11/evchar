@@ -39,7 +39,7 @@ public class UserCar extends AbstractEntity{
 	
 	//车模型id
 	@Column(name="car_model_id")
-    private String carModelId;
+    private Long carModelId;
 	
 	/**
 	 * 车牌号
@@ -77,11 +77,11 @@ public class UserCar extends AbstractEntity{
 		this.userId = userId;
 	}
 
-	public String getCarModelId() {
+	public Long getCarModelId() {
 		return carModelId;
 	}
 
-	public void setCarModelId(String carModelId) {
+	public void setCarModelId(Long carModelId) {
 		this.carModelId = carModelId;
 	}
 
