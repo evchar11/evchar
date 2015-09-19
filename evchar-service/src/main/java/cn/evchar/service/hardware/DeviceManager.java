@@ -33,6 +33,32 @@ public enum DeviceManager {
 	public void removeDevice(String sn) {
 		devices.remove(sn);
 	}
-	
-	
+
+	/**
+	 * 取消预约
+	 * @param deviceId
+	 */
+	public void cancelAppoint(Long deviceId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * 设备上电
+	 * @param deviceId
+	 * @return
+	 */
+	public boolean energize(Long deviceId) {
+		return true;
+	}
+
+	/**
+	 * 设备是否为空闲状态
+	 * @param deviceId
+	 * @return
+	 */
+	public boolean isIdle(Long deviceId) {
+		return true;
+	}
+
 }

@@ -9,4 +9,6 @@ public interface ICarDeviceMatchService {
 	List<CarModel> findMatchCarModel(DeviceModel deviceModel);
 
 	List<DeviceModel> findMatchDeviceModel(CarModel carModel);
+	
+	 boolean match(Long carModelId, Long deviceId);
 }

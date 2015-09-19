@@ -33,4 +33,12 @@ public class UserCarServiceImpl implements IUserCarService {
 		return userCarDao.findUserCarListByUserId(userId);
 	}
 
+
+	@Override
+	public UserCar getById(Long carId) {
+		return userCarDao.get(carId);
+	}
+	
+	
+
 }

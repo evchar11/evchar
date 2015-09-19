@@ -3,6 +3,8 @@
  */
 package cn.evchar.service.order;
 
+import cn.evchar.common.entity.order.Order;
+
 
 
 
@@ -22,4 +24,27 @@ public interface IOrderService {
 	 * @return 订单号
 	 */
 	Long appoint(String wechatId, Long deviceId, Long carId, String macId, boolean force);
+	
+	/**
+	 * 取消预约订单
+	 * @param orderId
+	 * @param type 0:用户取消，1:超时自动取消
+	 */
+	void appointCancel(Long orderId, int type);
+	
+	/**
+	 * 根据id获取
+	 * @param orderId
+	 */
+	Order getById(Long orderId);
+	
+	
+	/**
+	 * 设备匹配到用户
+	 * @param wechatId
+	 * @param deviceId
+	 * @param carId
+	 */
+	void deviceMatchUser(String wechatId, Long deviceId,String macId,  Long carId);
+	
 }
