@@ -33,6 +33,14 @@ public enum DeviceManager {
 	public void removeDevice(String sn) {
 		devices.remove(sn);
 	}
-	
-	
+
+	/**
+	 * 取消预约
+	 * @param deviceId
+	 */
+	public void cancelAppoint(Long deviceId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

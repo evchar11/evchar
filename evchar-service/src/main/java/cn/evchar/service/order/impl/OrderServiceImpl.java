@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.order.Order;
@@ -16,6 +17,7 @@ import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.util.Result;
 import cn.evchar.dao.order.OrderDao;
 import cn.evchar.service.device.IDeviceService;
+import cn.evchar.service.hardware.DeviceManager;
 import cn.evchar.service.order.ICalculateService;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.service.user.IUserAccountService;
@@ -111,10 +113,44 @@ public class OrderServiceImpl implements IOrderService {
 	}
 
 
+	@Override
+	public Order getById(Long orderId) {
+		return  orderDao.get(orderId);
+	}
+
+
 
 	@Override
-	public void appointCancel(String wechatId, Long deviceId, int type) {
-		
-		
+	public void appointCancel(Long orderId, int type) {
+		Order order = getById(orderId);
+		Long deviceId = order.getDeviceId();
+		Assert.state(order.getStatus() == OrderStatus.APPOINT.code(), "订单状态异常");
+		if(type == 0){
+			order.setStatus(OrderStatus.CANCEL_BY_USER.code());
+		}else{
+			order.setStatus(OrderStatus.CANCEL_AUTO.code());
+		}
+		orderDao.update(order);
+		//调用device服务，将设备置为可用
+		DeviceManager.INSANCE.cancelAppoint(deviceId);
 	}
+
+
+
+	@Override
+	public void deviceMatchUser(String wechatId, Long deviceId) {
+		User user = userService.findUserByWechatId(wechatId);
+		if(user == null){
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+		}
+		Long userId = user.getId();
+		Order order = findAppointedOrder(userId);
+		if(order != null){
+			Assert.state(order.getDeviceId() == deviceId, "不是你预约的设备");
+		}
+	}
+	
+	
+
+
 }
