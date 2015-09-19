@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import cn.evchar.common.util.Result;
 import cn.evchar.dao.device.DeviceDao;
 import cn.evchar.service.device.IDeviceService;
+import cn.evchar.service.hardware.DeviceManager;
 
 @Service
-public class DeviceServiceImpl implements IDeviceService{
+public class DeviceServiceImpl implements IDeviceService {
 
 	@Resource
 	private DeviceDao deviceDao;
@@ -22,11 +23,8 @@ public class DeviceServiceImpl implements IDeviceService{
 
 	@Override
 	public Result<Object> appointDevice(Long deviceId) {
-		// TODO Auto-generated method stub
+		DeviceManager instance = DeviceManager.INSANCE;
 		return new Result<Object>();
 	}
-	
-	
-	
-	
+
 }
