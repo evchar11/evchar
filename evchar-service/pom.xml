@@ -29,8 +29,8 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
 		</dependency>
-		
-		
+
+
 		<!-- testing begin -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -43,8 +43,24 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- testing end -->
-
-		<!-- evchar dependences-->
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+		<!-- evchar dependences -->
 		<dependency>
 			<groupId>cn.evchar</groupId>
 			<artifactId>evchar-common</artifactId>
