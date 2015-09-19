@@ -7,6 +7,8 @@ import cn.evchar.common.entity.user.UserAccount;
  */
 public interface IUserAccountService {
 
+	public static final byte BALANCE_TYPE = 0;
+	public static final byte POINT_TYPE = 1;
     /**
      * 初始化用户账户信息
      * @param userId 用户id
@@ -35,4 +37,12 @@ public interface IUserAccountService {
 	 * @return
 	 */
 	Long usefulAccount(Long userId);
+
+	/**
+	 * 更新用户帐户余额
+	 * @param userId
+	 * @param money 更新金额
+	 * @param balanceType
+	 */
+	void updateAccountAdd(Long userId, Long money, byte balanceType);
 }

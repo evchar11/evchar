@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import cn.evchar.service.order.IOrderService;
 import cn.evchar.service.user.IUserAccountService;
 import cn.evchar.service.user.IUserService;
 
+@Service
 public class OrderServiceImpl implements IOrderService {
 	//默认2元提示用户余额不足
 	private static final Long DEFAULT_MONEY_LIMIT = 200L;
