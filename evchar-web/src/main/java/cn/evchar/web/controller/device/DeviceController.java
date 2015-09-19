@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,19 +15,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.exception.EvcharException;
-import cn.evchar.common.requestparam.AppointRequestParam;
 import cn.evchar.common.requestparam.DeviceListRequestParam;
 import cn.evchar.common.requestparam.DeviceRequestParam;
 import cn.evchar.service.device.IDeviceService;
-import cn.evchar.service.order.IOrderService;
 import cn.evchar.web.controller.AbstractController;
 
+@Controller
+@RequestMapping("device")
 public class DeviceController extends AbstractController {
 
 	@Resource
 	private IDeviceService deviceService;
 
-	@Resource
 	/**
 	 * 用户预约订单
 	 */

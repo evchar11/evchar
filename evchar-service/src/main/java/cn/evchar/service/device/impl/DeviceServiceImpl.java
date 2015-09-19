@@ -61,6 +61,8 @@ public class DeviceServiceImpl implements IDeviceService {
 			} else {
 				return deviceList;// 没有匹配的设备，返回空列表
 			}
+		} else {
+			deviceList = deviceDao.loadAll(Device.class);
 		}
 		// TODO:需要一个根据经纬度取出附近Device的方法
 		return deviceList;

@@ -56,8 +56,8 @@ public class Device extends AbstractEntity {
 	/**
 	 * 硬件其他外设
 	 */
-	@Column(name = "peripherals")
-	private String peripherals;
+	@Column(name = "peripheral")
+	private String peripheral;
 
 	@Column(name = "ip")
 	private String ip;
@@ -147,12 +147,12 @@ public class Device extends AbstractEntity {
 		this.address = address;
 	}
 
-	public String getPeripherals() {
-		return peripherals;
+	public String getPeripheral() {
+		return peripheral;
 	}
 
-	public void setPeripherals(String peripherals) {
-		this.peripherals = peripherals;
+	public void setPeripherals(String peripheral) {
+		this.peripheral = peripheral;
 	}
 
 	public String getIp() {
