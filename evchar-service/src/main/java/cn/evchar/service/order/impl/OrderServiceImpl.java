@@ -15,6 +15,7 @@ import cn.evchar.common.entity.user.User;
 import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.util.Result;
 import cn.evchar.dao.order.OrderDao;
+import cn.evchar.service.device.IDeviceService;
 import cn.evchar.service.order.ICalculateService;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.service.user.IUserAccountService;
@@ -36,6 +37,8 @@ public class OrderServiceImpl implements IOrderService {
 	private IUserAccountService userAccountService;
 	@Resource
 	private ICalculateService calculateService;
+	@Resource
+	private IDeviceService deviceService;
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRES_NEW)
@@ -61,12 +64,12 @@ public class OrderServiceImpl implements IOrderService {
 		}
 		Result<Object> result = new Result<Object>();
 		//TODO 预约设备，返回对应
-		//result = deviceService.appointDevice(userId, deviceId);
+		result = deviceService.appointDevice(deviceId);
 		if(!result.isSuccess()){
 			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT, result.getMessage());
 		}
-		
-		return generateOrder(userId, deviceId, carId, macId);
+		Long price = 10L;
+		return generateOrder(userId, deviceId, carId, macId, price);
 		
 	}
 
@@ -85,11 +88,12 @@ public class OrderServiceImpl implements IOrderService {
 	 * @param userId
 	 * @param deviceId
 	 * @param carId
+	 * @param price 
 	 * @param money
 	 */
 	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRED)
 	public Long generateOrder(Long userId, Long deviceId, Long carId,
-			String macId) {
+			String macId, Long price) {
 		Date now = new Date();
 		Order order = new Order();
 		order.setCarId(carId);
@@ -99,6 +103,7 @@ public class OrderServiceImpl implements IOrderService {
 		order.setUserId(userId);
 		order.setStatus(OrderStatus.APPOINT.code());
 		order.setMacId(macId);
+		order.setPrice(price);
 		Long orderId = orderDao.save(order);
 		return orderId;
 	}

@@ -48,6 +48,15 @@ public class Order extends AbstractEntity{
 	@Column(name="device_id")
 	private Long deviceId;
 	
+	@Column(name="price")
+	private Long price;
+	
+	@Column(name="start_degree")
+	private Long startDegree;
+	
+	@Column(name="end_degree")
+	private Long endDegree;
+	
 	/**
 	 * 车id
 	 */
@@ -81,6 +90,12 @@ public class Order extends AbstractEntity{
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date updateTime;
 
+	/**
+	 * 结束时间
+	 */
+	@Column(name="end_time")
+	@JsonSerialize(using = CustomDateSerializer.class)
+	private Date endTime;
 	
 	/**
 	 * 版本号，乐观锁事务控制
@@ -170,8 +185,42 @@ public class Order extends AbstractEntity{
 	public void setCarId(Long carId) {
 		this.carId = carId;
 	}
+	
+	 public Long getPrice() {
+		return price;
+	}
 
-	 public static enum OrderStatus{
+	public void setPrice(Long price) {
+		this.price = price;
+	}
+
+	public Long getStartDegree() {
+		return startDegree;
+	}
+
+	public void setStartDegree(Long startDegree) {
+		this.startDegree = startDegree;
+	}
+
+	public Long getEndDegree() {
+		return endDegree;
+	}
+
+	public void setEndDegree(Long endDegree) {
+		this.endDegree = endDegree;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+
+
+	public static enum OrderStatus{
 	        APPOINT((byte)0,"已预约"),
 	        DEVICE_MATCH((byte)1,"已适配设备"),
 	        CANCEL_BY_USER((byte)2,"手动取消预约"),
