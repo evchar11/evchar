@@ -12,4 +12,14 @@ public class DeviceServiceImpl implements IDeviceService{
 
 	@Resource
 	private DeviceDao deviceDao;
+
+	@Override
+	public boolean isAvailable(String deviceSn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
+	
+	
 }

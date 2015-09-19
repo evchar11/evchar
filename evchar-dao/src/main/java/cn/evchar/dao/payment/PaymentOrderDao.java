@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PaymentOrderDao extends AbstractBaseDao<PaymentOrder, Long>{
-
+	
 }
