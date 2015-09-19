@@ -66,6 +66,7 @@ public class UserAccountServiceImpl implements IUserAccountService{
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateAccountAdd(Long userId, Long money, byte balanceType) {
 		Assert.state(money > 0, "增加金额必须为正");
 		Date now = new Date();
@@ -74,11 +75,14 @@ public class UserAccountServiceImpl implements IUserAccountService{
 		Long point = userAccount.getPoint();
 		if(balanceType == BALANCE_TYPE){
 			balance += money;
+			userAccount.setBalance(balance);
 		}
 		if(balanceType == POINT_TYPE){
 			point += money;
+			userAccount.setPoint(point);
 		}
 		userAccount.setUpdateTime(now);
+		
 		userAccountDao.update(userAccount);
 		
 	}
