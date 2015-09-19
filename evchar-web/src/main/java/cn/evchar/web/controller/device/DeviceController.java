@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.device.Device;
+import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.requestparam.AppointRequestParam;
 import cn.evchar.common.requestparam.DeviceListRequestParam;
+import cn.evchar.common.requestparam.DeviceRequestParam;
 import cn.evchar.service.device.IDeviceService;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.web.controller.AbstractController;
@@ -28,7 +30,7 @@ public class DeviceController extends AbstractController {
 	/**
 	 * 用户预约订单
 	 */
-	@RequestMapping("get.action")
+	@RequestMapping("getAll.action")
 	@ResponseBody
 	public String getDeviceList(DeviceListRequestParam param,
 			HttpServletRequest request, HttpServletResponse response,
@@ -40,7 +42,21 @@ public class DeviceController extends AbstractController {
 		}
 		List<Device> deviceList = deviceService.getDeviceList(
 				param.getLongitude(), param.getLatitude(), carModelId);
+		return createJsonResponse(ApiCode.SUCCESS, deviceList, "获取设备列表成功");
+	}
 
-		return createJsonResponse(ApiCode.SUCCESS, deviceList, "预约成功");
+	@RequestMapping("get.action")
+	@ResponseBody
+	public String getDevice(DeviceRequestParam param,
+			HttpServletRequest request, HttpServletResponse response,
+			Errors errors) {
+		String deviceId = param.getDeviceId();
+		if (NumberUtils.isNumber(deviceId)) {
+			Long id = NumberUtils.toLong(deviceId);
+			Device device = deviceService.getDevice(id);
+			return createJsonResponse(ApiCode.SUCCESS, device, "获取设备成功");
+		} else {
+			throw new EvcharException(ApiCode.ERR_DEVICE_NOT_FOUND, "设备ID参数为空");
+		}
 	}
 }
