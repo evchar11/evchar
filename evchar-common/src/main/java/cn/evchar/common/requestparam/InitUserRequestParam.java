@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class InitUserRequestParam {
 	//用户昵称
-	@NotBlank
     private String nickName;
     //微信id
     @NotBlank
