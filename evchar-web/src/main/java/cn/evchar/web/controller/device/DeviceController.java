@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +24,7 @@ public class DeviceController extends AbstractController {
 	@Resource
 	private IDeviceService deviceService;
 
+	@Resource
 	/**
 	 * 用户预约订单
 	 */
@@ -31,10 +33,17 @@ public class DeviceController extends AbstractController {
 	public String getDeviceList(DeviceListRequestParam param,
 			HttpServletRequest request, HttpServletResponse response,
 			Errors errors) {
-//		String longitude = param;
-//		String latitude;
-//		String car ;
-		
+		Long carModelId = null;
+		String carModel = param.getCarModel();
+		if (carModel != null) {
+			carModelId = NumberUtils.toLong(carModel);
+		}
+		List<Device> deviceList = deviceService.getDeviceList(
+				param.getLongitude(), param.getLatitude(), carModelId);
+		// String longitude = param;
+		// String latitude;
+		// String car ;
+
 		return createJsonResponse(ApiCode.SUCCESS, new Object(), "预约成功");
 	}
 }

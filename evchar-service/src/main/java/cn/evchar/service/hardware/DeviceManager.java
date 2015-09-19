@@ -28,13 +28,11 @@ public enum DeviceManager {
 
 	public void addDevice(DeviceLived device) {
 		devices.put(device.getSn(), device);
-		for (DeviceStateListener listener : stateListeners) {
-			
-		}
 	}
 
 	public void removeDevice(String sn) {
 		devices.remove(sn);
 	}
-
+	
+	
 }
