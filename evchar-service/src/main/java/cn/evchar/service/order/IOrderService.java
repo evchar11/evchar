@@ -47,4 +47,17 @@ public interface IOrderService {
 	 */
 	void deviceMatchUser(String wechatId, Long deviceId,String macId,  Long carId);
 	
+	/**
+	 * 开始充电
+	 * @param deviceId
+	 */
+	void startCharge(Long deviceId, Long degree);
+	
+	/**
+	 * 根据设备id获取已适配的订单
+	 * @param deviceId
+	 * @return
+	 */
+	Order getDeviceMatchOrderByDeviceId(Long deviceId);
+	
 }

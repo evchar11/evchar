@@ -1,6 +1,7 @@
 package cn.evchar.service.order.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -182,6 +183,31 @@ public class OrderServiceImpl implements IOrderService {
 				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
 			}
 		}
+	}
+
+
+
+	@Override
+	public void startCharge(Long deviceId, Long degree) {
+		Order order = getDeviceMatchOrderByDeviceId(deviceId);
+		order.setStartDegree(degree);
+		order.setStatus(OrderStatus.CHARGING.code());
+		order.setUpdateTime(new Date());
+		Long price = devicePriceService.getDevicePrice(deviceId);
+		order.setPrice(price);
+		orderDao.update(order);
+	}
+
+
+
+	@Override
+	public Order getDeviceMatchOrderByDeviceId(Long deviceId) {
+		Order order =  new Order();
+		order.setDeviceId(deviceId);
+		order.setStatus(OrderStatus.DEVICE_MATCH.code());
+		List<Order> OrderList = orderDao.findByExample(Order.class, order);
+		Assert.state(OrderList.size() == 1, "状态异常");
+		return OrderList.get(0);
 	}
 	
 	
