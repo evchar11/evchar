@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Component;
+
 import cn.evchar.device.hardware.DeviceLived;
 import cn.evchar.device.hardware.DeviceStateListener;
 
-public enum DeviceManager {
+@Component
+public class DeviceManager {
 
-	INSANCE;
-
-	DeviceManager() {
+	@PostConstruct
+	public void init() {
 		DeviceLived liveDevice = new DeviceLived();
 		DeviceLived liveDevice2 = new DeviceLived();
 		devices.put(liveDevice.getSn(), liveDevice);
@@ -49,6 +53,7 @@ public enum DeviceManager {
 	 * @return
 	 */
 	public boolean energize(Long deviceId) {
+//		if(devices.contains(deviceId))
 		return true;
 	}
 

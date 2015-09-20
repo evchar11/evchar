@@ -6,9 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import cn.evchar.common.entity.car.CarDeviceMatch;
 import cn.evchar.common.entity.car.CarModel;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.entity.device.DeviceModel;
@@ -26,6 +24,8 @@ public class DeviceServiceImpl implements IDeviceService {
 
 	@Resource
 	private CarDeviceMatchDao carDeviceMatchDao;
+	@Resource
+	private DeviceManager deviceManager;
 
 	@Override
 	public boolean isAvailable(String deviceSn) {
@@ -35,7 +35,6 @@ public class DeviceServiceImpl implements IDeviceService {
 
 	@Override
 	public Result<Object> appointDevice(Long deviceId) {
-		DeviceManager instance = DeviceManager.INSANCE;
 		return new Result<Object>();
 	}
 

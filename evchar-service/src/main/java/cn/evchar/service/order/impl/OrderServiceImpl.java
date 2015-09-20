@@ -52,6 +52,8 @@ public class OrderServiceImpl implements IOrderService {
 	private IUserCarService userCarService;
 	@Resource
 	private IDevicePriceService devicePriceService;
+	@Resource
+	private DeviceManager deviceManager;
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRES_NEW)
@@ -144,7 +146,7 @@ public class OrderServiceImpl implements IOrderService {
 		}
 		orderDao.update(order);
 		//调用device服务，将设备置为可用
-		DeviceManager.INSANCE.cancelAppoint(deviceId);
+		deviceManager.cancelAppoint(deviceId);
 	}
 
 
@@ -164,21 +166,21 @@ public class OrderServiceImpl implements IOrderService {
 			Assert.state(order.getStatus() == OrderStatus.APPOINT.code(), "订单状态异常");
 			order.setStatus(OrderStatus.DEVICE_MATCH.code());
 			orderDao.update(order);
-			boolean result = DeviceManager.INSANCE.energize(deviceId);
+			boolean result = deviceManager.energize(deviceId);
 			if(!result){
 				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
 			}
 			
 		}else{//2. 非预约直接充电
 			//2.1校验设备是否可用
-			Assert.state(DeviceManager.INSANCE.isIdle(deviceId), "设备不可用");
+			Assert.state(deviceManager.isIdle(deviceId), "设备不可用");
 			//2.2校验是否匹配
 			UserCar userCar = userCarService.getById(carId);
 			boolean match = carDeviceMatchService.match(userCar.getCarModelId(), deviceId);
 			Assert.state(match, "设备不匹配");
 			Long price = devicePriceService.getDevicePrice(deviceId);
 			generateOrder(userId, deviceId, carId, macId, price, OrderStatus.DEVICE_MATCH.code());
-			boolean result = DeviceManager.INSANCE.energize(deviceId);
+			boolean result = deviceManager.energize(deviceId);
 			if(!result){
 				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
 			}
