@@ -10,6 +10,14 @@ public class DeviceLived {
 	private String ip;
 	private String port;
 
+	
+	public DeviceLived() {
+		super();
+		this.sn = "121212";
+		this.ip = "121212";
+		this.port = "123";
+	}
+
 	public String getSn() {
 		return sn;
 	}
