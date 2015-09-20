@@ -30,11 +30,10 @@ import cn.evchar.service.user.IUserService;
 
 @Service
 public class OrderServiceImpl implements IOrderService {
-	//默认2元提示用户余额不足
+	// 默认2元提示用户余额不足
 	private static final Long DEFAULT_MONEY_LIMIT = 200L;
-	//默认10元提示用户
+	// 默认10元提示用户
 	private static final Long DEFAULT_MONEY_WARN_LIMIT = 1000L;
-	
 
 	@Resource
 	private OrderDao orderDao;
@@ -54,62 +53,63 @@ public class OrderServiceImpl implements IOrderService {
 	private IDevicePriceService devicePriceService;
 	@Resource
 	private DeviceManager deviceManager;
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRES_NEW)
-	public Long  appoint(String wechatId, Long deviceId, Long carId, String macId, boolean force) {
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+	public Long appoint(String wechatId, Long deviceId, Long carId,
+			String macId, boolean force) {
 		User user = userService.findUserByWechatId(wechatId);
-		if(user == null){
+		if (user == null) {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
 		}
 		Long userId = user.getId();
-		//校验用户是否有已经预约的订单
-		if(findAppointedOrder(userId) != null){
-			throw new EvcharException(ApiCode.ERR_USER_HAS_ORDER_APPOINTED, "已存在预约订单，请先取消");
+		// 校验用户是否有已经预约的订单
+		if (findAppointedOrder(userId) != null) {
+			throw new EvcharException(ApiCode.ERR_USER_HAS_ORDER_APPOINTED,
+					"已存在预约订单，请先取消");
 		}
 		Long usefulAccount = userAccountService.usefulAccount(userId);
-		//校验余额是否充足
-		if(usefulAccount < DEFAULT_MONEY_LIMIT){
-			throw new EvcharException(ApiCode.ERR_USER_HAS_ENOUGH_MONEY, "用户余额不足");
+		// 校验余额是否充足
+		if (usefulAccount < DEFAULT_MONEY_LIMIT) {
+			throw new EvcharException(ApiCode.ERR_USER_HAS_ENOUGH_MONEY,
+					"用户余额不足");
 		}
-		//余额不足，warn用户可充值电量
-		if(usefulAccount < DEFAULT_MONEY_WARN_LIMIT && !force){
+		// 余额不足，warn用户可充值电量
+		if (usefulAccount < DEFAULT_MONEY_WARN_LIMIT && !force) {
 			double degree = calculateService.generateDegree(usefulAccount);
-			throw new EvcharException(degree, ApiCode.ERR_USER_MONEY_WARN, "用户余额不足");
+			throw new EvcharException(degree, ApiCode.ERR_USER_MONEY_WARN,
+					"用户余额不足");
 		}
-		Result<Object> result = new Result<Object>();
-		//TODO 预约设备，返回对应
-		result = deviceService.appointDevice(deviceId);
-		if(!result.isSuccess()){
-			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT, result.getMessage());
-		}
-		
+		// TODO 预约设备，返回对应
+		deviceManager.appointDevice(deviceId);
+
 		Long price = devicePriceService.getDevicePrice(deviceId);
-		return generateOrder(userId, deviceId, carId, macId, price, OrderStatus.APPOINT.code());
-		
+		return generateOrder(userId, deviceId, carId, macId, price,
+				OrderStatus.APPOINT.code());
+
 	}
-	
-	
 
 	/**
 	 * 查找用户已预约的订单
+	 * 
 	 * @param userId
 	 * @return 订单
 	 */
 	public Order findAppointedOrder(Long userId) {
 		return orderDao.findAppointedOrder(userId);
-		
+
 	}
 
 	/**
 	 * 创建订单
+	 * 
 	 * @param userId
 	 * @param deviceId
 	 * @param carId
-	 * @param price 
+	 * @param price
 	 * @param money
 	 */
-	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRED)
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public Long generateOrder(Long userId, Long deviceId, Long carId,
 			String macId, Long price, Integer status) {
 		Date now = new Date();
@@ -126,68 +126,65 @@ public class OrderServiceImpl implements IOrderService {
 		return orderId;
 	}
 
-
 	@Override
 	public Order getById(Long orderId) {
-		return  orderDao.get(orderId);
+		return orderDao.get(orderId);
 	}
-
-
 
 	@Override
 	public void appointCancel(Long orderId, int type) {
 		Order order = getById(orderId);
 		Long deviceId = order.getDeviceId();
 		Assert.state(order.getStatus() == OrderStatus.APPOINT.code(), "订单状态异常");
-		if(type == 0){
+		if (type == 0) {
 			order.setStatus(OrderStatus.CANCEL_BY_USER.code());
-		}else{
+		} else {
 			order.setStatus(OrderStatus.CANCEL_AUTO.code());
 		}
 		orderDao.update(order);
-		//调用device服务，将设备置为可用
+		// 调用device服务，将设备置为可用
 		deviceManager.cancelAppoint(deviceId);
 	}
 
-
-
 	@Override
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void deviceMatchUser(String wechatId, Long deviceId, String macId, Long carId) {
+	public void deviceMatchUser(String wechatId, Long deviceId, String macId,
+			Long carId) {
 		User user = userService.findUserByWechatId(wechatId);
-		if(user == null){
+		if (user == null) {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
 		}
 		Long userId = user.getId();
 		Order order = findAppointedOrder(userId);
-		//1. 预约匹配
-		if(order != null){
+		// 1. 预约匹配
+		if (order != null) {
 			Assert.state(order.getDeviceId() == deviceId, "不是你预约的设备");
-			Assert.state(order.getStatus() == OrderStatus.APPOINT.code(), "订单状态异常");
+			Assert.state(order.getStatus() == OrderStatus.APPOINT.code(),
+					"订单状态异常");
 			order.setStatus(OrderStatus.DEVICE_MATCH.code());
 			orderDao.update(order);
 			boolean result = deviceManager.energize(deviceId);
-			if(!result){
+			if (!result) {
 				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
 			}
-			
-		}else{//2. 非预约直接充电
-			//2.1校验设备是否可用
+
+		} else {// 2. 非预约直接充电
+				// 2.1校验设备是否可用
 			Assert.state(deviceManager.isIdle(deviceId), "设备不可用");
-			//2.2校验是否匹配
+			// 2.2校验是否匹配
 			UserCar userCar = userCarService.getById(carId);
-			boolean match = carDeviceMatchService.match(userCar.getCarModelId(), deviceId);
+			boolean match = carDeviceMatchService.match(
+					userCar.getCarModelId(), deviceId);
 			Assert.state(match, "设备不匹配");
 			Long price = devicePriceService.getDevicePrice(deviceId);
-			generateOrder(userId, deviceId, carId, macId, price, OrderStatus.DEVICE_MATCH.code());
+			generateOrder(userId, deviceId, carId, macId, price,
+					OrderStatus.DEVICE_MATCH.code());
 			boolean result = deviceManager.energize(deviceId);
-			if(!result){
+			if (!result) {
 				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
 			}
 		}
 	}
-
-
 
 	@Override
 	public void startCharge(Long deviceId, Long degree) {
@@ -200,11 +197,9 @@ public class OrderServiceImpl implements IOrderService {
 		orderDao.update(order);
 	}
 
-
-
 	@Override
 	public Order getDeviceMatchOrderByDeviceId(Long deviceId) {
-		Order order =  new Order();
+		Order order = new Order();
 		order.setDeviceId(deviceId);
 		order.setStatus(OrderStatus.DEVICE_MATCH.code());
 		List<Order> OrderList = orderDao.findByExample(Order.class, order);
@@ -212,15 +207,9 @@ public class OrderServiceImpl implements IOrderService {
 		return OrderList.get(0);
 	}
 
-
-
 	@Override
 	public void endCharge(Long deviceId, Long degree) {
-		
-		
-	}
-	
-	
 
+	}
 
 }

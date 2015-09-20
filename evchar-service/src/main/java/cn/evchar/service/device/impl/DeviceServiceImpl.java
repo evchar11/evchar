@@ -33,10 +33,6 @@ public class DeviceServiceImpl implements IDeviceService {
 		return false;
 	}
 
-	@Override
-	public Result<Object> appointDevice(Long deviceId) {
-		return new Result<Object>();
-	}
 
 	@Override
 	public List<Device> getDeviceList(String longitude, String latitude,

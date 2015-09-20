@@ -1,5 +1,7 @@
 package cn.evchar.device.hardware;
 
+import cn.evchar.device.hardware.protocol.types.DeviceStateType;
+
 /**
  * 所有处于工作状态中的设备，记录在内存中
  * 
@@ -9,13 +11,21 @@ public class DeviceLived {
 	private String sn; // 硬件识别码
 	private String ip;
 	private String port;
+	private DeviceStateType state;
 
-	
 	public DeviceLived() {
 		super();
-		this.sn = "121212";
+		this.sn = "001";
 		this.ip = "121212";
 		this.port = "123";
+	}
+
+	public DeviceLived(String sn, String ip, String port, DeviceStateType state) {
+		super();
+		this.sn = sn;
+		this.ip = ip;
+		this.port = port;
+		this.state = state;
 	}
 
 	public String getSn() {
@@ -40,6 +50,14 @@ public class DeviceLived {
 
 	public void setPort(String port) {
 		this.port = port;
+	}
+
+	public DeviceStateType getState() {
+		return state;
+	}
+
+	public void setState(DeviceStateType state) {
+		this.state = state;
 	}
 
 }
