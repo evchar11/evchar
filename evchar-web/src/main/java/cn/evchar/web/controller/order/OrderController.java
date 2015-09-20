@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.requestparam.AppointRequestParam;
 import cn.evchar.common.requestparam.DeviceMatchUserRequestParam;
+import cn.evchar.common.requestparam.GetOrderListRequestParam;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.web.controller.AbstractController;
 @Controller
@@ -51,6 +52,26 @@ public class OrderController extends AbstractController{
 		handleValidFieldError(errors);
 		orderService.deviceMatchUser(deviceMatchUserRequestParam.getWechatId(), deviceMatchUserRequestParam.getDeviceId(), deviceMatchUserRequestParam.getMacId(), deviceMatchUserRequestParam.getCarId());
 		return createJsonResponse(ApiCode.SUCCESS, null, "匹配成功");
+	}
+	
+	/**
+	 * 设备匹配用户(分页)
+	 */
+	@RequestMapping("getOrderList.action")
+	@ResponseBody
+	public String getOrderList(GetOrderListRequestParam getOrderListRequestParam, HttpServletRequest request, HttpServletResponse response, Errors errors){
+		return "正在开发中";
+	}
+	
+	/**
+	 * 查询用户当前正在充电的订单
+	 */
+	@RequestMapping("getCharingOrder.action")
+	@ResponseBody
+	public String getCharingOrder(){
+		
+		return "正在开发中";
+		
 	}
 
 }
