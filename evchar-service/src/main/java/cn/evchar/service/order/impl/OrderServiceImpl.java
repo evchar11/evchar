@@ -211,6 +211,14 @@ public class OrderServiceImpl implements IOrderService {
 		Assert.state(OrderList.size() == 1, "状态异常");
 		return OrderList.get(0);
 	}
+
+
+
+	@Override
+	public void endCharge(Long deviceId, Long degree) {
+		
+		
+	}
 	
 	
 

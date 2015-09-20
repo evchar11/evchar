@@ -54,6 +54,13 @@ public interface IOrderService {
 	void startCharge(Long deviceId, Long degree);
 	
 	/**
+	 * 充电结束
+	 * @param deviceId
+	 * @param degree
+	 */
+	void endCharge(Long deviceId, Long degree);
+	
+	/**
 	 * 根据设备id获取已适配的订单
 	 * @param deviceId
 	 * @return
