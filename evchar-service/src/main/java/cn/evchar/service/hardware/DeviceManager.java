@@ -20,8 +20,10 @@ import cn.evchar.service.device.IDeviceService;
 @Component
 public class DeviceManager {
 
+	// TODO:需要解决设备时断时连时用户体验的问题
 	@Resource
 	private IDeviceService deviceService;
+	
 
 	@PostConstruct
 	public void init() {
@@ -75,9 +77,10 @@ public class DeviceManager {
 	 */
 	public void appointDevice(Long deviceId) {
 		String sn = getDeviceSnById(deviceId);
-		if (devices.containsKey(sn)
-				&& devices.get(sn).getState() == DeviceStateType.IDLE) {
-			devices.get(sn).setState(DeviceStateType.RESERVED);
+		DeviceLived dev = getAliveDevice(sn);
+		if (dev.getState() == DeviceStateType.IDLE) {
+			dev.setState(DeviceStateType.RESERVED);
+			devices.put(sn, dev);
 		} else {
 			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT,
 					"设备当前无法预约，请重试");
@@ -90,6 +93,15 @@ public class DeviceManager {
 	 * @param deviceId
 	 */
 	public void cancelAppoint(Long deviceId) {
+		String sn = getDeviceSnById(deviceId);
+		DeviceLived dev = getAliveDevice(sn);
+		if (dev.getState() == DeviceStateType.RESERVED) {
+			dev.setState(DeviceStateType.IDLE);
+			devices.put(sn, dev);
+		} else {
+			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT,
+					"设备当前无法取消预约，请重试");
+		}
 	}
 
 	/**
@@ -99,18 +111,58 @@ public class DeviceManager {
 	 * @return
 	 */
 	public boolean energize(Long deviceId) {
-		// if(devices.contains(deviceId))
+		String sn = getDeviceSnById(deviceId);
+		DeviceLived dev = getAliveDevice(sn);
+		if (dev.getState() == DeviceStateType.RESERVED) {
+			dev.setState(DeviceStateType.IDLE);
+			devices.put(sn, dev);
+			// TODO:向设备发送上电命令，并等待返回
+		} else {
+			throw new EvcharException(ApiCode.ERR_DEVICE_CHARGE, "设备未处于预约状态");
+		}
 		return true;
 	}
 
 	/**
-	 * 设备是否为空闲状态
+	 * 设备是否为空闲状态，只有设备在线并
 	 * 
 	 * @param deviceId
 	 * @return
 	 */
 	public boolean isIdle(Long deviceId) {
-		return true;
+		String sn = getDeviceSnById(deviceId);
+		DeviceLived dev = getAliveDevice(sn);
+		return dev.getState() == DeviceStateType.IDLE;
+	}
+
+	/**
+	 * 设置设备的状态，只要设备在线，一定会成功(没有其他校验)
+	 * 
+	 * @param deviceId
+	 * @param state
+	 */
+	public void setState(long deviceId, DeviceStateType state) {
+		String sn = getDeviceSnById(deviceId);
+		DeviceLived dev = getAliveDevice(sn);
+		if (state == dev.getState()) {
+			return;// 目标状态和当前状态相同， 不需要处理
+		} else {
+			switch (state) {
+			case CHARGING:
+				throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
+			case ENERGIZED: // 上电
+				break;
+			case FULL:
+				throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
+			case IDLE:
+				dev.setState(state);
+				break;
+			case RESERVED:
+				dev.setState(state);
+				break;
+			}
+			devices.put(sn, dev);
+		}
 	}
 
 	private String getDeviceSnById(Long deviceId) {
@@ -120,5 +172,13 @@ public class DeviceManager {
 		}
 		String sn = dev.getSn();
 		return sn;
+	}
+
+	private DeviceLived getAliveDevice(String sn) {
+		if (devices.containsKey(sn)) {
+			return devices.get(sn);
+		} else {
+			throw new EvcharException(ApiCode.ERR_DEVICE_NOT_ONLINE, "设备当前不在线");
+		}
 	}
 }

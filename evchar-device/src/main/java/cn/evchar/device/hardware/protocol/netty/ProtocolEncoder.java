@@ -8,10 +8,11 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 public class ProtocolEncoder extends MessageToByteEncoder<Command>
 {
+	
     @Override  
     protected void encode(ChannelHandlerContext ctx, Command cmd, ByteBuf out) throws Exception {  
-        byte[] datas = cmd.toBytes(); 
-        out.writeBytes(datas);  
-        ctx.flush();  
+        byte[] datas = cmd.toBytes();
+        out.writeBytes(datas);
+        ctx.flush();
     }  
 }

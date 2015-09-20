@@ -25,6 +25,9 @@ public class ApiCode {
 	//----------------------------设备错误码------------------------
 	public static final String ERR_DEVICE_NOT_FOUND = "A02404"; //设备不存在
 	public static final String ERR_DEVICE_APPOINT = "A02405"; //设备预约失败
+	public static final String ERR_DEVICE_CHARGE = "A02406"; //设备上电失败
+	public static final String ERR_DEVICE_NOT_ONLINE = "A02407";//设备不在线
+	public static final String ERR_DEVICE_COMMAND = "A02408";	//给设备的命令错误
 	
 	
 	

@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import cn.evchar.common.entity.car.CarModel;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.entity.device.DeviceModel;
-import cn.evchar.common.util.Result;
 import cn.evchar.dao.car.CarDeviceMatchDao;
 import cn.evchar.dao.device.DeviceDao;
+import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 import cn.evchar.service.device.IDeviceService;
 import cn.evchar.service.hardware.DeviceManager;
 
@@ -26,13 +26,6 @@ public class DeviceServiceImpl implements IDeviceService {
 	private CarDeviceMatchDao carDeviceMatchDao;
 	@Resource
 	private DeviceManager deviceManager;
-
-	@Override
-	public boolean isAvailable(String deviceSn) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 
 	@Override
 	public List<Device> getDeviceList(String longitude, String latitude,
@@ -67,5 +60,19 @@ public class DeviceServiceImpl implements IDeviceService {
 	public Device getDevice(Long deviceId) {
 		Device device = deviceDao.get(Device.class, deviceId);
 		return device;
+	}
+
+	@Override
+	public List<Device> getDeviceListByOwner(Long id) {
+		Device deviceExample = new Device();
+		deviceExample.setOwner(id);
+		List<Device> deviceList = deviceDao.findByExample(Device.class,
+				deviceExample);
+		return deviceList;
+	}
+
+	@Override
+	public void setDeviceState(Long deviceId, DeviceStateType state) {
+		deviceManager.setState(deviceId, state);
 	}
 }

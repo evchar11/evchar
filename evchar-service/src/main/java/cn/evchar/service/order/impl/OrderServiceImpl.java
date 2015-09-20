@@ -80,7 +80,6 @@ public class OrderServiceImpl implements IOrderService {
 			throw new EvcharException(degree, ApiCode.ERR_USER_MONEY_WARN,
 					"用户余额不足");
 		}
-		// TODO 预约设备，返回对应
 		deviceManager.appointDevice(deviceId);
 
 		Long price = devicePriceService.getDevicePrice(deviceId);
