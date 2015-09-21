@@ -8,7 +8,7 @@ import java.util.List;
  * @version v1.0
  * @param <T>
  */
-public class PageResults<T> {
+public class PageResult<T> {
  
     // 下一页
     private int pageNo;

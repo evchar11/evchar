@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
+import cn.evchar.common.entity.order.Order;
 import cn.evchar.common.requestparam.AppointRequestParam;
 import cn.evchar.common.requestparam.DeviceMatchUserRequestParam;
 import cn.evchar.common.requestparam.GetOrderListRequestParam;
+import cn.evchar.dao.PageResult;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.web.controller.AbstractController;
 @Controller
@@ -55,12 +57,16 @@ public class OrderController extends AbstractController{
 	}
 	
 	/**
-	 * 设备匹配用户(分页)
+	 * 获取用户所有的充电订单(分页)
 	 */
-	@RequestMapping("getOrderList.action")
+	@RequestMapping("getOrderPage.action")
 	@ResponseBody
-	public String getOrderList(GetOrderListRequestParam getOrderListRequestParam, HttpServletRequest request, HttpServletResponse response, Errors errors){
-		return "正在开发中";
+	public String getOrderPage(GetOrderListRequestParam getOrderListRequestParam, HttpServletRequest request, HttpServletResponse response, Errors errors){
+		// initUserRequestParam校验
+		validator.validate(getOrderListRequestParam, errors);
+		handleValidFieldError(errors);
+		PageResult<Order> orderPage = orderService.findOrderPage(getOrderListRequestParam);
+		return createJsonResponse(ApiCode.SUCCESS, orderPage, "获取成功");
 	}
 	
 	/**

@@ -4,6 +4,8 @@
 package cn.evchar.service.order;
 
 import cn.evchar.common.entity.order.Order;
+import cn.evchar.common.requestparam.GetOrderListRequestParam;
+import cn.evchar.dao.PageResult;
 
 
 
@@ -66,5 +68,12 @@ public interface IOrderService {
 	 * @return
 	 */
 	Order getDeviceMatchOrderByDeviceId(Long deviceId);
+
+	/**
+	 * 获取用户的全部订单（分页，按照时间倒序）
+	 * @param getOrderListRequestParam
+	 * @return
+	 */
+	PageResult<Order> findOrderPage(GetOrderListRequestParam getOrderListRequestParam);
 	
 }

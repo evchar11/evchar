@@ -2,11 +2,11 @@ package cn.evchar.common.requestparam;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-public class GetOrderListRequestParam {
+public class GetOrderListRequestParam extends BasePageRequestParam{
 	//微信openId
 	@NotBlank
 	private String wechatId;
-
+	
 	public String getWechatId() {
 		return wechatId;
 	}

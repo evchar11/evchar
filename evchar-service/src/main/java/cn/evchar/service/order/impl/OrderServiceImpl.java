@@ -16,7 +16,9 @@ import cn.evchar.common.entity.order.Order.OrderStatus;
 import cn.evchar.common.entity.user.User;
 import cn.evchar.common.entity.user.UserCar;
 import cn.evchar.common.exception.EvcharException;
+import cn.evchar.common.requestparam.GetOrderListRequestParam;
 import cn.evchar.common.util.Result;
+import cn.evchar.dao.PageResult;
 import cn.evchar.dao.order.OrderDao;
 import cn.evchar.service.car.ICarDeviceMatchService;
 import cn.evchar.service.device.IDevicePriceService;
@@ -211,4 +213,28 @@ public class OrderServiceImpl implements IOrderService {
 
 	}
 
+	@Override
+	public PageResult<Order> findOrderPage(GetOrderListRequestParam getOrderListRequestParam) {
+		User user = userService.findUserByWechatId(getOrderListRequestParam.getWechatId());
+		if (user == null) {
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+		}
+		Long userId = user.getId();
+		PageResult<Order> orderPage = new PageResult<Order>();
+		//总数
+		int totalCount = orderDao.findOrderCountByUserId(userId);
+		orderPage.setTotalCount(totalCount);
+		//Order列表
+		int pageSize = getOrderListRequestParam.getPageSize();
+		int pageNum = getOrderListRequestParam.getPageNum();
+		List<Order> result = orderDao.getOrderByPage(pageSize, pageNum, userId);
+		orderPage.setResults(result);
+		orderPage.setPageNo(pageNum);
+		orderPage.setPageSize(pageSize);
+		orderPage.setCurrentPage(pageNum);
+		
+		return orderPage;
+	}
+
+	
 }
