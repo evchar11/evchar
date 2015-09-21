@@ -17,7 +17,6 @@ import cn.evchar.common.entity.user.User;
 import cn.evchar.common.entity.user.UserCar;
 import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.requestparam.GetOrderListRequestParam;
-import cn.evchar.common.util.Result;
 import cn.evchar.dao.PageResult;
 import cn.evchar.dao.order.OrderDao;
 import cn.evchar.service.car.ICarDeviceMatchService;
@@ -234,6 +233,19 @@ public class OrderServiceImpl implements IOrderService {
 		orderPage.setCurrentPage(pageNum);
 		
 		return orderPage;
+	}
+
+	@Override
+	public List<Order> getCharingOrderList(String wechatId) {
+		User user = userService.findUserByWechatId(wechatId);
+		if (user == null) {
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+		}
+		Long userId = user.getId();
+		Order order = new Order();
+		order.setUserId(userId);
+		order.setStatus(OrderStatus.CHARGING.code());
+		return orderDao.findByExample(Order.class, order);
 	}
 
 	

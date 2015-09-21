@@ -1,5 +1,7 @@
 package cn.evchar.web.controller.order;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,9 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.order.Order;
+import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.requestparam.AppointRequestParam;
 import cn.evchar.common.requestparam.DeviceMatchUserRequestParam;
 import cn.evchar.common.requestparam.GetOrderListRequestParam;
+import cn.evchar.common.util.StringUtils;
 import cn.evchar.dao.PageResult;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.web.controller.AbstractController;
@@ -74,10 +78,12 @@ public class OrderController extends AbstractController{
 	 */
 	@RequestMapping("getCharingOrder.action")
 	@ResponseBody
-	public String getCharingOrder(){
-		
-		return "正在开发中";
-		
+	public String getCharingOrder(String wechatId, HttpServletRequest request, HttpServletResponse response){
+		if(StringUtils.isBlank(wechatId)){
+			throw new EvcharException(null, ApiCode.ERR_WRONG_PARAMS, "wechatId can not be empty");
+		}
+		List<Order> orderList = orderService.getCharingOrderList(wechatId);
+		return createJsonResponse(ApiCode.SUCCESS, orderList, "获取成功");
 	}
 
 }

@@ -3,6 +3,8 @@
  */
 package cn.evchar.service.order;
 
+import java.util.List;
+
 import cn.evchar.common.entity.order.Order;
 import cn.evchar.common.requestparam.GetOrderListRequestParam;
 import cn.evchar.dao.PageResult;
@@ -75,5 +77,7 @@ public interface IOrderService {
 	 * @return
 	 */
 	PageResult<Order> findOrderPage(GetOrderListRequestParam getOrderListRequestParam);
+
+	List<Order> getCharingOrderList(String wechatId);
 	
 }
