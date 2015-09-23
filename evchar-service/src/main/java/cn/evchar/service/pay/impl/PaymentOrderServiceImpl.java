@@ -63,7 +63,7 @@ public class PaymentOrderServiceImpl implements IPaymentOrderService{
 		paymentOrder.setStatus(PaymentOrderStatus.PAY.getValue());
 		paymentOrder.setUserId(userId);
 		paymentOrder.setUpdateTime(now);
-		paymentOrder.setPayTime(paymentOrderCallbackRequestParam.getPayTime());
+		paymentOrder.setPayTime(now);
 		paymentOrder.setOutTradeNo(paymentOrderCallbackRequestParam.getOutTradeNo());
 		paymentOrder.setMacId(paymentOrderCallbackRequestParam.getMacId());
 		paymentOrder.setTransactionId(paymentOrderCallbackRequestParam.getTransactionId());
