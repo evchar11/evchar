@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
+import cn.evchar.common.entity.order.Order;
+import cn.evchar.common.entity.pay.PaymentOrder;
 import cn.evchar.common.requestparam.CreatePaymentOrderRequestParam;
+import cn.evchar.common.requestparam.FindUserPaymentOrderRequestParam;
 import cn.evchar.common.requestparam.PaymentOrderCallbackRequestParam;
+import cn.evchar.dao.PageResult;
 import cn.evchar.service.pay.IPaymentOrderService;
 import cn.evchar.web.controller.AbstractController;
 
@@ -49,5 +53,17 @@ public class PayOrderController extends AbstractController{
 		payOrderService.updateForPay(paymentOrderCallbackRequestParam);
 		return createJsonResponse(ApiCode.SUCCESS, null, "支付订单回调通知成功");
 	}
+	
+	
+	@RequestMapping("findUserPaymentOrder.action")
+	@ResponseBody
+	public String findUserPaymentOrder(FindUserPaymentOrderRequestParam param, HttpServletRequest request, HttpServletResponse response, Errors errors){
+		// initUserRequestParam校验
+		validator.validate(param, errors);
+		handleValidFieldError(errors);
+		PageResult<PaymentOrder> paymentOrderPage = payOrderService.findPage(param);
+		return createJsonResponse(ApiCode.SUCCESS, paymentOrderPage, "获取成功");
+	}
+
 
 }

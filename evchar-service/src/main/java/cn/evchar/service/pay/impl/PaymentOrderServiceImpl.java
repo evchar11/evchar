@@ -1,6 +1,7 @@
 package cn.evchar.service.pay.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -9,10 +10,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import cn.evchar.common.ApiCode;
+import cn.evchar.common.entity.order.Order;
 import cn.evchar.common.entity.pay.PaymentOrder;
 import cn.evchar.common.entity.pay.PaymentOrder.PaymentOrderStatus;
 import cn.evchar.common.entity.user.User;
+import cn.evchar.common.exception.EvcharException;
+import cn.evchar.common.requestparam.FindUserPaymentOrderRequestParam;
 import cn.evchar.common.requestparam.PaymentOrderCallbackRequestParam;
+import cn.evchar.dao.PageResult;
 import cn.evchar.dao.payment.PaymentOrderDao;
 import cn.evchar.service.pay.IPaymentOrderService;
 import cn.evchar.service.user.IUserAccountService;
@@ -66,4 +72,28 @@ public class PaymentOrderServiceImpl implements IPaymentOrderService{
 		accountService.updateAccountAdd(userId, money, IUserAccountService.BALANCE_TYPE);
 	}
 
+	@Override
+	public PageResult<PaymentOrder> findPage(FindUserPaymentOrderRequestParam param) {
+		User user = userService.findUserByWechatId(param.getWechatId());
+		if (user == null) {
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+		}
+		Long userId = user.getId();
+		PageResult<PaymentOrder> paymentOrderPage = new PageResult<PaymentOrder>();
+		//总数
+		int totalCount = paymentOrderDao.findCountByUserId(userId);
+		paymentOrderPage.setTotalCount(totalCount);
+		//Order列表
+		int pageSize = param.getPageSize();
+		int pageNum = param.getPageNum();
+		List<PaymentOrder> result = paymentOrderDao.getByPage(pageSize, pageNum, userId);
+		paymentOrderPage.setResults(result);
+		paymentOrderPage.setPageNo(pageNum);
+		paymentOrderPage.setPageSize(pageSize);
+		paymentOrderPage.setCurrentPage(pageNum);
+		
+		return paymentOrderPage;
+	}
+
+	
 }

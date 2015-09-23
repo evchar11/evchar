@@ -1,6 +1,9 @@
 package cn.evchar.service.pay;
 
+import cn.evchar.common.entity.pay.PaymentOrder;
+import cn.evchar.common.requestparam.FindUserPaymentOrderRequestParam;
 import cn.evchar.common.requestparam.PaymentOrderCallbackRequestParam;
+import cn.evchar.dao.PageResult;
 
 public interface IPaymentOrderService {
 
@@ -18,5 +21,12 @@ public interface IPaymentOrderService {
 	 * @return
 	 */
 	void updateForPay(PaymentOrderCallbackRequestParam paymentOrderCallbackRequestParam);
+
+	/**
+	 * 分页获取用户充值订单（时间倒序）
+	 * @param param
+	 * @return
+	 */
+	PageResult<PaymentOrder> findPage(FindUserPaymentOrderRequestParam param);
 
 }

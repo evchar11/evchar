@@ -1,10 +1,10 @@
 package cn.evchar.common.requestparam;
 
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotBlank;
 
 public class CarSubModelRequestParam {
 
-	@NotNull
+	@NotBlank
 	private String brand;
 
 	public String getBrand() {

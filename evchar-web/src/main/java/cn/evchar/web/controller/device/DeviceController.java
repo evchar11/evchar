@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,6 +35,9 @@ public class DeviceController extends AbstractController {
 
 	@Resource
 	private IUserService userService;
+	
+	@Resource
+	private Validator validator;
 
 	/**
 	 * 用户预约订单
@@ -43,6 +47,9 @@ public class DeviceController extends AbstractController {
 	public String getDeviceList(DeviceListRequestParam param,
 			HttpServletRequest request, HttpServletResponse response,
 			Errors errors) {
+		// initUserRequestParam校验
+		validator.validate(param, errors);
+		handleValidFieldError(errors);
 		Long carModelId = null;
 		String carModel = param.getCarModel();
 		if (carModel != null) {
@@ -58,6 +65,9 @@ public class DeviceController extends AbstractController {
 	public String getDevice(DeviceRequestParam param,
 			HttpServletRequest request, HttpServletResponse response,
 			Errors errors) {
+		// initUserRequestParam校验
+		validator.validate(param, errors);
+		handleValidFieldError(errors);
 		String deviceId = param.getDeviceId();
 		if (NumberUtils.isNumber(deviceId)) {
 			Long id = NumberUtils.toLong(deviceId);
@@ -73,6 +83,9 @@ public class DeviceController extends AbstractController {
 	public String getDeviceListByOwner(DeviceListByOwnerRequestParam param,
 			HttpServletRequest request, HttpServletResponse response,
 			Errors errors) {
+		// initUserRequestParam校验
+		validator.validate(param, errors);
+		handleValidFieldError(errors);
 		User user = userService.findUserByWechatId(param.getWechatId());
 		if (user == null) {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户不存在");

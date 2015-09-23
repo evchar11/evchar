@@ -34,7 +34,7 @@ public class UserController extends AbstractController{
 	@RequestMapping("get.action")
 	@ResponseBody
 	public String getUserInfo(String wechatId, HttpServletRequest request, HttpServletResponse response){
-		Assert.state(StringUtils.isNotBlank(wechatId), "微信id为空");
+		Assert.state(StringUtils.isNotBlank(wechatId), "wechatId 不能为空");
 		if(!userService.checkUserExists(wechatId)){
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
 		}
