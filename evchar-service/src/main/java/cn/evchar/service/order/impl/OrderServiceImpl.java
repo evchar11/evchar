@@ -61,10 +61,11 @@ public class OrderServiceImpl implements IOrderService {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
 		}
 		Long userId = user.getId();
-		// 校验用户是否有已经预约的订单
-		if (findAppointedOrder(userId) != null) {
+		//校验用户是否有正在进行的订单
+		Order lastOrder = orderDao.getLastOrder(userId);
+		if(lastOrder != null && !lastOrder.isStatusFinal()){
 			throw new EvcharException(ApiCode.ERR_USER_HAS_ORDER_APPOINTED,
-					"已存在预约订单，请先取消");
+					"有正在进行的订单");
 		}
 		Long usefulMoney = userAccountService.usefulAccount(userId);
 		// 校验余额是否充足
@@ -253,5 +254,14 @@ public class OrderServiceImpl implements IOrderService {
 		return orderDao.findByExample(Order.class, order);
 	}
 
+	@Override
+	public Order getLastOrder(String wechatId){
+		User user = userService.findUserByWechatId(wechatId);
+		if (user == null) {
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+		}
+		Long userId = user.getId();
+		return orderDao.getLastOrder(userId);
+	}
 	
 }

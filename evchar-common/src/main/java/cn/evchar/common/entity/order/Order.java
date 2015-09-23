@@ -67,7 +67,7 @@ public class Order extends AbstractEntity{
 	 * 订单状态; 0:已预约状态,1:已匹配设备状态,2:手动取消预约（终态）,3:超时自动取消预约（终态）,4:正在使用,5:订单完成
 	 */
 	@Column(name="status")
-	private int status;
+	private Integer status;
 	
 	/**
 	 * 总价格,单位：分
@@ -169,11 +169,11 @@ public class Order extends AbstractEntity{
 		this.version = version;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
@@ -218,6 +218,11 @@ public class Order extends AbstractEntity{
 		this.endTime = endTime;
 	}
 
+	public boolean isStatusFinal(){
+		return status.byteValue() == OrderStatus.COMPLETE.code() || 
+				status.byteValue() == OrderStatus.CANCEL_BY_USER.code() ||
+				status.byteValue() == OrderStatus.CANCEL_AUTO.code();
+	}
 
 
 	public static enum OrderStatus{

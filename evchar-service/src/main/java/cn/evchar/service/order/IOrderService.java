@@ -84,6 +84,13 @@ public interface IOrderService {
 	 * @return
 	 */
 	List<Order> getCharingOrderList(String wechatId);
+
+	/**
+	 * 获取用户最近一次的充电订单
+	 * @param wechatId
+	 * @return
+	 */
+	Order getLastOrder(String wechatId);
 	
 	
 	
