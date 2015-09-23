@@ -23,7 +23,6 @@ import cn.evchar.service.car.ICarDeviceMatchService;
 import cn.evchar.service.device.IDevicePriceService;
 import cn.evchar.service.device.IDeviceService;
 import cn.evchar.service.hardware.DeviceManager;
-import cn.evchar.service.order.ICalculateService;
 import cn.evchar.service.order.IOrderService;
 import cn.evchar.service.user.IUserAccountService;
 import cn.evchar.service.user.IUserCarService;
@@ -42,8 +41,6 @@ public class OrderServiceImpl implements IOrderService {
 	private IUserService userService;
 	@Resource
 	private IUserAccountService userAccountService;
-	@Resource
-	private ICalculateService calculateService;
 	@Resource
 	private IDeviceService deviceService;
 	@Resource
@@ -69,21 +66,21 @@ public class OrderServiceImpl implements IOrderService {
 			throw new EvcharException(ApiCode.ERR_USER_HAS_ORDER_APPOINTED,
 					"已存在预约订单，请先取消");
 		}
-		Long usefulAccount = userAccountService.usefulAccount(userId);
+		Long usefulMoney = userAccountService.usefulAccount(userId);
 		// 校验余额是否充足
-		if (usefulAccount < DEFAULT_MONEY_LIMIT) {
+		if (usefulMoney < DEFAULT_MONEY_LIMIT) {
 			throw new EvcharException(ApiCode.ERR_USER_HAS_ENOUGH_MONEY,
 					"用户余额不足");
 		}
+
+		Long price = devicePriceService.getDevicePrice(deviceId);
 		// 余额不足，warn用户可充值电量
-		if (usefulAccount < DEFAULT_MONEY_WARN_LIMIT && !force) {
-			double degree = calculateService.generateDegree(usefulAccount);
+		if (usefulMoney < DEFAULT_MONEY_WARN_LIMIT && !force) {
+			Long degree = devicePriceService.calculateDegree(usefulMoney, price);
 			throw new EvcharException(degree, ApiCode.ERR_USER_MONEY_WARN,
 					"用户余额不足");
 		}
 		deviceManager.appointDevice(deviceId);
-
-		Long price = devicePriceService.getDevicePrice(deviceId);
 		return generateOrder(userId, deviceId, carId, macId, price,
 				OrderStatus.APPOINT.code());
 
@@ -208,8 +205,16 @@ public class OrderServiceImpl implements IOrderService {
 	}
 
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void endCharge(Long deviceId, Long degree) {
-
+		Order orderSearch = new Order();
+		orderSearch.setDeviceId(deviceId);
+		orderSearch.setStatus(OrderStatus.CHARGING.code());
+		List<Order> OrderList = orderDao.findByExample(Order.class, orderSearch);
+		Assert.state(OrderList.size() == 1, "状态异常");
+		Order order = OrderList.get(0);
+		Long money = devicePriceService.calculateMoneyByDeviceId(degree, deviceId);
+		userAccountService.consumeAccount(order.getUserId(), money);
 	}
 
 	@Override

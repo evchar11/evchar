@@ -86,4 +86,28 @@ public class UserAccountServiceImpl implements IUserAccountService{
 		userAccountDao.update(userAccount);
 		
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void consumeAccount(Long userId, Long money) {
+		Assert.state(money > 0, "增加金额必须为正");
+		Date now = new Date();
+		UserAccount userAccount = findByUserId(userId);
+		Long balance = userAccount.getBalance();
+		Long point = userAccount.getPoint();
+		userAccount.setUpdateTime(now);
+		//扣除积分后剩余需要balance补偿的金额
+		Long rest = point - money;
+		if(rest > 0){//优先积分抵扣
+			userAccount.setPoint(rest);
+		}else{//balance抵扣
+			userAccount.setPoint(0L);
+			Long balanceRest = balance + rest;
+			balanceRest = balanceRest >= 0 ? balanceRest : 0;
+			userAccount.setBalance(balance);
+		}
+		userAccountDao.update(userAccount);
+	}
+	
+	
 }

@@ -45,4 +45,11 @@ public interface IUserAccountService {
 	 * @param balanceType
 	 */
 	void updateAccountAdd(Long userId, Long money, byte balanceType);
+	
+	/**
+	 * 用户帐户扣除余额
+	 * @param userId
+	 * @param money
+	 */
+	void consumeAccount(Long userId, Long money);
 }

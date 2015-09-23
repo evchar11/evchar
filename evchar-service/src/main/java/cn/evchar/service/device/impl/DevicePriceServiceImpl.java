@@ -34,4 +34,28 @@ public class DevicePriceServiceImpl implements IDevicePriceService {
 			}
 		}
 	}
+
+	@Override
+	public Long calculateDegree(Long usefulMoney, Long price) {
+		return usefulMoney/price;
+	}
+
+	@Override
+	public Long calculateDegreeByDeviceId(Long usefulMoney, Long deviceId) {
+		Long price = getDevicePrice(deviceId);
+		return calculateDegree(usefulMoney, price);
+	}
+
+	@Override
+	public Long calculateMoney(Long degree, Long price) {
+		return degree*price;
+		
+	}
+
+	@Override
+	public Long calculateMoneyByDeviceId(Long degree, Long deviceId) {
+		Long price = getDevicePrice(deviceId);
+		return calculateMoney(degree, price);
+	}
+	
 }

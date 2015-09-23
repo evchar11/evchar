@@ -78,6 +78,13 @@ public interface IOrderService {
 	 */
 	PageResult<Order> findOrderPage(GetOrderListRequestParam getOrderListRequestParam);
 
+	/**
+	 * 获取用户正在充电订单
+	 * @param wechatId
+	 * @return
+	 */
 	List<Order> getCharingOrderList(String wechatId);
+	
+	
 	
 }
