@@ -16,6 +16,7 @@ import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.order.Order;
 import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.requestparam.AppointRequestParam;
+import cn.evchar.common.requestparam.CancelOrderRequestParam;
 import cn.evchar.common.requestparam.DeviceMatchUserRequestParam;
 import cn.evchar.common.requestparam.GetOrderListRequestParam;
 import cn.evchar.common.util.StringUtils;
@@ -97,6 +98,17 @@ public class OrderController extends AbstractController{
 		}
 		Order order = orderService.getLastOrder(wechatId);
 		return createJsonResponse(ApiCode.SUCCESS, order, null);
+	}
+	
+	
+	/**
+	 * 取消已预约的订单
+	 */
+	@RequestMapping("appointCancel.action")
+	@ResponseBody
+	public String appointCancel(CancelOrderRequestParam param, HttpServletRequest request, HttpServletResponse response, Errors errors){
+		orderService.appointCancel(param.getOrderId(), 0);
+		return createJsonResponse(ApiCode.SUCCESS, null, null);
 	}
 
 }

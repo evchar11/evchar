@@ -40,7 +40,7 @@ public class DeviceController extends AbstractController {
 	private Validator validator;
 
 	/**
-	 * 用户预约订单
+	 * 根据地理位置获取附近的电桩
 	 */
 	@RequestMapping("getAll.action")
 	@ResponseBody

@@ -1,12 +1,12 @@
 package cn.evchar.common.requestparam;
 
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotBlank;
 
 public class DeviceListRequestParam {
 	private String carModel;
-	@NotNull
+	@NotBlank
 	private String longitude;
-	@NotNull
+	@NotBlank
 	private String latitude;
 
 	public String getCarModel() {
