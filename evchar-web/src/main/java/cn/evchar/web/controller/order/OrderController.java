@@ -85,5 +85,18 @@ public class OrderController extends AbstractController{
 		List<Order> orderList = orderService.getCharingOrderList(wechatId);
 		return createJsonResponse(ApiCode.SUCCESS, orderList, "获取成功");
 	}
+	
+	/**
+	 * 查询用户最近的充电订单
+	 */
+	@RequestMapping("getLastOrder.action")
+	@ResponseBody
+	public String getLastOrder(String wechatId, HttpServletRequest request, HttpServletResponse response){
+		if(StringUtils.isBlank(wechatId)){
+			throw new EvcharException(null, ApiCode.ERR_WRONG_PARAMS, "wechatId can not be empty");
+		}
+		Order order = orderService.getLastOrder(wechatId);
+		return createJsonResponse(ApiCode.SUCCESS, order, null);
+	}
 
 }
