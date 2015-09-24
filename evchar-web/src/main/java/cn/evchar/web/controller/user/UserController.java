@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.exception.EvcharException;
 import cn.evchar.common.requestparam.InitUserRequestParam;
+import cn.evchar.common.requestparam.SetDefaultCarRequestParam;
 import cn.evchar.common.view.UserInfoView;
 import cn.evchar.service.user.IUserService;
 import cn.evchar.web.controller.AbstractController;
@@ -63,6 +64,26 @@ public class UserController extends AbstractController{
 		return createJsonResponse(ApiCode.SUCCESS, null, "注册成功");
 	}
 	
+	/**
+	 * 为用户设置默认车辆
+	 * @param initUserRequestParam
+	 * @param request
+	 * @param response
+	 * @param errors
+	 * @return
+	 */
+	@RequestMapping("setDefaultCar.action")
+	@ResponseBody
+	public String setDefaultCar(SetDefaultCarRequestParam param, HttpServletRequest request, HttpServletResponse response, Errors errors){
+		// initUserRequestParam校验
+//		validator.validate(param, errors);
+//		handleValidFieldError(errors);
+//		if(!userService.checkUserExists(param.getWechatId())){
+//			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+//		}
+//		userService.init(param);
+		return createJsonResponse(ApiCode.SUCCESS, null, "设置默认车型成功");
+	}
 	
 
 

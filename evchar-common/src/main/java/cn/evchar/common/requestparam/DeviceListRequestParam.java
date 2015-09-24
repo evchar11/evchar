@@ -9,6 +9,8 @@ public class DeviceListRequestParam {
 	@NotBlank
 	private String latitude;
 
+	private String distCode;
+
 	public String getCarModel() {
 		return carModel;
 	}
@@ -31,6 +33,14 @@ public class DeviceListRequestParam {
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+	public String getDistCode() {
+		return distCode;
+	}
+
+	public void setDistCode(String distCode) {
+		this.distCode = distCode;
 	}
 
 }

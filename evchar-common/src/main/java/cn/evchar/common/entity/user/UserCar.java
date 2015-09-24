@@ -14,48 +14,53 @@ import cn.evchar.common.util.serializer.CustomDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
- * @author wangfeng@evchar.cn
- * 用户汽车相关信息
+ * @author wangfeng@evchar.cn 用户汽车相关信息
  */
 @Entity
-@Table(name="evchar_user_car")
-public class UserCar extends AbstractEntity{
+@Table(name = "evchar_user_car")
+public class UserCar extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 自增id
 	 */
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
 	/**
 	 * 用户id
 	 */
-	@Column(name="user_id")
+	@Column(name = "user_id")
 	private Long userId;
-	
-	//车模型id
-	@Column(name="car_model_id")
-    private Long carModelId;
-	
+
+	// 车模型id
+	@Column(name = "car_model_id")
+	private Long carModelId;
+
 	/**
 	 * 车牌号
 	 */
-	@Column(name="car_no")
+	@Column(name = "car_no")
 	private String carNo;
-	
+
+	/**
+	 * 是否是车主默认车辆
+	 */
+	@Column(name = "is_default")
+	private Boolean isDefault;
+
 	/**
 	 * 生成时间
 	 */
-	@Column(name="create_time")
+	@Column(name = "create_time")
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createTime;
-	
+
 	/**
 	 * 更新时间
 	 */
-	@Column(name="update_time")
+	@Column(name = "update_time")
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date updateTime;
 
@@ -105,6 +110,14 @@ public class UserCar extends AbstractEntity{
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public Boolean getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 }

@@ -1,5 +1,6 @@
 package cn.evchar.web.controller.device;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -35,7 +36,7 @@ public class DeviceController extends AbstractController {
 
 	@Resource
 	private IUserService userService;
-	
+
 	@Resource
 	private Validator validator;
 
@@ -128,4 +129,47 @@ public class DeviceController extends AbstractController {
 			return createJsonResponse(ApiCode.SUCCESS, null, "设备操作成功");
 		}
 	}
+
+	@RequestMapping("distanceOptions.action")
+	@ResponseBody
+	public String getDistances(HttpServletRequest request,
+			HttpServletResponse response, Errors errors) {
+		List<Distance> distanceList = new ArrayList<>();
+		distanceList.add(new Distance("0", "1km"));
+		distanceList.add(new Distance("1", "2km"));
+		distanceList.add(new Distance("2", "5km"));
+		distanceList.add(new Distance("3", "10km"));
+		distanceList.add(new Distance("4", "15km"));
+		return createJsonResponse(ApiCode.SUCCESS, distanceList, "查找距离选项列表成功");
+	}
+}
+
+// TODO:临时解决方案，待9.27fix
+class Distance {
+
+	public Distance(String itemCode, String itemValue) {
+		super();
+		this.itemCode = itemCode;
+		this.itemValue = itemValue;
+	}
+
+	private String itemCode;
+	private String itemValue;
+
+	public String getItemCode() {
+		return itemCode;
+	}
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+
+	public String getItemValue() {
+		return itemValue;
+	}
+
+	public void setItemValue(String itemValue) {
+		this.itemValue = itemValue;
+	}
+
 }
