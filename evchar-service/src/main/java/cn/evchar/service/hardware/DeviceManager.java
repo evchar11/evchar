@@ -49,6 +49,8 @@ public class DeviceManager {
 				DeviceStateType.IDLE);
 		DeviceLived dev8 = new DeviceLived("008", "1", "2",
 				DeviceStateType.IDLE);
+		DeviceLived dev9 = new DeviceLived("FFFF", "1", "2",
+				DeviceStateType.IDLE);
 		devices.put(dev1.getSn(), dev1);
 		devices.put(dev2.getSn(), dev2);
 		devices.put(dev3.getSn(), dev3);
@@ -57,6 +59,7 @@ public class DeviceManager {
 		devices.put(dev6.getSn(), dev6);
 		devices.put(dev7.getSn(), dev7);
 		devices.put(dev8.getSn(), dev8);
+		devices.put(dev9.getSn(), dev9);
 	}
 
 	private DeviceAcceptor acceptor = DeviceAcceptor.getInstance();
@@ -159,6 +162,8 @@ public class DeviceManager {
 			case CHARGING:
 				throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
 			case ENERGIZED: // 上电
+				dev.setState(state);
+				acceptor.on();
 				break;
 			case FULL:
 				throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
@@ -168,7 +173,7 @@ public class DeviceManager {
 				break;
 			case RESERVED:
 				dev.setState(state);
-				acceptor.on();
+				acceptor.off();
 				break;
 			}
 			devices.put(sn, dev);
