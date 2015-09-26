@@ -46,7 +46,7 @@ public abstract class AbstractController{
 			EvcharException ex, 
 			HttpServletResponse response){
 		String requestParam = generateRequestParamStr(request);
-		logger.info("throw Exception: " + requestParam);
+		logger.info("throw EvcharException: " + requestParam);
 		return createJsonResponse(ex.getCode(), ex.getData(), ex.getMessage());
 	}
 	
@@ -57,7 +57,7 @@ public abstract class AbstractController{
 			IllegalStateException ex, 
 			HttpServletResponse response){
 		String requestParam = generateRequestParamStr(request);
-		logger.info("throw Exception: " + requestParam);
+		logger.info("throw IllegalStateException: " + requestParam);
 		return createJsonResponse(ApiCode.ERR_SYSTEM, null, ex.getMessage());
 	}
 
@@ -70,7 +70,7 @@ public abstract class AbstractController{
 			Exception ex, 
 			HttpServletResponse response){
 		String requestParam = generateRequestParamStr(request);
-		logger.error("erp throw Exception: " + requestParam);
+		logger.error("throw Exception: " + requestParam);
 		logger.error("未处理异常", ex);
 		return createJsonResponse(ApiCode.ERR_WRONG_PARAMS, null, "系统错误");
 	}
