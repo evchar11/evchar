@@ -2,6 +2,8 @@ package cn.evchar.web.controller.device;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -97,10 +99,10 @@ public class DeviceController extends AbstractController {
 
 	@RequestMapping("operate.action")
 	@ResponseBody
-	public String operate(DeviceOperationParam param,
+	public String operate(final DeviceOperationParam param,
 			HttpServletRequest request, HttpServletResponse response,
 			Errors errors) {
-		Long deviceId = param.getDeviceId();
+		final Long deviceId = param.getDeviceId();
 		User user = userService.findUserByWechatId(param.getWechatId());
 		if (user == null) {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户不存在");
@@ -109,24 +111,34 @@ public class DeviceController extends AbstractController {
 		if (param.getOperation() == null) {
 			throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "操作不合法");
 		} else {
-			switch (param.getOperation()) {
-			case DeviceOperationParam.ON:
-				deviceService.setDeviceState(deviceId,
-						DeviceStateType.ENERGIZED);
-				break;
-			case DeviceOperationParam.OFF:
-				deviceService
-						.setDeviceState(deviceId, DeviceStateType.RESERVED);
-				break;
-			case DeviceOperationParam.ENABLE:
-				deviceService.setDeviceState(deviceId, DeviceStateType.IDLE);
-				break;
-			case DeviceOperationParam.DISABLE:
-				deviceService
-						.setDeviceState(deviceId, DeviceStateType.RESERVED);
-				break;
+			if (param.getTime() != null) {
+				operate(param.getOperation(), deviceId);
+			} else {
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						operate(param.getOperation(), deviceId);
+					}
+				}, param.getTime());
 			}
 			return createJsonResponse(ApiCode.SUCCESS, null, "设备操作成功");
+		}
+	}
+
+	private void operate(String operate, Long deviceId) {
+		switch (operate) {
+		case DeviceOperationParam.ON:
+			deviceService.setDeviceState(deviceId, DeviceStateType.ENERGIZED);
+			break;
+		case DeviceOperationParam.OFF:
+			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED);
+			break;
+		case DeviceOperationParam.ENABLE:
+			deviceService.setDeviceState(deviceId, DeviceStateType.IDLE);
+			break;
+		case DeviceOperationParam.DISABLE:
+			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED);
+			break;
 		}
 	}
 

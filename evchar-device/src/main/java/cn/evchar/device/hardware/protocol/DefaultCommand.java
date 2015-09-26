@@ -6,12 +6,12 @@ import cn.evchar.device.hardware.protocol.types.DataType;
 
 public abstract class DefaultCommand implements Command {
 	protected static final int[] BLANK_ARRAY = new int[] {};
-	protected static final int[] BLANK_SN = new int[] { 0, 0, 0, 0 };
+	protected static final int[] BLANK_SN = new int[] { 255, 255, 255, 255 };
 	protected static final int LENGTH_FLAG = 4;// 头尾长度
 	protected static final int LENGTH_CONTENT_0_ARGS = 6;// 协议固定部分除头尾长度
 
 	protected DataType dataType;
-	protected int[] sn = BLANK_ARRAY;
+	protected int[] sn = BLANK_SN;
 
 	@Override
 	public byte[] toBytes() {

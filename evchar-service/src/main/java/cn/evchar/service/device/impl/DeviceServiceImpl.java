@@ -52,6 +52,8 @@ public class DeviceServiceImpl implements IDeviceService {
 		} else {
 			deviceList = deviceDao.loadAll(Device.class);
 		}
+		for (Device dev : deviceList) {
+		}
 		// TODO:需要一个根据经纬度取出附近Device的方法
 		return deviceList;
 	}
@@ -74,5 +76,14 @@ public class DeviceServiceImpl implements IDeviceService {
 	@Override
 	public void setDeviceState(Long deviceId, DeviceStateType state) {
 		deviceManager.setState(deviceId, state);
+	}
+
+	private void refreshList(List<Device> deviceList) {
+		if (deviceList != null && deviceList.size() > 0) {
+			for (Device dev : deviceList) {
+				dev.setStatus(deviceManager.getLivedDeviceState(dev.getSn())
+						.toString());
+			}
+		}
 	}
 }

@@ -2,6 +2,8 @@ package cn.evchar.service.hardware;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.exception.EvcharException;
+import cn.evchar.device.hardware.DeviceAcceptor;
 import cn.evchar.device.hardware.DeviceLived;
 import cn.evchar.device.hardware.DeviceStateListener;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
@@ -23,7 +26,10 @@ public class DeviceManager {
 	// TODO:需要解决设备时断时连时用户体验的问题
 	@Resource
 	private IDeviceService deviceService;
-	
+
+	public static void main(String[] args) {
+		new DeviceManager().init();
+	}
 
 	@PostConstruct
 	public void init() {
@@ -52,6 +58,8 @@ public class DeviceManager {
 		devices.put(dev7.getSn(), dev7);
 		devices.put(dev8.getSn(), dev8);
 	}
+
+	private DeviceAcceptor acceptor = DeviceAcceptor.getInstance();
 
 	private List<DeviceStateListener> stateListeners = new ArrayList<>();
 
@@ -156,9 +164,11 @@ public class DeviceManager {
 				throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
 			case IDLE:
 				dev.setState(state);
+				acceptor.off();
 				break;
 			case RESERVED:
 				dev.setState(state);
+				acceptor.on();
 				break;
 			}
 			devices.put(sn, dev);
@@ -179,6 +189,14 @@ public class DeviceManager {
 			return devices.get(sn);
 		} else {
 			throw new EvcharException(ApiCode.ERR_DEVICE_NOT_ONLINE, "设备当前不在线");
+		}
+	}
+
+	public DeviceStateType getLivedDeviceState(String devSn) {
+		if (devices.get(devSn) == null) {
+			return DeviceStateType.OFF;
+		} else {
+			return devices.get(devSn).getState();
 		}
 	}
 }

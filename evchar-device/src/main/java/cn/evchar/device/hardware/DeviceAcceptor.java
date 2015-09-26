@@ -1,13 +1,8 @@
 package cn.evchar.device.hardware;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import cn.evchar.device.hardware.protocol.netty.ProtocolEncoder;
-import cn.evchar.device.hardware.protocol.netty.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -18,6 +13,20 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.evchar.device.hardware.protocol.impl.SetStateCommand;
+import cn.evchar.device.hardware.protocol.netty.ProtocolEncoder;
+import cn.evchar.device.hardware.protocol.netty.ServerHandler;
+import cn.evchar.device.hardware.protocol.types.DeviceStateType;
+
 public class DeviceAcceptor {
 
 	private static final Logger logger = LoggerFactory
@@ -27,13 +36,25 @@ public class DeviceAcceptor {
 	private static final int PORT = 6666;
 	private static final int BACKLOG_SIZE = 1000;
 
-	private static DeviceAcceptor acceptor = new DeviceAcceptor();
+	private static DeviceAcceptor acceptor = null;
 
 	public static DeviceAcceptor getInstance() {
-		return acceptor;
+		if (acceptor == null) {
+			acceptor = new DeviceAcceptor();
+			acceptor.start();
+			return acceptor;
+		} else {
+			return acceptor;
+		}
 	}
 
+	private Set<ChannelHandlerContext> deviceSet = new HashSet<>();
+
 	private DeviceAcceptor() {
+	}
+
+	public void start() {
+
 		EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
@@ -48,7 +69,7 @@ public class DeviceAcceptor {
 								throws Exception {
 							ChannelPipeline p = ch.pipeline();
 							p.addLast(new ProtocolEncoder());
-							p.addLast(new ServerHandler(null));
+							p.addLast(new ServerHandler(DeviceAcceptor.this));
 						}
 					});
 
@@ -63,6 +84,28 @@ public class DeviceAcceptor {
 			// Shut down all event loops to terminate all threads.
 			bossGroup.shutdownGracefully();
 			workerGroup.shutdownGracefully();
+		}
+	}
+
+	public void add(ChannelHandlerContext ctx) {
+		deviceSet.add(ctx);
+	}
+
+	public void remove(ChannelHandlerContext ctx) {
+		deviceSet.remove(ctx);
+	}
+
+	public void on() {
+		for (ChannelHandlerContext ctx : deviceSet) {
+			ctx.write(new SetStateCommand(DeviceStateType.ENERGIZED));
+			ctx.flush();
+		}
+	}
+
+	public void off() {
+		for (ChannelHandlerContext ctx : deviceSet) {
+			ctx.write(new SetStateCommand(DeviceStateType.IDLE));
+			ctx.flush();
 		}
 	}
 }
