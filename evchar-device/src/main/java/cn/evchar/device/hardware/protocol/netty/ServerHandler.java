@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import cn.evchar.device.hardware.DeviceAcceptor;
 import cn.evchar.device.hardware.protocol.DeviceProtocol;
-import cn.evchar.device.hardware.protocol.impl.SetStateCommand;
+import cn.evchar.device.hardware.protocol.sent.SetStateCommand;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

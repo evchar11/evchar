@@ -119,6 +119,6 @@ public class DeviceServiceImpl implements IDeviceService {
 
 	@Override
 	public void update(Device device) {
-		deviceDao.save(device);
+		deviceDao.saveOrUpdate(device);
 	}
 }

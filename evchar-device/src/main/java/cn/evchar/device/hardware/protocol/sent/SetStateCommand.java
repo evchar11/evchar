@@ -1,4 +1,4 @@
-package cn.evchar.device.hardware.protocol.impl;
+package cn.evchar.device.hardware.protocol.sent;
 
 import java.util.Arrays;
 

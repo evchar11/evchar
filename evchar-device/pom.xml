@@ -24,11 +24,7 @@
 			<artifactId>evchar-dao</artifactId>
 			<version>${evchar.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>cn.evchar</groupId>
-			<artifactId>evchar-dao</artifactId>
-			<version>${evchar.version}</version>
-		</dependency>
+		
 	</dependencies>
   <artifactId>evchar-device</artifactId>
 </project>
