@@ -86,4 +86,39 @@ public class DeviceServiceImpl implements IDeviceService {
 			}
 		}
 	}
+
+	@Override
+	public List<Device> getDeviceListByAddr(String addr, Long carModelId) {
+		List<Device> devList = new ArrayList<Device>();
+		List<Device> all = deviceDao.getByAddr(addr);
+		if (carModelId != null) {
+			CarModel carModel = deviceDao.get(CarModel.class, carModelId);
+			if (carModel != null) {
+				List<DeviceModel> deviceModelList = carDeviceMatchDao
+						.findMatchDeviceModel(carModel);
+				for (Device dev : all) {
+					boolean isMatch = false;
+					for (DeviceModel deviceModel : deviceModelList) {
+						if (deviceModel.getId().equals(dev.getModel())) {
+							isMatch = true;
+							break;
+						}
+						// Device modelDevice = new Device();
+						// modelDevice.setModel(deviceModel.getId());
+						// deviceList.addAll(deviceDao.findByExample(Device.class,
+						// modelDevice));
+					}
+					if (isMatch) {
+						devList.add(dev);
+					}
+				}
+			}
+		}
+		return devList;
+	}
+
+	@Override
+	public void update(Device device) {
+		deviceDao.save(device);
+	}
 }

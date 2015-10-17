@@ -24,6 +24,8 @@ import cn.evchar.common.requestparam.DeviceListByOwnerRequestParam;
 import cn.evchar.common.requestparam.DeviceListRequestParam;
 import cn.evchar.common.requestparam.DeviceOperationParam;
 import cn.evchar.common.requestparam.DeviceRequestParam;
+import cn.evchar.common.requestparam.DeviceRequestParamBind;
+import cn.evchar.common.requestparam.DeviceRequestParamByAddr;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 import cn.evchar.service.device.IDeviceService;
 import cn.evchar.service.user.IUserService;
@@ -153,6 +155,42 @@ public class DeviceController extends AbstractController {
 		distanceList.add(new Distance("3", "10km"));
 		distanceList.add(new Distance("4", "15km"));
 		return createJsonResponse(ApiCode.SUCCESS, distanceList, "查找距离选项列表成功");
+	}
+
+	@RequestMapping("search.action")
+	@ResponseBody
+	public String getDeviceListByAddr(DeviceRequestParamByAddr param,
+			HttpServletRequest request, HttpServletResponse response) {
+		Long carModelId = null;
+		String carModel = param.getCarModel();
+		if (carModel != null) {
+			carModelId = NumberUtils.toLong(carModel);
+		}
+		List<Device> deviceList = deviceService.getDeviceListByAddr(
+				param.getAddr(), carModelId);
+		return createJsonResponse(ApiCode.SUCCESS, deviceList, "获取设备列表成功");
+	}
+
+	@RequestMapping("bindOwner.action")
+	@ResponseBody
+	public String bindOwner(DeviceRequestParamBind param,
+			HttpServletRequest request, HttpServletResponse response) {
+		User user = userService.findUserByWechatId(param.getWechatId());
+		if (user == null) {
+			return createJsonResponse(ApiCode.ERR_USER_NOT_FOUND, null, "绑定失败");
+		}
+		if (!NumberUtils.isNumber(param.getDeviceId())) {
+			return createJsonResponse(ApiCode.ERR_WRONG_PARAMS, null, "设备参数错误");
+		}
+		Device dev = deviceService.getDevice(NumberUtils.toLong(param
+				.getDeviceId()));
+		if (dev == null) {
+			return createJsonResponse(ApiCode.ERR_DEVICE_NOT_FOUND, null,
+					"绑定失败");
+		}
+		dev.setOwner(user.getId());
+		deviceService.update(dev);
+		return createJsonResponse(ApiCode.SUCCESS, dev, "绑定桩主成功");
 	}
 }
 
