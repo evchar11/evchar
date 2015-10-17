@@ -113,7 +113,7 @@ public class DeviceController extends AbstractController {
 		if (param.getOperation() == null) {
 			throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "操作不合法");
 		} else {
-			if (param.getTime() != null) {
+			if (param.getTime() == null) {
 				operate(param.getOperation(), deviceId);
 			} else {
 				new Timer().schedule(new TimerTask() {
