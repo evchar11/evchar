@@ -22,13 +22,22 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cn.evchar.device.hardware.protocol.StatusHandler;
 import cn.evchar.device.hardware.protocol.netty.ProtocolDecoder;
 import cn.evchar.device.hardware.protocol.netty.ProtocolEncoder;
 import cn.evchar.device.hardware.protocol.netty.ServerHandler;
+import cn.evchar.device.hardware.protocol.receive.BatteryStatus;
+import cn.evchar.device.hardware.protocol.receive.BootCompletedStatus;
+import cn.evchar.device.hardware.protocol.receive.ModelStatus;
+import cn.evchar.device.hardware.protocol.receive.PheriStatus;
+import cn.evchar.device.hardware.protocol.receive.PowerStatus;
+import cn.evchar.device.hardware.protocol.receive.ServerIpStatus;
+import cn.evchar.device.hardware.protocol.receive.ServerPortStatus;
+import cn.evchar.device.hardware.protocol.receive.StateStatus;
 import cn.evchar.device.hardware.protocol.sent.SetStateCommand;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 
-public class DeviceAcceptor {
+public class DeviceAcceptor implements StatusHandler {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DeviceAcceptor.class);
@@ -97,23 +106,63 @@ public class DeviceAcceptor {
 
 	public void add(ChannelHandlerContext ctx) {
 		deviceSet.add(ctx);
+		logger.info("设备连接: " + ctx.channel().remoteAddress());
 	}
 
 	public void remove(ChannelHandlerContext ctx) {
 		deviceSet.remove(ctx);
+		logger.info("设备断开: " + ctx.channel().remoteAddress());
 	}
 
 	public void on() {
+		logger.info("打开设备" + deviceSet.size());
 		for (ChannelHandlerContext ctx : deviceSet) {
+			logger.info("设备地址" + ctx.channel().remoteAddress());
 			ctx.write(new SetStateCommand(DeviceStateType.ENERGIZED));
 			ctx.flush();
 		}
 	}
 
 	public void off() {
+		logger.info("关闭设备" + deviceSet.size());
 		for (ChannelHandlerContext ctx : deviceSet) {
+			logger.info("设备地址" + ctx.channel().remoteAddress());
 			ctx.write(new SetStateCommand(DeviceStateType.IDLE));
 			ctx.flush();
 		}
+	}
+
+	@Override
+	public void handle(BatteryStatus batteryStatus, ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(BootCompletedStatus bootCompletedStatus,
+			ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(ModelStatus modelStatus, ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(PheriStatus pheriStatus, ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(PowerStatus powerStatus, ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(ServerIpStatus serverIpStatus, ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(ServerPortStatus serverPortStatus,
+			ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(StateStatus stateStatus, ChannelHandlerContext ctx) {
 	}
 }

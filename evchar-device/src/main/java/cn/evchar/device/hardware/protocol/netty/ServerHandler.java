@@ -4,7 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.evchar.device.hardware.DeviceAcceptor;
+import cn.evchar.device.hardware.protocol.DefaultStatus;
 import cn.evchar.device.hardware.protocol.DeviceProtocol;
+import cn.evchar.device.hardware.protocol.Status;
+import cn.evchar.device.hardware.protocol.StatusHandler;
+import cn.evchar.device.hardware.protocol.receive.BatteryStatus;
+import cn.evchar.device.hardware.protocol.receive.BootCompletedStatus;
+import cn.evchar.device.hardware.protocol.receive.ModelStatus;
+import cn.evchar.device.hardware.protocol.receive.PheriStatus;
+import cn.evchar.device.hardware.protocol.receive.PowerStatus;
+import cn.evchar.device.hardware.protocol.receive.ServerIpStatus;
+import cn.evchar.device.hardware.protocol.receive.ServerPortStatus;
+import cn.evchar.device.hardware.protocol.receive.StateStatus;
 import cn.evchar.device.hardware.protocol.sent.SetStateCommand;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 import io.netty.buffer.ByteBuf;
@@ -25,6 +36,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
+		DefaultStatus status = (DefaultStatus) msg;
+		status.handleBy(acceptor, ctx);
 	}
 
 	@Override
@@ -48,10 +61,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		cause.printStackTrace();
 		ctx.close();
 	}
-	
+
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		acceptor.remove(ctx);
 		super.channelInactive(ctx);
 	}
+
 }

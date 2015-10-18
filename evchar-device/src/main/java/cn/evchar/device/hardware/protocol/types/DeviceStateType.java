@@ -5,27 +5,26 @@ import java.util.Map;
 
 public enum DeviceStateType {
 	// 空闲/已预约/已上电/正在充电/已充满
-	IDLE("01"), RESERVED("02"), ENERGIZED("03"), CHARGING("04"), FULL("05"),OFF("06");
+	IDLE(1), RESERVED(2), ENERGIZED(3), CHARGING(4), FULL(5),OFF(6);
 
-	private final String str;
+	private final Integer value;
 
-	DeviceStateType(String str) {
-		this.str = str;
+	DeviceStateType(Integer value) {
+		this.value = value;
 	}
 
-	private static final Map<String, DeviceStateType> stringToEnum = new HashMap<String, DeviceStateType>();
+	private static final Map<Integer, DeviceStateType> integerToEnum = new HashMap<Integer, DeviceStateType>();
 
 	static {
 		for (DeviceStateType op : values())
-			stringToEnum.put(op.toString(), op);
+			integerToEnum.put(op.toInteger(), op);
 	}
 
-	public static DeviceStateType fromString(String symbol) {
-		return stringToEnum.get(symbol);
+	public static DeviceStateType fromInteger(Integer symbol) {
+		return integerToEnum.get(symbol);
 	}
 
-	@Override
-	public String toString() {
-		return str;
+	public Integer toInteger() {
+		return value;
 	}
 }

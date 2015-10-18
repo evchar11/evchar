@@ -18,27 +18,28 @@ public class UserCarServiceImpl implements IUserCarService {
 	@Resource
 	private UserCarDao userCarDao;
 
-
 	@Override
-	@Transactional(rollbackFor=Exception.class, propagation=Propagation.REQUIRED)
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public boolean saveUserCar(UserCar userCar) {
 		Long userCarId = userCarDao.save(userCar);
 		Assert.state(userCarId != null && userCarId > 0, "保存用户车信息失败");
 		return true;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void updateUserCar(UserCar userCar) {
+		userCarDao.saveOrUpdate(userCar);
+	}
 
 	@Override
 	public List<UserCar> findUserCarListByUserId(Long userId) {
 		return userCarDao.findUserCarListByUserId(userId);
 	}
 
-
 	@Override
 	public UserCar getById(Long carId) {
 		return userCarDao.get(carId);
 	}
-	
-	
 
 }

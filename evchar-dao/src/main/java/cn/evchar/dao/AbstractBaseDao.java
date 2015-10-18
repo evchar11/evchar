@@ -3,10 +3,7 @@ package cn.evchar.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -49,8 +46,9 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 		HQL_COUNT_ALL = " select count(*) from " + entityName;
 	}
 
-	protected List findByHql(String queryString, Object... value) {
-		return getHibernateTemplate().find(queryString, value);
+	@SuppressWarnings("unchecked")
+	protected List<M> findByHql(String queryString, Object... value) {
+		return (List<M>) getHibernateTemplate().find(queryString, value);
 	}
 
 	protected String getListAllHql() {// 获取查询所有记录的HQL
@@ -167,42 +165,52 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 
 	// 省略部分可选的便利方法，想了解更多请参考源代码
 	/**
-     * 列表查询
-     * @param <T> 模型类型
-     * @param hql Hibernate查询语句
-     * @param pn  页码 从1开始
-     * @param pageSize 每页记录数
-     * @param map 命名参数Map
-     * @return 模型列表
-     */
-    @SuppressWarnings("unchecked")
-    protected <T> List<T> list(final String hql,final int pn, final int pageSize, final Object... paramlist) {
-        List<T> resultList = (List<T>) getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
-            
-            public List<T>  doInHibernate(Session session) throws HibernateException, SQLException {
-                Query query = session.createQuery(hql);
-//                for (Entry<String, Collection<?>> e : map.entrySet()) {
-//                    query.setParameterList(e.getKey(), e.getValue());
-//                }
-                int i = 0;
-                for(Object val : paramlist){
-                	query.setParameter(i, val);
-                	i++;
-                }
-                if (pn > -1 && pageSize > -1) {
-                    query.setMaxResults(pageSize);
-                    int start = (pn-1) * pageSize;
-                    if(start != 0) {
-                        query.setFirstResult(start);
-                    }
-                }
-                if(pn < 0) {
-                    query.setFirstResult(0);
-                }
-                List<T> results = query.list();
-                return results;
-            }
-        });
-        return resultList;
-    }
+	 * 列表查询
+	 * 
+	 * @param <T>
+	 *            模型类型
+	 * @param hql
+	 *            Hibernate查询语句
+	 * @param pn
+	 *            页码 从1开始
+	 * @param pageSize
+	 *            每页记录数
+	 * @param map
+	 *            命名参数Map
+	 * @return 模型列表
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T> List<T> list(final String hql, final int pn,
+			final int pageSize, final Object... paramlist) {
+		List<T> resultList = (List<T>) getHibernateTemplate().executeFind(
+				new HibernateCallback<List<T>>() {
+
+					public List<T> doInHibernate(Session session)
+							throws HibernateException, SQLException {
+						Query query = session.createQuery(hql);
+						// for (Entry<String, Collection<?>> e : map.entrySet())
+						// {
+						// query.setParameterList(e.getKey(), e.getValue());
+						// }
+						int i = 0;
+						for (Object val : paramlist) {
+							query.setParameter(i, val);
+							i++;
+						}
+						if (pn > -1 && pageSize > -1) {
+							query.setMaxResults(pageSize);
+							int start = (pn - 1) * pageSize;
+							if (start != 0) {
+								query.setFirstResult(start);
+							}
+						}
+						if (pn < 0) {
+							query.setFirstResult(0);
+						}
+						List<T> results = query.list();
+						return results;
+					}
+				});
+		return resultList;
+	}
 }

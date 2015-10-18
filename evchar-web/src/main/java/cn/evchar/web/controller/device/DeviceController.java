@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -70,16 +71,17 @@ public class DeviceController extends AbstractController {
 	public String getDevice(DeviceRequestParam param,
 			HttpServletRequest request, HttpServletResponse response,
 			Errors errors) {
-		// initUserRequestParam校验
-		validator.validate(param, errors);
-		handleValidFieldError(errors);
 		String deviceId = param.getDeviceId();
-		if (NumberUtils.isNumber(deviceId)) {
+		String sn = param.getSn();
+		if (StringUtils.isNotBlank(deviceId) && NumberUtils.isNumber(deviceId)) {
 			Long id = NumberUtils.toLong(deviceId);
 			Device device = deviceService.getDevice(id);
 			return createJsonResponse(ApiCode.SUCCESS, device, "获取设备成功");
+		} else if (StringUtils.isNotBlank(sn)) {
+			Device device = deviceService.getDeviceBySn(sn);
+			return createJsonResponse(ApiCode.SUCCESS, device, "获取设备成功");
 		} else {
-			throw new EvcharException(ApiCode.ERR_DEVICE_NOT_FOUND, "设备ID参数为空");
+			throw new EvcharException(ApiCode.ERR_DEVICE_NOT_FOUND, "设备参数为空");
 		}
 	}
 

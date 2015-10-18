@@ -28,17 +28,12 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,
 			List<Object> out) throws Exception {
-		// TODO:未完成
-
 		byte[] received = new byte[in.readableBytes()];
 		in.readBytes(received);
 		temp = ConvertUtils.bytesToInteger(received, received.length);
-
-	}
-
-	public void read(int[] temp) {
 		unescaped = new int[temp.length];
 		temp = ArrayUtils.addAll(remain, temp);
+		logger.info("temp:" + Arrays.toString(temp));
 		boolean isEscape = false;
 		boolean isContent = false;
 		int unescapeIndex = 0;
@@ -49,23 +44,42 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 				case Protocol.BIT_START:// 必定是一段数据的开头
 					if (isContent) {
 						logger.error("连续的开头");
+						unescaped = new int[temp.length];
+						unescapeIndex = 0;
+					} else {
+						logger.info("数据头" + i);
 					}
 					isContent = true;
 					break;
 				case Protocol.BIT_END:
 					if (isContent) {
-						// out.add(statusFactory.getStatus(unescaped));
-						logger.info(Arrays.toString(unescaped));
+						logger.info("数据尾" + i);
+						int[] result = ArrayUtils.subarray(unescaped, 0,
+								unescapeIndex);
+						logger.info("总数据:" + Arrays.toString(result));
+						int checksum = 0;
+						for (int j = 0; j < result.length - 1; j++) {
+							checksum += result[j];
+						}
+						if (checksum % 0x100 != result[result.length - 1]) {
+							out.add(statusFactory.getStatus(result));
+						} else {
+							logger.error("校验和不符" + checksum + "!="
+									+ result[result.length - 1]);
+						}
+						unescapeIndex = 0;
 						unescaped = new int[temp.length];
 						isContent = false;
-					}
-					if (!isContent) {
+					} else {
 						logger.info("没有数据头的数据尾");
 					}
-					remainIndex = i;
+					remainIndex = i + 1;
 					break;
-				case Protocol.BIT_ESCAPE:
-					if (!isContent) {
+				default:
+					if (isContent) {
+						unescaped[unescapeIndex++] = temp[i];
+					} else {
+						logger.error("没有数据头的数据");
 					}
 					break;
 				}
@@ -81,8 +95,7 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 				}
 			}
 		}
-		remain = ArrayUtils.subarray(temp, remainIndex + 1, temp.length);
+		remain = ArrayUtils.subarray(temp, remainIndex, temp.length);
+		logger.info("remain " + ArrayUtils.toString(remain));
 	}
-
-	
 }

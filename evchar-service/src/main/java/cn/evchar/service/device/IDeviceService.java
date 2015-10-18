@@ -11,6 +11,8 @@ public interface IDeviceService {
 			Long carModelId);
 
 	Device getDevice(Long deviceId);
+	
+	Device getDeviceBySn(String sn);
 
 	List<Device> getDeviceListByOwner(Long id);
 

@@ -121,4 +121,16 @@ public class DeviceServiceImpl implements IDeviceService {
 	public void update(Device device) {
 		deviceDao.saveOrUpdate(device);
 	}
+
+	@Override
+	public Device getDeviceBySn(String sn) {
+		Device sample = new Device();
+		sample.setSn(sn);
+		List<Device> dev = deviceDao.findByExample(Device.class, sample);
+		if (dev.size() > 0) {
+			return dev.get(0);
+		} else {
+			return null;
+		}
+	}
 }

@@ -13,6 +13,12 @@ public interface IUserCarService {
 	boolean saveUserCar(UserCar userCar);
 
 	/**
+	 * 修改用户车辆信息
+	 * 
+	 */
+	void updateUserCar(UserCar userCar);
+	
+	/**
 	 * 获取用户车辆信息 by userId
 	 * @param userId
 	 * @return

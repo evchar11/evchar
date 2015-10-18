@@ -76,7 +76,11 @@
             <artifactId>log4j</artifactId>
         </dependency>
         <!-- logging end -->
-
+        <!-- base64 -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
 
         <!-- testing begin -->
         <dependency>

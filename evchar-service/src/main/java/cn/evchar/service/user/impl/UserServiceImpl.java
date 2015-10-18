@@ -24,40 +24,40 @@ import cn.evchar.service.user.IUserService;
  * Created by wangfeng on 15-8-30.
  */
 @Service
-public class UserServiceImpl implements IUserService{
-    @Resource
-    private UserDao userDao;
+public class UserServiceImpl implements IUserService {
+	@Resource
+	private UserDao userDao;
 
-    @Resource
-    private IUserAccountService userAccountService;
-    
-    @Resource
-    private IUserCarService userCarService;
+	@Resource
+	private IUserAccountService userAccountService;
 
+	@Resource
+	private IUserCarService userCarService;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class ,propagation = Propagation.REQUIRES_NEW)
-    public boolean init(InitUserRequestParam initUserRequestParam) {
-    	String wechatId = initUserRequestParam.getWechatId();
-    	//校验用户是否已经注册
-    	User findUserByWechatId = findUserByWechatId(wechatId);
-    	Assert.state(findUserByWechatId == null, "用户已经注册");
-        Date now = new Date();
-        // 保存用户信息
-        User user = generateUser(initUserRequestParam, now);
-        Long userId = saveUser(user);
-        
-        //保存用户车信息
-        UserCar userCar = generateUserCar(initUserRequestParam, now, userId);
-        userCarService.saveUserCar(userCar);
-        
-        // 初始化用户的账户信息
-        userAccountService.initUserAccount(userId);
-        return true;
-    }
+	@Override
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+	public boolean init(InitUserRequestParam initUserRequestParam) {
+		String wechatId = initUserRequestParam.getWechatId();
+		// 校验用户是否已经注册
+		User findUserByWechatId = findUserByWechatId(wechatId);
+		Assert.state(findUserByWechatId == null, "用户已经注册");
+		Date now = new Date();
+		// 保存用户信息
+		User user = generateUser(initUserRequestParam, now);
+		Long userId = saveUser(user);
+
+		// 保存用户车信息
+		UserCar userCar = generateUserCar(initUserRequestParam, now, userId);
+		userCarService.saveUserCar(userCar);
+
+		// 初始化用户的账户信息
+		userAccountService.initUserAccount(userId);
+		return true;
+	}
 
 	/**
 	 * 生成用户车信息
+	 * 
 	 * @param initUserRequestParam
 	 * @param now
 	 * @param userId
@@ -65,41 +65,42 @@ public class UserServiceImpl implements IUserService{
 	private UserCar generateUserCar(InitUserRequestParam initUserRequestParam,
 			Date now, Long userId) {
 		UserCar userCar = new UserCar();
-        userCar.setCarModelId(initUserRequestParam.getCarModelId());
-        userCar.setCarNo(initUserRequestParam.getCarNo());
-        userCar.setUserId(userId);
-        userCar.setCreateTime(now);
-        userCar.setUpdateTime(now);
-        return userCar;
+		userCar.setCarModelId(initUserRequestParam.getCarModelId());
+		userCar.setCarNo(initUserRequestParam.getCarNo());
+		userCar.setUserId(userId);
+		userCar.setCreateTime(now);
+		userCar.setUpdateTime(now);
+		return userCar;
 	}
 
 	/**
 	 * 生成需要保存的用户信息
+	 * 
 	 * @param initUserRequestParam
 	 * @param now
 	 * @return
 	 */
-	private User generateUser(InitUserRequestParam initUserRequestParam, Date now) {
+	private User generateUser(InitUserRequestParam initUserRequestParam,
+			Date now) {
 		User user = new User();
-        user.setMacId(initUserRequestParam.getMacId());
-        user.setMobile(initUserRequestParam.getMobile());
-        user.setNickName(initUserRequestParam.getNickName());
-        user.setWechatId(initUserRequestParam.getWechatId());
-        user.setHeadImgUrl(initUserRequestParam.getHeadImgUrl());
-        user.setCreateTime(now);
-        user.setUpdateTime(now);
-        user.authCustomer();
+		user.setMacId(initUserRequestParam.getMacId());
+		user.setMobile(initUserRequestParam.getMobile());
+		user.setNickName(initUserRequestParam.getNickName());
+		user.setWechatId(initUserRequestParam.getWechatId());
+		user.setHeadImgUrl(initUserRequestParam.getHeadImgUrl());
+		user.setCreateTime(now);
+		user.setUpdateTime(now);
+		user.authCustomer();
 		return user;
 	}
 
-    @Override
-    public User findUserById(Long id) {
-        return userDao.get(id);
-    }
-
+	@Override
+	public User findUserById(Long id) {
+		return userDao.get(id);
+	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class ,propagation = Propagation.REQUIRED)
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public Long saveUser(User user) {
 		Long userId = userDao.save(user);
 		Assert.state(userId != null && userId > 0, "保存商品失败");
@@ -116,7 +117,8 @@ public class UserServiceImpl implements IUserService{
 		User user = findUserByWechatId(wechatId);
 		Assert.state(user != null, "微信号未注册");
 		Long userId = user.getId();
-		List<UserCar> userCarList = userCarService.findUserCarListByUserId(userId);
+		List<UserCar> userCarList = userCarService
+				.findUserCarListByUserId(userId);
 		UserInfoView userInfoView = new UserInfoView();
 		userInfoView.setCarList(userCarList);
 		userInfoView.setUser(user);
@@ -131,5 +133,10 @@ public class UserServiceImpl implements IUserService{
 		return user != null;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void updateUser(User user) {
+		userDao.saveOrUpdate(user);
+	}
 
 }
