@@ -54,6 +54,17 @@ public class DeviceCommentsController extends AbstractController {
 	}
 
 	/**
+	 * 新增评论
+	 * */
+	@RequestMapping("addcomms.action")
+	@ResponseBody
+	public String addComments(HttpServletRequest request,
+			HttpServletResponse response, Errors errors) {
+
+		return "";
+	}
+
+	/**
 	 * 新增"赞"数
 	 * */
 	@RequestMapping("addapprove.action")
@@ -64,6 +75,19 @@ public class DeviceCommentsController extends AbstractController {
 		String wechatId = param.getWechatId();
 		Long commId = param.getCommId();
 		approveService.addDeviceApprove(commId, wechatId);
+		return createJsonResponse(ApiCode.SUCCESS, "", "");
+	}
+
+	/**
+	 * 取消"赞"
+	 * */
+	@RequestMapping("removeapprove.action")
+	@ResponseBody
+	public String remove(DeviceApproveParam param, HttpServletRequest request,
+			HttpServletResponse response, Errors errors) {
+		String wechatId = param.getWechatId();
+		Long commId = param.getCommId();
+		approveService.removeDeviceApprove(commId, wechatId);
 		return createJsonResponse(ApiCode.SUCCESS, "", "");
 	}
 }

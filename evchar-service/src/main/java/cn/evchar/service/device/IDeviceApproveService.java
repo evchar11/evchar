@@ -10,6 +10,8 @@ public interface IDeviceApproveService {
 
 	public void addDeviceApprove(Long commId, String wechatId);
 
-	public void removeDeviceApprove(Long id);
+	public void removeDeviceApprove(Long commId, String wechatId);
+
+	public DeviceApprove getDeviceApprove(Long commId, String wechatId);
 
 }
