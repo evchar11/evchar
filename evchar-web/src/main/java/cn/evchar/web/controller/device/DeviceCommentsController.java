@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.device.DeviceComments;
+import cn.evchar.common.requestparam.DeviceApproveParam;
 import cn.evchar.common.requestparam.DeviceCommentsParam;
 import cn.evchar.service.device.IDeviceApproveService;
 import cn.evchar.service.device.IDeviceCommentsService;
@@ -33,7 +34,7 @@ public class DeviceCommentsController extends AbstractController {
 	@Resource
 	private Validator valiadtor;
 
-	/*
+	/**
 	 * 加载评论列表
 	 */
 	@RequestMapping("getcomms.action")
@@ -50,5 +51,19 @@ public class DeviceCommentsController extends AbstractController {
 		List<DeviceComments> commentsList = commentsService.getDeviceComments(
 				pageSize, pageNum, deviceId);
 		return createJsonResponse(ApiCode.SUCCESS, commentsList, "");
+	}
+
+	/**
+	 * 新增"赞"数
+	 * */
+	@RequestMapping("addapprove.action")
+	@ResponseBody
+	public String addApprove(DeviceApproveParam param,
+			HttpServletRequest request, HttpServletResponse response,
+			Errors errors) {
+		String wechatId = param.getWechatId();
+		Long commId = param.getCommId();
+		approveService.addDeviceApprove(commId, wechatId);
+		return createJsonResponse(ApiCode.SUCCESS, "", "");
 	}
 }
