@@ -46,9 +46,8 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 		HQL_COUNT_ALL = " select count(*) from " + entityName;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected List<M> findByHql(String queryString, Object... value) {
-		return (List<M>) getHibernateTemplate().find(queryString, value);
+	protected List findByHql(String queryString, Object... value) {
+		return  getHibernateTemplate().find(queryString, value);
 	}
 
 	protected String getListAllHql() {// 获取查询所有记录的HQL
