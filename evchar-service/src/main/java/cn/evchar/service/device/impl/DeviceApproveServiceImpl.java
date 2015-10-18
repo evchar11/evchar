@@ -49,6 +49,7 @@ public class DeviceApproveServiceImpl implements IDeviceApproveService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public DeviceApprove getDeviceApprove(Long commId, String wechatId) {
 		Assert.state(commId != null && StringUtils.isNotBlank(wechatId),
 				"信息不完整！");

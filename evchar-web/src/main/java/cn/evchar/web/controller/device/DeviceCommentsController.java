@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.device.DeviceComments;
+import cn.evchar.common.entity.user.User;
 import cn.evchar.common.requestparam.DeviceApproveParam;
+import cn.evchar.common.requestparam.DeviceCommentsAddParam;
 import cn.evchar.common.requestparam.DeviceCommentsParam;
+import cn.evchar.common.util.StringUtils;
 import cn.evchar.service.device.IDeviceApproveService;
 import cn.evchar.service.device.IDeviceCommentsService;
+import cn.evchar.service.user.IUserService;
 import cn.evchar.web.controller.AbstractController;
 
 @Controller
@@ -33,6 +37,9 @@ public class DeviceCommentsController extends AbstractController {
 
 	@Resource
 	private Validator valiadtor;
+
+	@Resource
+	private IUserService userService;
 
 	/**
 	 * 加载评论列表
@@ -58,8 +65,14 @@ public class DeviceCommentsController extends AbstractController {
 	 * */
 	@RequestMapping("addComms.action")
 	@ResponseBody
-	public String addComments(HttpServletRequest request,
-			HttpServletResponse response, Errors errors) {
+	public String addComments(DeviceCommentsAddParam param,
+			HttpServletRequest request, HttpServletResponse response,
+			Errors errors) {
+		valiadtor.validate(param, errors);
+		handleValidFieldError(errors);
+		Assert.isTrue(StringUtils.isNotBlank(param.getWechatId()), "微信ID为空！");
+		User user = userService.findUserByWechatId(param.getWechatId());
+		Assert.isTrue(user != null, "用户不存在！");
 		
 		return "";
 	}
@@ -72,6 +85,8 @@ public class DeviceCommentsController extends AbstractController {
 	public String addApprove(DeviceApproveParam param,
 			HttpServletRequest request, HttpServletResponse response,
 			Errors errors) {
+		valiadtor.validate(param, errors);
+		handleValidFieldError(errors);
 		String wechatId = param.getWechatId();
 		Long commId = param.getCommId();
 		approveService.addDeviceApprove(commId, wechatId);
@@ -85,6 +100,8 @@ public class DeviceCommentsController extends AbstractController {
 	@ResponseBody
 	public String remove(DeviceApproveParam param, HttpServletRequest request,
 			HttpServletResponse response, Errors errors) {
+		valiadtor.validate(param, errors);
+		handleValidFieldError(errors);
 		String wechatId = param.getWechatId();
 		Long commId = param.getCommId();
 		approveService.removeDeviceApprove(commId, wechatId);

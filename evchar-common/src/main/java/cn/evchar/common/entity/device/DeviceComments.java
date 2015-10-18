@@ -10,7 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import cn.evchar.common.entity.AbstractEntity;
+import cn.evchar.common.util.serializer.CustomDateSerializer;
 
 @Entity
 @Table(name = "evchar_device_comments")
@@ -59,6 +62,7 @@ public class DeviceComments extends AbstractEntity {
 	/**
 	 * 评论时间
 	 **/
+	@JsonSerialize(using = CustomDateSerializer.class)
 	@Column(name = "comm_date")
 	private Date commDate;
 
