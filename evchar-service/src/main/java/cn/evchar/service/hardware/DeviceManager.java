@@ -157,9 +157,6 @@ public class DeviceManager {
 		DeviceLived dev = getAliveDevice(sn);
 //		if (state == dev.getState()) {
 //			return;// 目标状态和当前状态相同， 不需要处理
-//		} else 
-		{
-			
 			switch (state) {
 			case CHARGING:
 				throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
@@ -179,7 +176,7 @@ public class DeviceManager {
 				break;
 			}
 			devices.put(sn, dev);
-		}
+//		}
 	}
 
 	private String getDeviceSnById(Long deviceId) {

@@ -20,6 +20,8 @@ public class CarModel extends AbstractEntity {
 	/** 车型名称 **/
 	@Column(name = "name")
 	private String name;
+	
+	
 
 	/**
 	 * 品牌，如比亚迪、特斯拉，需要数据字典
