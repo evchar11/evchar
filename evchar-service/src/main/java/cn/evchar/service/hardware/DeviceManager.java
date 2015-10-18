@@ -155,9 +155,11 @@ public class DeviceManager {
 	public void setState(long deviceId, DeviceStateType state) {
 		String sn = getDeviceSnById(deviceId);
 		DeviceLived dev = getAliveDevice(sn);
-		if (state == dev.getState()) {
-			return;// 目标状态和当前状态相同， 不需要处理
-		} else {
+//		if (state == dev.getState()) {
+//			return;// 目标状态和当前状态相同， 不需要处理
+//		} else 
+		{
+			
 			switch (state) {
 			case CHARGING:
 				throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
