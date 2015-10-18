@@ -1,17 +1,15 @@
 package cn.evchar.common.requestparam;
 
-import javax.validation.constraints.NotNull;
 
 public class DeviceCommentsParam {
 
-	@NotNull
 	private Long deviceId;
 
-	@NotNull
 	private int pageSize;
 
-	@NotNull
 	private int pageNum;
+	
+	
 
 	public Long getDeviceId() {
 		return deviceId;

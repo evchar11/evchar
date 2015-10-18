@@ -37,7 +37,7 @@ public class DeviceCommentsController extends AbstractController {
 	/**
 	 * 加载评论列表
 	 */
-	@RequestMapping("getcomms.action")
+	@RequestMapping("getComms.action")
 	@ResponseBody
 	public String getDeviceCommentsList(DeviceCommentsParam param,
 			HttpServletRequest request, HttpServletResponse response,
@@ -56,18 +56,18 @@ public class DeviceCommentsController extends AbstractController {
 	/**
 	 * 新增评论
 	 * */
-	@RequestMapping("addcomms.action")
+	@RequestMapping("addComms.action")
 	@ResponseBody
 	public String addComments(HttpServletRequest request,
 			HttpServletResponse response, Errors errors) {
-
+		
 		return "";
 	}
 
 	/**
 	 * 新增"赞"数
 	 * */
-	@RequestMapping("addapprove.action")
+	@RequestMapping("addApprove.action")
 	@ResponseBody
 	public String addApprove(DeviceApproveParam param,
 			HttpServletRequest request, HttpServletResponse response,
@@ -81,7 +81,7 @@ public class DeviceCommentsController extends AbstractController {
 	/**
 	 * 取消"赞"
 	 * */
-	@RequestMapping("removeapprove.action")
+	@RequestMapping("removeApprove.action")
 	@ResponseBody
 	public String remove(DeviceApproveParam param, HttpServletRequest request,
 			HttpServletResponse response, Errors errors) {
