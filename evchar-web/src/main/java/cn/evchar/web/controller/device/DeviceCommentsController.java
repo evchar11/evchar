@@ -73,7 +73,7 @@ public class DeviceCommentsController extends AbstractController {
 		Assert.isTrue(StringUtils.isNotBlank(param.getWechatId()), "微信ID为空！");
 		User user = userService.findUserByWechatId(param.getWechatId());
 		Assert.isTrue(user != null, "用户不存在！");
-		
+
 		return "";
 	}
 
@@ -88,6 +88,8 @@ public class DeviceCommentsController extends AbstractController {
 		valiadtor.validate(param, errors);
 		handleValidFieldError(errors);
 		String wechatId = param.getWechatId();
+		User user = userService.findUserByWechatId(wechatId);
+		Assert.state(user != null, "用户不存在！");
 		Long commId = param.getCommId();
 		approveService.addDeviceApprove(commId, wechatId);
 		return createJsonResponse(ApiCode.SUCCESS, "", "");
