@@ -1,0 +1,75 @@
+/*（多页）组 OR 孙 特*/
+.nopadding{padding-left:0px;padding-right:0px;}
+/*height 100%*/
+.htpct{	height: 100%;}
+.green{font-size: 16px;color:#5CB85C !important;}
+
+.navbar-header a{
+	padding:0px;
+}
+.navbar-header a img{
+	height:60px;
+}
+.navbar-brand{
+	height:60px;
+}
+.navbar-nav li a {
+    line-height: 30px;
+}
+.navbar-nav .actv{
+	background-color: #fff;
+	color:#15894a !important;
+	border-bottom:#15894a 4px solid;
+}
+.navbar-nav .actv a{
+	color:#15894a !important;
+}
+.navbar {
+    border-bottom: 2px solid #2cb66b;
+}
+.nvbr{background-color: #fff;min-height: 60px;}
+.itrft{color:#fff;font-size: 18px;line-height: 30px;}/*introduce font*/
+.nxt{
+	position: fixed;
+	width: 50px;height: 50px;
+	left:50%;
+	margin-left: -25px;
+	bottom:20px;
+	z-index: 100px;
+	background: transparent url('../IMG/nxt.png') no-repeat scroll ;
+}
+/*bottom image*/
+.btmimg{
+	top:10%;padding-left:23px;padding-right:23px;
+}
+
+.pdlr20{
+	padding-left:20px;padding-right:20px;text-align: center;
+}
+.btmsplit{
+	border-bottom: #2cb66b 2px solid;
+}
+/*bottom font size*/
+.btmftsz{
+	font-size: 11px;color: #888;text-align: center;
+}
+.idct {
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+    text-indent: -999px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid #FFF;
+    border-radius: 10px;
+}
+.idctctn{
+	position: fixed;
+	top:50%;
+	margin-top:-25px;
+	right: 50px;
+}
+.idctctn .active {
+    background-color: #FFF;
+}
