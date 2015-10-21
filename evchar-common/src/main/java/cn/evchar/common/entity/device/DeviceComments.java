@@ -26,7 +26,7 @@ public class DeviceComments extends AbstractEntity {
 	 * */
 	@GeneratedValue
 	@Id
-	@Column(name="comm_id")
+	@Column(name = "comm_id")
 	private Long commId;
 
 	/**
@@ -66,7 +66,6 @@ public class DeviceComments extends AbstractEntity {
 	@Column(name = "comm_date")
 	private Date commDate;
 
-	
 	public Long getCommId() {
 		return commId;
 	}
@@ -119,8 +118,16 @@ public class DeviceComments extends AbstractEntity {
 	 * 好评列表
 	 * */
 	@Transient
-	private List<DeviceApprove> approves;
-	
+	private Long approves;
+
+	public Long getApproves() {
+		return approves;
+	}
+
+	public void setApproves(Long approves) {
+		this.approves = approves;
+	}
+
 	/**
 	 * 是否已经好评
 	 * */
@@ -133,14 +140,6 @@ public class DeviceComments extends AbstractEntity {
 
 	public void setCommDate(Date commDate) {
 		this.commDate = commDate;
-	}
-
-	public List<DeviceApprove> getApproves() {
-		return approves;
-	}
-
-	public void setApproves(List<DeviceApprove> approves) {
-		this.approves = approves;
 	}
 
 	public int getIsApprove() {

@@ -1,5 +1,6 @@
 package cn.evchar.web.controller.device;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -73,8 +74,15 @@ public class DeviceCommentsController extends AbstractController {
 		Assert.isTrue(StringUtils.isNotBlank(param.getWechatId()), "微信ID为空！");
 		User user = userService.findUserByWechatId(param.getWechatId());
 		Assert.isTrue(user != null, "用户不存在！");
-
-		return "";
+		DeviceComments comments = new DeviceComments();
+		comments.setUserId(user.getId());
+		comments.setStarLevel(param.getStarLevel());
+		comments.setDeviceId(param.getDeviceId());
+		comments.setContent(param.getContent());
+		comments.setCommRefId(param.getCommRefId());
+		comments.setCommDate(new Date());
+		commentsService.addDeviceComments(comments);
+		return createJsonResponse(ApiCode.SUCCESS, "", "");
 	}
 
 	/**

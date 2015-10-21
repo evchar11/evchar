@@ -8,4 +8,6 @@ public interface IDeviceCommentsService {
 
 	public List<DeviceComments> getDeviceComments(int pageSize, int pageNum,
 			Long deivceId);
+
+	public void addDeviceComments(DeviceComments deviceComments);
 }

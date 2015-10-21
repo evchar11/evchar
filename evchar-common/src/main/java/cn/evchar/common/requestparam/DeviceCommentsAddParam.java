@@ -2,16 +2,24 @@ package cn.evchar.common.requestparam;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 public class DeviceCommentsAddParam {
 
+	@NotNull
 	private Long deviceId;
 
+	@NotBlank
 	private String wechatId;
 
 	private Long commRefId;
 
+	@NotBlank
 	private String content;
 
+	@NotNull
 	private Long starLevel;
 
 	private Date commDate;
