@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.persistence.Table;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -17,8 +18,11 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.util.Assert;
+
+import cn.evchar.common.entity.device.Device;
 
 public abstract class AbstractBaseDao<M extends Serializable, PK extends Serializable>
 		extends HibernateDaoSupport {
@@ -47,7 +51,8 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 	}
 
 	protected List findByHql(String queryString, Object... value) {
-		return  getHibernateTemplate().find(queryString, value);
+		return getHibernateTemplate().find(queryString, value);
+
 	}
 
 	protected String getListAllHql() {// 获取查询所有记录的HQL
@@ -91,18 +96,15 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 	/**
 	 * 查找全部
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> List<T> loadAll(final Class<T> entityClass) {
-		Criteria criteria = createCriteria(entityClass);
-		return criteria.list();
+		return getHibernateTemplate().loadAll(entityClass);
 	}
 
 	/**
 	 * 按主键查找
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T get(Class<T> entityClass, final Serializable id) {
-		return (T) getSession().get(entityClass, id);
+		return getHibernateTemplate().get(entityClass, id);
 	}
 
 	/**
@@ -112,15 +114,16 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 	public <T> List<T> findByExample(final Class<T> entityClass,
 			final Object exampleEntity) {
 		Assert.notNull(exampleEntity, "Example entity must not be null");
-		Criteria executableCriteria = (getSession().createCriteria(entityClass));
-		executableCriteria.add(Example.create(exampleEntity));
-		return executableCriteria.list();
+		return (List<T>) getHibernateTemplate().findByExample(
+				Device.class.getName(), exampleEntity);
+
 	}
 
 	/** 按属性查找唯一实体 **/
 	@SuppressWarnings("unchecked")
 	public <T> T findUniqueByProperty(Class<T> entityClass,
 			String propertyName, Object value) {
+		//TODO: 会引起session泄露的方法，待fix
 		Assert.hasText(propertyName);
 		return (T) createCriteria(entityClass,
 				Restrictions.eq(propertyName, value)).uniqueResult();
