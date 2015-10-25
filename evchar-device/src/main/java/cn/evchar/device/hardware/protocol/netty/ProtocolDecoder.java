@@ -61,7 +61,7 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 						for (int j = 0; j < result.length - 1; j++) {
 							checksum += result[j];
 						}
-						if (checksum % 0x100 != result[result.length - 1]) {
+						if (checksum % 0x100 == result[result.length - 1]) {
 							out.add(statusFactory.getStatus(result));
 						} else {
 							logger.error("校验和不符" + checksum + "!="

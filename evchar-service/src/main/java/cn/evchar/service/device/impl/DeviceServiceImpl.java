@@ -79,12 +79,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	}
 
 	private void refreshList(List<Device> deviceList) {
-		if (deviceList != null && deviceList.size() > 0) {
-			for (Device dev : deviceList) {
-				dev.setStatus(deviceManager.getLivedDeviceState(dev.getSn())
-						.toString());
-			}
-		}
+		//TODO:刷新列表
 	}
 
 	@Override

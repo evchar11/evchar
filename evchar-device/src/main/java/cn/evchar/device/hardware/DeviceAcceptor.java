@@ -13,7 +13,11 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
+import java.net.InetSocketAddress;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,6 +26,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cn.evchar.common.ApiCode;
+import cn.evchar.common.exception.EvcharException;
 import cn.evchar.device.hardware.protocol.StatusHandler;
 import cn.evchar.device.hardware.protocol.netty.ProtocolDecoder;
 import cn.evchar.device.hardware.protocol.netty.ProtocolEncoder;
@@ -58,9 +64,19 @@ public class DeviceAcceptor implements StatusHandler {
 		}
 	}
 
-	private Set<ChannelHandlerContext> deviceSet = new HashSet<>();
+	private Map<String, ChannelHandlerContext> deviceMap = new HashMap<>();
+	private Map<String, DeviceLived> liveDeviceMap = new HashMap<>();
+	private Map<String, Date> deviceTimer = new HashMap<>();
 
 	private DeviceAcceptor() {
+	}
+
+	public Map<String, DeviceLived> getLiveDeviceMap() {
+		return liveDeviceMap;
+	}
+
+	public Map<String, ChannelHandlerContext> getDeviceMap() {
+		return deviceMap;
 	}
 
 	public void start() {
@@ -82,6 +98,7 @@ public class DeviceAcceptor implements StatusHandler {
 												throws Exception {
 											ChannelPipeline p = ch.pipeline();
 											p.addLast(new ProtocolEncoder());
+											p.addLast(new ProtocolDecoder());
 											p.addLast(new ServerHandler(
 													DeviceAcceptor.this));
 										}
@@ -104,65 +121,98 @@ public class DeviceAcceptor implements StatusHandler {
 		}).start();
 	}
 
-	public void add(ChannelHandlerContext ctx) {
-		deviceSet.add(ctx);
-		logger.info("设备连接: " + ctx.channel().remoteAddress());
+	public void add(String sn, ChannelHandlerContext ctx) {
+		deviceMap.put(sn, ctx);
+		logger.info("设备连接: " + sn + ctx.channel().remoteAddress());
 	}
 
-	public void remove(ChannelHandlerContext ctx) {
-		deviceSet.remove(ctx);
+	public void remove(String sn, ChannelHandlerContext ctx) {
+		deviceMap.remove(sn);
 		logger.info("设备断开: " + ctx.channel().remoteAddress());
 	}
 
-	public void on() {
-		logger.info("打开设备" + deviceSet.size());
-		for (ChannelHandlerContext ctx : deviceSet) {
-			logger.info("设备地址" + ctx.channel().remoteAddress());
-			ctx.write(new SetStateCommand(DeviceStateType.ENERGIZED));
-			ctx.flush();
-		}
+	public void on(String deviceSn) {
+		ChannelHandlerContext ctx = deviceMap.get(deviceSn);
+		ctx.write(new SetStateCommand(DeviceStateType.ENERGIZED));
+		ctx.flush();
 	}
 
-	public void off() {
-		logger.info("关闭设备" + deviceSet.size());
-		for (ChannelHandlerContext ctx : deviceSet) {
-			logger.info("设备地址" + ctx.channel().remoteAddress());
-			ctx.write(new SetStateCommand(DeviceStateType.IDLE));
-			ctx.flush();
-		}
+	public void off(String deviceSn) {
+		ChannelHandlerContext ctx = deviceMap.get(deviceSn);
+		ctx.write(new SetStateCommand(DeviceStateType.IDLE));
+		ctx.flush();
 	}
 
 	@Override
 	public void handle(BatteryStatus batteryStatus, ChannelHandlerContext ctx) {
+		refreshDeviceMap(batteryStatus.getSn(), ctx);
+		logger.info("电量");
 	}
 
 	@Override
 	public void handle(BootCompletedStatus bootCompletedStatus,
 			ChannelHandlerContext ctx) {
+		refreshDeviceMap(bootCompletedStatus.getSn(), ctx);
+
 	}
 
 	@Override
 	public void handle(ModelStatus modelStatus, ChannelHandlerContext ctx) {
+		refreshDeviceMap(modelStatus.getSn(), ctx);
+		logger.info("型号");
 	}
 
 	@Override
 	public void handle(PheriStatus pheriStatus, ChannelHandlerContext ctx) {
+		refreshDeviceMap(pheriStatus.getSn(), ctx);
+		logger.info("外设");
 	}
 
 	@Override
 	public void handle(PowerStatus powerStatus, ChannelHandlerContext ctx) {
+		refreshDeviceMap(powerStatus.getSn(), ctx);
+		logger.info("电量");
 	}
 
 	@Override
 	public void handle(ServerIpStatus serverIpStatus, ChannelHandlerContext ctx) {
+		refreshDeviceMap(serverIpStatus.getSn(), ctx);
+		logger.info("服务器IP");
 	}
 
 	@Override
 	public void handle(ServerPortStatus serverPortStatus,
 			ChannelHandlerContext ctx) {
+		refreshDeviceMap(serverPortStatus.getSn(), ctx);
+		logger.info("服务器端口");
 	}
 
 	@Override
 	public void handle(StateStatus stateStatus, ChannelHandlerContext ctx) {
+		logger.info("状态");
+	}
+
+	private void refreshDeviceMap(String sn, ChannelHandlerContext ctx) {
+		InetSocketAddress address = (InetSocketAddress) ctx.channel()
+				.remoteAddress();
+		liveDeviceMap.put(sn, new DeviceLived(sn, address.getHostString(),
+				address.getPort(), DeviceStateType.IDLE));
+		deviceMap.put(sn, ctx);
+	}
+
+	public DeviceLived getAliveDevice(String sn) {
+		if (liveDeviceMap.containsKey(sn)) {
+			return liveDeviceMap.get(sn);
+		} else {
+			throw new EvcharException(ApiCode.ERR_DEVICE_NOT_ONLINE, "设备当前不在线");
+		}
+	}
+
+	public DeviceStateType getLivedDeviceState(String devSn) {
+		if (liveDeviceMap.get(devSn) == null) {
+			return DeviceStateType.OFF;
+		} else {
+			return liveDeviceMap.get(devSn).getState();
+		}
 	}
 }

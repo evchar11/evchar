@@ -32,4 +32,12 @@ public class ConvertUtils {
 		return result;
 	}
 
+	public static String integersToString(int[] intArray) {
+		StringBuilder s = new StringBuilder();
+		for (int value : intArray) {
+			s.append(StringUtils.leftPad(Integer.toHexString(value), 2, "0"));
+		}
+		return s.toString();
+	}
+
 }

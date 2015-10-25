@@ -35,5 +35,7 @@ public class ServerPortStatus extends DefaultStatus {
 	public void handleBy(StatusHandler handler, ChannelHandlerContext ctx) {
 		handler.handle(this, ctx);
 	}
+	
+
 
 }

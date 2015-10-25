@@ -52,7 +52,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		// ctx.write(new CmdReadSn(DeviceProtocol.SN_BROADCAST));
 		// ctx.write(new SetStateCommand(DeviceStateType.ENERGIZED));
 		// ctx.flush();
-		acceptor.add(ctx);
 	}
 
 	@Override
@@ -64,7 +63,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		acceptor.remove(ctx);
 		super.channelInactive(ctx);
 	}
 

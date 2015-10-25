@@ -22,7 +22,8 @@ public class StatusFactory {
 	public void receive(byte[] bytes) {
 
 	}
-	//TODO:测试过程中直接抛错，后期转为返回IllegalStatus
+
+	// TODO:测试过程中直接抛错，后期转为返回IllegalStatus
 	public Status getStatus(int[] array) {
 		DefaultStatus status;
 		DataType dataType = DataType.fromInteger(array[0]);
@@ -66,7 +67,8 @@ public class StatusFactory {
 			logger.error("数据长度错误");
 			throw new IllegalStateException();
 		}
-		status.setSn(ArrayUtils.subarray(array, 1, contentIndex));
+		status.setSn(ArrayUtils
+				.subarray(array, 1, 1 + Protocol.BLANK_SN.length));
 		status.setContent(ArrayUtils.subarray(array, contentIndex, contentIndex
 				+ status.getContentLength()));
 		return status;

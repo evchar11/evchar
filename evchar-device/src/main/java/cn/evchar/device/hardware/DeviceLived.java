@@ -10,17 +10,17 @@ import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 public class DeviceLived {
 	private String sn; // 硬件识别码
 	private String ip;
-	private String port;
+	private int port;
 	private DeviceStateType state;
 
 	public DeviceLived() {
 		super();
 		this.sn = "001";
 		this.ip = "121212";
-		this.port = "123";
+		this.port = 123;
 	}
 
-	public DeviceLived(String sn, String ip, String port, DeviceStateType state) {
+	public DeviceLived(String sn, String ip, int port, DeviceStateType state) {
 		super();
 		this.sn = sn;
 		this.ip = ip;
@@ -44,11 +44,11 @@ public class DeviceLived {
 		this.ip = ip;
 	}
 
-	public String getPort() {
+	public int getPort() {
 		return port;
 	}
 
-	public void setPort(String port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 
