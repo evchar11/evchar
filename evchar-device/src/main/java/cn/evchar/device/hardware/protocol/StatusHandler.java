@@ -8,6 +8,7 @@ import cn.evchar.device.hardware.protocol.receive.PheriStatus;
 import cn.evchar.device.hardware.protocol.receive.PowerStatus;
 import cn.evchar.device.hardware.protocol.receive.ServerIpStatus;
 import cn.evchar.device.hardware.protocol.receive.ServerPortStatus;
+import cn.evchar.device.hardware.protocol.receive.SnStatus;
 import cn.evchar.device.hardware.protocol.receive.StateStatus;
 
 public interface StatusHandler {
@@ -27,4 +28,6 @@ public interface StatusHandler {
 	void handle(ServerPortStatus serverPortStatus, ChannelHandlerContext ctx);
 
 	void handle(StateStatus stateStatus, ChannelHandlerContext ctx);
+
+	void handle(SnStatus snStatus, ChannelHandlerContext ctx);
 }

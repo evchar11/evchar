@@ -1,6 +1,7 @@
 package cn.evchar.web.controller.device;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -115,33 +116,25 @@ public class DeviceController extends AbstractController {
 		if (param.getOperation() == null) {
 			throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "操作不合法");
 		} else {
-			if (param.getTime() == null) {
-				operate(param.getOperation(), deviceId);
-			} else {
-				new Timer().schedule(new TimerTask() {
-					@Override
-					public void run() {
-						operate(param.getOperation(), deviceId);
-					}
-				}, param.getTime());
-			}
+			operate(param.getOperation(), deviceId, param.getTime());
 			return createJsonResponse(ApiCode.SUCCESS, null, "设备操作成功");
 		}
 	}
 
-	private void operate(String operate, Long deviceId) {
+	private void operate(String operate, Long deviceId, Date time) {
 		switch (operate) {
 		case DeviceOperationParam.ON:
-			deviceService.setDeviceState(deviceId, DeviceStateType.ENERGIZED);
+			deviceService.setDeviceState(deviceId, DeviceStateType.ENERGIZED,
+					time);
 			break;
 		case DeviceOperationParam.OFF:
-			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED);
+			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED, time);
 			break;
 		case DeviceOperationParam.ENABLE:
-			deviceService.setDeviceState(deviceId, DeviceStateType.IDLE);
+			deviceService.setDeviceState(deviceId, DeviceStateType.IDLE, time);
 			break;
 		case DeviceOperationParam.DISABLE:
-			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED);
+			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED, time);
 			break;
 		}
 	}
@@ -194,6 +187,17 @@ public class DeviceController extends AbstractController {
 		deviceService.update(dev);
 		return createJsonResponse(ApiCode.SUCCESS, dev, "绑定桩主成功");
 	}
+
+	@RequestMapping("timer.action")
+	@ResponseBody
+	public String getDeviceTimer(String deviceId, HttpServletRequest request,
+			HttpServletResponse response) {
+		if (deviceId == null || !NumberUtils.isNumber(deviceId)) {
+			throw new EvcharException(ApiCode.ERR_WRONG_PARAMS, "设备参数为空");
+		}
+		String time = deviceService.getDeviceTimer(NumberUtils.toLong(deviceId));
+		return createJsonResponse(ApiCode.SUCCESS, time, "获取定时时间成功");
+	}
 }
 
 // TODO:临时解决方案，待9.27fix
@@ -223,5 +227,4 @@ class Distance {
 	public void setItemValue(String itemValue) {
 		this.itemValue = itemValue;
 	}
-
 }

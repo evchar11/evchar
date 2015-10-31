@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,12 +62,12 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 						for (int j = 0; j < result.length - 1; j++) {
 							checksum += result[j];
 						}
-						if (checksum % 0x100 == result[result.length - 1]) {
+//						if (checksum % 0x100 == result[result.length - 1]) {
 							out.add(statusFactory.getStatus(result));
-						} else {
-							logger.error("校验和不符" + checksum + "!="
-									+ result[result.length - 1]);
-						}
+//						} else {
+//							logger.error("校验和不符" + checksum + "!="
+//									+ result[result.length - 1]);
+//						}
 						unescapeIndex = 0;
 						unescaped = new int[temp.length];
 						isContent = false;
@@ -98,4 +99,5 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 		remain = ArrayUtils.subarray(temp, remainIndex, temp.length);
 		logger.info("remain " + ArrayUtils.toString(remain));
 	}
+
 }

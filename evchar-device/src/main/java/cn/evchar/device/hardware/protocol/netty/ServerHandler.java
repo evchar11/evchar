@@ -1,5 +1,6 @@
 package cn.evchar.device.hardware.protocol.netty;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,22 +49,26 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		super.channelActive(ctx);
+		acceptor.onDeviceConnection(ctx, true);
 		logger.info("connected!");
-		// ctx.write(new CmdReadSn(DeviceProtocol.SN_BROADCAST));
-		// ctx.write(new SetStateCommand(DeviceStateType.ENERGIZED));
-		// ctx.flush();
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-		logger.info("disconnected");
-		cause.printStackTrace();
+		logger.info(ExceptionUtils.getStackTrace(cause));
 		ctx.close();
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		logger.info("inactive");
 		super.channelInactive(ctx);
 	}
 
+	@Override
+	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+		super.channelRegistered(ctx);
+		acceptor.onDeviceConnection(ctx, true);
+		logger.info("registered");
+	}
 }

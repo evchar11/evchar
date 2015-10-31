@@ -1,5 +1,6 @@
 package cn.evchar.service.device;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.evchar.common.entity.device.Device;
@@ -16,9 +17,11 @@ public interface IDeviceService {
 
 	List<Device> getDeviceListByOwner(Long id);
 
-	void setDeviceState(Long deviceId, DeviceStateType energized);
+	void setDeviceState(Long deviceId, DeviceStateType energized, Date time);
 	
 	List<Device> getDeviceListByAddr(String addr, Long carModelId);
 
 	void update(Device device);
+
+	String getDeviceTimer(Long id);
 }

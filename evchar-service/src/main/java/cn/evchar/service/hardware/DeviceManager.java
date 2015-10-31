@@ -1,10 +1,13 @@
 package cn.evchar.service.hardware;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Component;
 import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.exception.EvcharException;
+import cn.evchar.common.util.serializer.CustomDateSerializer;
 import cn.evchar.device.hardware.DeviceAcceptor;
 import cn.evchar.device.hardware.DeviceLived;
 import cn.evchar.device.hardware.DeviceStateListener;
@@ -36,6 +40,7 @@ public class DeviceManager {
 	}
 
 	private DeviceAcceptor acceptor = DeviceAcceptor.getInstance();
+	private Map<String, Date> deviceTimerMap = new HashMap<>();
 
 	private List<DeviceStateListener> stateListeners = new ArrayList<>();
 
@@ -115,8 +120,21 @@ public class DeviceManager {
 	 * @param deviceId
 	 * @param state
 	 */
-	public void setState(long deviceId, DeviceStateType state) {
-		String sn = getDeviceSnById(deviceId);
+	public void setState(final long deviceId, final DeviceStateType state,
+			final Date time) {
+		final String sn = getDeviceSnById(deviceId);
+		if (time != null) {
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					deviceTimerMap.put(sn, time);
+					setState(deviceId, state, null);
+					deviceTimerMap.remove(sn);
+				}
+			}, time);
+			deviceTimerMap.put(sn, time);
+			return;
+		}
 		DeviceLived dev = acceptor.getAliveDevice(sn);
 		// if (state == dev.getState()) {
 		// return;// 目标状态和当前状态相同， 不需要处理
@@ -151,4 +169,14 @@ public class DeviceManager {
 		return sn;
 	}
 
+	public String getDeviceTimer(Long id) {
+		String sn = getDeviceSnById(id);
+		Date timer = deviceTimerMap.get(sn);
+		if (timer != null) {
+			return new SimpleDateFormat(CustomDateSerializer.DATE_FORMATER)
+					.format(timer);
+		} else {
+			return "";
+		}
+	}
 }

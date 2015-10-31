@@ -39,7 +39,9 @@ import cn.evchar.device.hardware.protocol.receive.PheriStatus;
 import cn.evchar.device.hardware.protocol.receive.PowerStatus;
 import cn.evchar.device.hardware.protocol.receive.ServerIpStatus;
 import cn.evchar.device.hardware.protocol.receive.ServerPortStatus;
+import cn.evchar.device.hardware.protocol.receive.SnStatus;
 import cn.evchar.device.hardware.protocol.receive.StateStatus;
+import cn.evchar.device.hardware.protocol.sent.ReadSnCommand;
 import cn.evchar.device.hardware.protocol.sent.SetStateCommand;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 
@@ -66,7 +68,6 @@ public class DeviceAcceptor implements StatusHandler {
 
 	private Map<String, ChannelHandlerContext> deviceMap = new HashMap<>();
 	private Map<String, DeviceLived> liveDeviceMap = new HashMap<>();
-	private Map<String, Date> deviceTimer = new HashMap<>();
 
 	private DeviceAcceptor() {
 	}
@@ -152,8 +153,7 @@ public class DeviceAcceptor implements StatusHandler {
 	@Override
 	public void handle(BootCompletedStatus bootCompletedStatus,
 			ChannelHandlerContext ctx) {
-		refreshDeviceMap(bootCompletedStatus.getSn(), ctx);
-
+		logger.info("启动完成");
 	}
 
 	@Override
@@ -214,5 +214,18 @@ public class DeviceAcceptor implements StatusHandler {
 		} else {
 			return liveDeviceMap.get(devSn).getState();
 		}
+	}
+
+	public void onDeviceConnection(ChannelHandlerContext ctx,
+			boolean isConnected) {
+		if (isConnected) {
+			ctx.write(new ReadSnCommand());
+		} else {
+		}
+	}
+
+	@Override
+	public void handle(SnStatus snStatus, ChannelHandlerContext ctx) {
+		refreshDeviceMap(snStatus.getSn(), ctx);
 	}
 }

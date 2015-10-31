@@ -1,6 +1,7 @@
 package cn.evchar.service.device.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -74,12 +75,12 @@ public class DeviceServiceImpl implements IDeviceService {
 	}
 
 	@Override
-	public void setDeviceState(Long deviceId, DeviceStateType state) {
-		deviceManager.setState(deviceId, state);
+	public void setDeviceState(Long deviceId, DeviceStateType state, Date time) {
+		deviceManager.setState(deviceId, state, time);
 	}
 
 	private void refreshList(List<Device> deviceList) {
-		//TODO:刷新列表
+		// TODO:刷新列表
 	}
 
 	@Override
@@ -127,5 +128,10 @@ public class DeviceServiceImpl implements IDeviceService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public String getDeviceTimer(Long id) {
+		return deviceManager.getDeviceTimer(id);
 	}
 }
