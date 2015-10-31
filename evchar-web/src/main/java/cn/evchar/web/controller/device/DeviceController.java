@@ -128,13 +128,15 @@ public class DeviceController extends AbstractController {
 					time);
 			break;
 		case DeviceOperationParam.OFF:
-			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED, time);
+			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED,
+					time);
 			break;
 		case DeviceOperationParam.ENABLE:
 			deviceService.setDeviceState(deviceId, DeviceStateType.IDLE, time);
 			break;
 		case DeviceOperationParam.DISABLE:
-			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED, time);
+			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED,
+					time);
 			break;
 		}
 	}
@@ -170,20 +172,27 @@ public class DeviceController extends AbstractController {
 	@ResponseBody
 	public String bindOwner(DeviceRequestParamBind param,
 			HttpServletRequest request, HttpServletResponse response) {
-		User user = userService.findUserByWechatId(param.getWechatId());
-		if (user == null) {
-			return createJsonResponse(ApiCode.ERR_USER_NOT_FOUND, null, "绑定失败");
-		}
+
+		Device dev = deviceService.getDevice(NumberUtils.toLong(param
+				.getDeviceId()));
 		if (!NumberUtils.isNumber(param.getDeviceId())) {
 			return createJsonResponse(ApiCode.ERR_WRONG_PARAMS, null, "设备参数错误");
 		}
-		Device dev = deviceService.getDevice(NumberUtils.toLong(param
-				.getDeviceId()));
 		if (dev == null) {
 			return createJsonResponse(ApiCode.ERR_DEVICE_NOT_FOUND, null,
-					"绑定失败");
+					"设备不存在，操作失败");
 		}
-		dev.setOwner(user.getId());
+		if (StringUtils.isBlank(param.getWechatId())) {
+			// wechatId为空为解绑
+			User user = userService.findUserByWechatId(param.getWechatId());
+			if (user == null) {
+				return createJsonResponse(ApiCode.ERR_USER_NOT_FOUND, null,
+						"用户不存在，绑定失败");
+			}
+			dev.setOwner(user.getId());
+		} else {
+			dev.setOwner(null);
+		}
 		deviceService.update(dev);
 		return createJsonResponse(ApiCode.SUCCESS, dev, "绑定桩主成功");
 	}
@@ -195,7 +204,8 @@ public class DeviceController extends AbstractController {
 		if (deviceId == null || !NumberUtils.isNumber(deviceId)) {
 			throw new EvcharException(ApiCode.ERR_WRONG_PARAMS, "设备参数为空");
 		}
-		String time = deviceService.getDeviceTimer(NumberUtils.toLong(deviceId));
+		String time = deviceService
+				.getDeviceTimer(NumberUtils.toLong(deviceId));
 		return createJsonResponse(ApiCode.SUCCESS, time, "获取定时时间成功");
 	}
 }

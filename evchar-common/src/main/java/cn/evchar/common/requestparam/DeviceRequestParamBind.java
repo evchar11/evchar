@@ -3,7 +3,6 @@ package cn.evchar.common.requestparam;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class DeviceRequestParamBind {
-	@NotBlank
 	private String wechatId;
 	@NotBlank
 	private String deviceId;
