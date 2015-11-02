@@ -20,7 +20,7 @@ public class SetStateCommand extends DefaultCommand {
 		this.state = state;
 	}
 
-	private DeviceStateType state = DeviceStateType.OFF;;
+	private DeviceStateType state = DeviceStateType.POWER_OFF;
 
 	public DeviceStateType getState() {
 		return state;
@@ -43,10 +43,12 @@ public class SetStateCommand extends DefaultCommand {
 	@Override
 	protected int[] getArgs() {
 		switch (state) {
-		case ENERGIZED:
+		case POWER_ON:
 			return new int[] { 0, 1 };
-		default:
+		case POWER_OFF:
 			return new int[] { 0, 2 };
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

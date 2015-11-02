@@ -112,7 +112,7 @@ public abstract class AbstractBaseDao<M extends Serializable, PK extends Seriali
 			final Object exampleEntity) {
 		Assert.notNull(exampleEntity, "Example entity must not be null");
 		return (List<T>) getHibernateTemplate().findByExample(
-				Device.class.getName(), exampleEntity);
+				entityClass.getName(), exampleEntity);
 
 	}
 

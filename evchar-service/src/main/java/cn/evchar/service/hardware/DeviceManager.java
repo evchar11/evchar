@@ -57,13 +57,13 @@ public class DeviceManager {
 	public void appointDevice(Long deviceId) {
 		String sn = getDeviceSnById(deviceId);
 		DeviceLived dev = acceptor.getAliveDevice(sn);
-		if (dev.getState() == DeviceStateType.IDLE) {
-			dev.setState(DeviceStateType.RESERVED);
-			acceptor.getLiveDeviceMap().put(sn, dev);
-		} else {
-			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT,
-					"设备当前无法预约，请重试");
-		}
+		// if (dev.getState() == DeviceStateType.IDLE) {
+		// dev.setState(DeviceStateType.RESERVED);
+		// acceptor.getLiveDeviceMap().put(sn, dev);
+		// } else {
+		// throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT,
+		// "设备当前无法预约，请重试");
+		// }
 	}
 
 	/**
@@ -74,13 +74,13 @@ public class DeviceManager {
 	public void cancelAppoint(Long deviceId) {
 		String sn = getDeviceSnById(deviceId);
 		DeviceLived dev = acceptor.getAliveDevice(sn);
-		if (dev.getState() == DeviceStateType.RESERVED) {
-			dev.setState(DeviceStateType.IDLE);
-			acceptor.getLiveDeviceMap().put(sn, dev);
-		} else {
-			throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT,
-					"设备当前无法取消预约，请重试");
-		}
+		// if (dev.getState() == DeviceStateType.RESERVED) {
+		// dev.setState(DeviceStateType.IDLE);
+		// acceptor.getLiveDeviceMap().put(sn, dev);
+		// } else {
+		// throw new EvcharException(ApiCode.ERR_DEVICE_APPOINT,
+		// "设备当前无法取消预约，请重试");
+		// }
 	}
 
 	/**
@@ -89,18 +89,18 @@ public class DeviceManager {
 	 * @param deviceId
 	 * @return
 	 */
-	public boolean energize(Long deviceId) {
-		String sn = getDeviceSnById(deviceId);
-		DeviceLived dev = acceptor.getAliveDevice(sn);
-		if (dev.getState() == DeviceStateType.RESERVED) {
-			dev.setState(DeviceStateType.IDLE);
-			acceptor.getLiveDeviceMap().put(sn, dev);
-			// TODO:向设备发送上电命令，并等待返回
-		} else {
-			throw new EvcharException(ApiCode.ERR_DEVICE_CHARGE, "设备未处于预约状态");
-		}
-		return true;
-	}
+	// public boolean energize(Long deviceId) {
+	// String sn = getDeviceSnById(deviceId);
+	// DeviceLived dev = acceptor.getAliveDevice(sn);
+	// if (dev.getState().isEnegrized()) {
+	// return false;
+	// acceptor.getLiveDeviceMap().put(sn, dev);
+	// // TODO:向设备发送上电命令，并等待返回
+	// } else {
+	// throw new EvcharException(ApiCode.ERR_DEVICE_CHARGE, "设备未处于预约状态");
+	// }
+	// return true;
+	// }
 
 	/**
 	 * 设备是否为空闲状态，只有设备在线并
@@ -108,10 +108,10 @@ public class DeviceManager {
 	 * @param deviceId
 	 * @return
 	 */
-	public boolean isIdle(Long deviceId) {
+	public boolean isEnergized(Long deviceId) {
 		String sn = getDeviceSnById(deviceId);
 		DeviceLived dev = acceptor.getAliveDevice(sn);
-		return dev.getState() == DeviceStateType.IDLE;
+		return dev.getState().isEnegrized();
 	}
 
 	/**
@@ -119,8 +119,9 @@ public class DeviceManager {
 	 * 
 	 * @param deviceId
 	 * @param state
+	 * @return
 	 */
-	public void setState(final long deviceId, final DeviceStateType state,
+	public boolean setState(final long deviceId, final DeviceStateType state,
 			final Date time) {
 		final String sn = getDeviceSnById(deviceId);
 		if (time != null) {
@@ -133,31 +134,28 @@ public class DeviceManager {
 				}
 			}, time);
 			deviceTimerMap.put(sn, time);
-			return;
+			return true;
 		}
 		DeviceLived dev = acceptor.getAliveDevice(sn);
-		// if (state == dev.getState()) {
-		// return;// 目标状态和当前状态相同， 不需要处理
 		switch (state) {
-		case CHARGING:
-			throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
-		case ENERGIZED: // 上电
-			dev.setState(state);
-			acceptor.on(sn);
+		case POWER_ON:
+			if (dev.getState().isEnegrized()) {
+				return false;
+			} else {
+				acceptor.on(sn);
+			}
 			break;
-		case FULL:
-			throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "设置命令有误");
-		case IDLE:
-			dev.setState(state);
-			acceptor.off(sn);
+		case POWER_OFF:
+			if (dev.getState().isEnegrized()) {
+				acceptor.off(sn);
+			} else {
+				return false;
+			}
 			break;
-		case RESERVED:
-			dev.setState(state);
-			acceptor.off(sn);
-			break;
+		default:
+			return false;
 		}
-		acceptor.getLiveDeviceMap().put(sn, dev);
-		// }
+		return true;
 	}
 
 	private String getDeviceSnById(Long deviceId) {
@@ -178,5 +176,17 @@ public class DeviceManager {
 		} else {
 			return "";
 		}
+	}
+
+	public String getStatus(String sn) {
+		DeviceLived dev = acceptor.getLiveDeviceMap().get(sn);
+		if (dev != null) {
+			if (dev.getState().isEnegrized()) {
+				return "01";
+			} else {
+				return "02";
+			}
+		}
+		return null;
 	}
 }

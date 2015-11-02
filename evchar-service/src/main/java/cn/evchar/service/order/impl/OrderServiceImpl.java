@@ -61,9 +61,9 @@ public class OrderServiceImpl implements IOrderService {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
 		}
 		Long userId = user.getId();
-		//校验用户是否有正在进行的订单
+		// 校验用户是否有正在进行的订单
 		Order lastOrder = orderDao.getLastOrder(userId);
-		if(lastOrder != null && !lastOrder.isStatusFinal()){
+		if (lastOrder != null && !lastOrder.isStatusFinal()) {
 			throw new EvcharException(ApiCode.ERR_USER_HAS_ORDER_APPOINTED,
 					"有正在进行的订单");
 		}
@@ -77,7 +77,8 @@ public class OrderServiceImpl implements IOrderService {
 		Long price = devicePriceService.getDevicePrice(deviceId);
 		// 余额不足，warn用户可充值电量
 		if (usefulMoney < DEFAULT_MONEY_WARN_LIMIT && !force) {
-			Long degree = devicePriceService.calculateDegree(usefulMoney, price);
+			Long degree = devicePriceService
+					.calculateDegree(usefulMoney, price);
 			throw new EvcharException(degree, ApiCode.ERR_USER_MONEY_WARN,
 					"用户余额不足");
 		}
@@ -161,14 +162,16 @@ public class OrderServiceImpl implements IOrderService {
 					"订单状态异常");
 			order.setStatus(OrderStatus.DEVICE_MATCH.code());
 			orderDao.update(order);
-			boolean result = deviceManager.energize(deviceId);
+			// boolean result = deviceManager.energize(deviceId);//TODO:待完成
+			boolean result = true;
 			if (!result) {
 				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
 			}
 
 		} else {// 2. 非预约直接充电
 				// 2.1校验设备是否可用
-			Assert.state(deviceManager.isIdle(deviceId), "设备不可用");
+				// Assert.state(deviceManager.isIdle(deviceId),
+				// "设备不可用");//TODO:待完成
 			// 2.2校验是否匹配
 			UserCar userCar = userCarService.getById(carId);
 			boolean match = carDeviceMatchService.match(
@@ -177,7 +180,8 @@ public class OrderServiceImpl implements IOrderService {
 			Long price = devicePriceService.getDevicePrice(deviceId);
 			generateOrder(userId, deviceId, carId, macId, price,
 					OrderStatus.DEVICE_MATCH.code());
-			boolean result = deviceManager.energize(deviceId);
+			boolean result = true; // TODO:待完成
+			// boolean result = deviceManager.energize(deviceId);
 			if (!result) {
 				throw new EvcharException(ApiCode.ERR_SYSTEM, "事务处理异常");
 			}
@@ -206,30 +210,34 @@ public class OrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void endCharge(Long deviceId, Long degree) {
 		Order orderSearch = new Order();
 		orderSearch.setDeviceId(deviceId);
 		orderSearch.setStatus(OrderStatus.CHARGING.code());
-		List<Order> OrderList = orderDao.findByExample(Order.class, orderSearch);
+		List<Order> OrderList = orderDao
+				.findByExample(Order.class, orderSearch);
 		Assert.state(OrderList.size() == 1, "状态异常");
 		Order order = OrderList.get(0);
-		Long money = devicePriceService.calculateMoneyByDeviceId(degree, deviceId);
+		Long money = devicePriceService.calculateMoneyByDeviceId(degree,
+				deviceId);
 		userAccountService.consumeAccount(order.getUserId(), money);
 	}
 
 	@Override
-	public PageResult<Order> findOrderPage(GetOrderListRequestParam getOrderListRequestParam) {
-		User user = userService.findUserByWechatId(getOrderListRequestParam.getWechatId());
+	public PageResult<Order> findOrderPage(
+			GetOrderListRequestParam getOrderListRequestParam) {
+		User user = userService.findUserByWechatId(getOrderListRequestParam
+				.getWechatId());
 		if (user == null) {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
 		}
 		Long userId = user.getId();
 		PageResult<Order> orderPage = new PageResult<Order>();
-		//总数
+		// 总数
 		int totalCount = orderDao.findOrderCountByUserId(userId);
 		orderPage.setTotalCount(totalCount);
-		//Order列表
+		// Order列表
 		int pageSize = getOrderListRequestParam.getPageSize();
 		int pageNum = getOrderListRequestParam.getPageNum();
 		List<Order> result = orderDao.getOrderByPage(pageSize, pageNum, userId);
@@ -237,7 +245,7 @@ public class OrderServiceImpl implements IOrderService {
 		orderPage.setPageNo(pageNum);
 		orderPage.setPageSize(pageSize);
 		orderPage.setCurrentPage(pageNum);
-		
+
 		return orderPage;
 	}
 
@@ -255,7 +263,7 @@ public class OrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public Order getLastOrder(String wechatId){
+	public Order getLastOrder(String wechatId) {
 		User user = userService.findUserByWechatId(wechatId);
 		if (user == null) {
 			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
@@ -263,5 +271,5 @@ public class OrderServiceImpl implements IOrderService {
 		Long userId = user.getId();
 		return orderDao.getLastOrder(userId);
 	}
-	
+
 }

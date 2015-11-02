@@ -18,8 +18,6 @@ import cn.evchar.service.user.IUserAccountService;
  */
 @Service
 public class UserAccountServiceImpl implements IUserAccountService{
-	
-	
 
     @Resource
     private UserAccountDao userAccountDao;

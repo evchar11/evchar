@@ -42,6 +42,7 @@ import cn.evchar.device.hardware.protocol.receive.ServerPortStatus;
 import cn.evchar.device.hardware.protocol.receive.SnStatus;
 import cn.evchar.device.hardware.protocol.receive.StateStatus;
 import cn.evchar.device.hardware.protocol.sent.ReadSnCommand;
+import cn.evchar.device.hardware.protocol.sent.ReadStatusCommand;
 import cn.evchar.device.hardware.protocol.sent.SetStateCommand;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 
@@ -67,6 +68,7 @@ public class DeviceAcceptor implements StatusHandler {
 	}
 
 	private Map<String, ChannelHandlerContext> deviceMap = new HashMap<>();
+	private Map<ChannelHandlerContext, String> snMap = new HashMap<>();
 	private Map<String, DeviceLived> liveDeviceMap = new HashMap<>();
 
 	private DeviceAcceptor() {
@@ -134,19 +136,19 @@ public class DeviceAcceptor implements StatusHandler {
 
 	public void on(String deviceSn) {
 		ChannelHandlerContext ctx = deviceMap.get(deviceSn);
-		ctx.write(new SetStateCommand(DeviceStateType.ENERGIZED));
+		ctx.write(new SetStateCommand(DeviceStateType.POWER_ON));
 		ctx.flush();
 	}
 
 	public void off(String deviceSn) {
 		ChannelHandlerContext ctx = deviceMap.get(deviceSn);
-		ctx.write(new SetStateCommand(DeviceStateType.IDLE));
+		ctx.write(new SetStateCommand(DeviceStateType.POWER_OFF));
 		ctx.flush();
 	}
 
 	@Override
 	public void handle(BatteryStatus batteryStatus, ChannelHandlerContext ctx) {
-		refreshDeviceMap(batteryStatus.getSn(), ctx);
+		// refreshDeviceMap(batteryStatus.getSn(), ctx);
 		logger.info("电量");
 	}
 
@@ -158,45 +160,48 @@ public class DeviceAcceptor implements StatusHandler {
 
 	@Override
 	public void handle(ModelStatus modelStatus, ChannelHandlerContext ctx) {
-		refreshDeviceMap(modelStatus.getSn(), ctx);
+		// refreshDeviceMap(modelStatus.getSn(), ctx);
 		logger.info("型号");
 	}
 
 	@Override
 	public void handle(PheriStatus pheriStatus, ChannelHandlerContext ctx) {
-		refreshDeviceMap(pheriStatus.getSn(), ctx);
+		// refreshDeviceMap(pheriStatus.getSn(), ctx);
 		logger.info("外设");
 	}
 
 	@Override
 	public void handle(PowerStatus powerStatus, ChannelHandlerContext ctx) {
-		refreshDeviceMap(powerStatus.getSn(), ctx);
+		// refreshDeviceMap(powerStatus.getSn(), ctx);
 		logger.info("电量");
 	}
 
 	@Override
 	public void handle(ServerIpStatus serverIpStatus, ChannelHandlerContext ctx) {
-		refreshDeviceMap(serverIpStatus.getSn(), ctx);
+		// refreshDeviceMap(serverIpStatus.getSn(), ctx);
 		logger.info("服务器IP");
 	}
 
 	@Override
 	public void handle(ServerPortStatus serverPortStatus,
 			ChannelHandlerContext ctx) {
-		refreshDeviceMap(serverPortStatus.getSn(), ctx);
+		// refreshDeviceMap(serverPortStatus.getSn(), ctx);
 		logger.info("服务器端口");
 	}
 
 	@Override
 	public void handle(StateStatus stateStatus, ChannelHandlerContext ctx) {
-		logger.info("状态");
+		refreshDeviceMap(stateStatus.getSn(), stateStatus.getState(), ctx);
+		logger.info("收到设备状态:" + stateStatus.getSn() + " "
+				+ stateStatus.getState());
 	}
 
-	private void refreshDeviceMap(String sn, ChannelHandlerContext ctx) {
+	private void refreshDeviceMap(String sn, DeviceStateType type,
+			ChannelHandlerContext ctx) {
 		InetSocketAddress address = (InetSocketAddress) ctx.channel()
 				.remoteAddress();
 		liveDeviceMap.put(sn, new DeviceLived(sn, address.getHostString(),
-				address.getPort(), DeviceStateType.IDLE));
+				address.getPort(), type));
 		deviceMap.put(sn, ctx);
 	}
 
@@ -208,24 +213,19 @@ public class DeviceAcceptor implements StatusHandler {
 		}
 	}
 
-	public DeviceStateType getLivedDeviceState(String devSn) {
-		if (liveDeviceMap.get(devSn) == null) {
-			return DeviceStateType.OFF;
-		} else {
-			return liveDeviceMap.get(devSn).getState();
-		}
-	}
-
 	public void onDeviceConnection(ChannelHandlerContext ctx,
 			boolean isConnected) {
 		if (isConnected) {
 			ctx.write(new ReadSnCommand());
 		} else {
+			String sn = snMap.get(ctx);
+			liveDeviceMap.remove(sn);
+			deviceMap.remove(sn);
+			logger.info("设备掉线");
 		}
 	}
 
 	@Override
 	public void handle(SnStatus snStatus, ChannelHandlerContext ctx) {
-		refreshDeviceMap(snStatus.getSn(), ctx);
 	}
 }

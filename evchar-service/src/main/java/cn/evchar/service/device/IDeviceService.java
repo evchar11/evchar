@@ -17,7 +17,7 @@ public interface IDeviceService {
 
 	List<Device> getDeviceListByOwner(Long id);
 
-	void setDeviceState(Long deviceId, DeviceStateType energized, Date time);
+	boolean setDeviceState(Long deviceId, DeviceStateType energized, Date time);
 	
 	List<Device> getDeviceListByAddr(String addr, Long carModelId);
 

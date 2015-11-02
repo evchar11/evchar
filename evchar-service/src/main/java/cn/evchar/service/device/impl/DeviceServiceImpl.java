@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.car.CarModel;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.entity.device.DeviceModel;
@@ -62,6 +63,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	@Override
 	public Device getDevice(Long deviceId) {
 		Device device = deviceDao.get(Device.class, deviceId);
+//		device.setStatus(deviceManager.getStatus(device.getSn()));
 		return device;
 	}
 
@@ -75,8 +77,9 @@ public class DeviceServiceImpl implements IDeviceService {
 	}
 
 	@Override
-	public void setDeviceState(Long deviceId, DeviceStateType state, Date time) {
-		deviceManager.setState(deviceId, state, time);
+	public boolean setDeviceState(Long deviceId, DeviceStateType state,
+			Date time) {
+		return deviceManager.setState(deviceId, state, time);
 	}
 
 	private void refreshList(List<Device> deviceList) {

@@ -14,6 +14,7 @@ public abstract class DefaultCommand implements Command {
 		int[] content = new int[getArgsLength() + LENGTH_CONTENT_0_ARGS];
 		int escape = 0;
 		int index = 0;
+		int checksum = 0;
 		content[index++] = getDataType().toTransitiveInteger();
 		for (int value : sn) {
 			content[index++] = value;
@@ -24,10 +25,12 @@ public abstract class DefaultCommand implements Command {
 		}
 		for (int value : content) // 统计转义字符个数
 		{
-			if (value == BIT_ESCAPE)
+			if (value == BIT_ESCAPE) {
 				escape++;
+				checksum += value;
+			}
 		}
-		byte[] result = new byte[LENGTH_FLAG + content.length + escape];
+		byte[] result = new byte[LENGTH_FLAG + content.length + escape + 1];
 		index = 0;
 		result[index++] = BIT_ESCAPE;
 		result[index++] = BIT_START;
@@ -36,7 +39,9 @@ public abstract class DefaultCommand implements Command {
 				result[index++] = BIT_ESCAPE;
 			}
 			result[index++] = (byte) value;
+			checksum += value;
 		}
+		result[index++] = (byte) (checksum % 0x100);
 		result[index++] = BIT_ESCAPE;
 		result[index++] = BIT_END;
 		return result;

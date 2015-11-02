@@ -17,13 +17,13 @@ public class StateStatus extends DefaultStatus {
 
 	@Override
 	public int getContentLength() {
-		return 2;
+		return 1;
 	}
 
 	@Override
 	public void setContent(int[] content) {
-		//TODO:目前由电脑端负责交换大小端
-		state = DeviceStateType.fromInteger(0x100 * content[1] + content[0]);
+		// TODO:目前由电脑端负责交换大小端
+		state = DeviceStateType.fromInteger(content[0]);
 
 	}
 

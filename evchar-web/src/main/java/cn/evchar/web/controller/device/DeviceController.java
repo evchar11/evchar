@@ -116,29 +116,33 @@ public class DeviceController extends AbstractController {
 		if (param.getOperation() == null) {
 			throw new EvcharException(ApiCode.ERR_DEVICE_COMMAND, "操作不合法");
 		} else {
-			operate(param.getOperation(), deviceId, param.getTime());
-			return createJsonResponse(ApiCode.SUCCESS, null, "设备操作成功");
+			if (operate(param.getOperation(), deviceId, param.getTime())) {
+				return createJsonResponse(ApiCode.SUCCESS, null, "设备操作成功");
+			} else {
+				return createJsonResponse(ApiCode.SUCCESS, null, "设备操作失败");
+			}
+
 		}
 	}
 
-	private void operate(String operate, Long deviceId, Date time) {
+	private boolean operate(String operate, Long deviceId, Date time) {
 		switch (operate) {
 		case DeviceOperationParam.ON:
-			deviceService.setDeviceState(deviceId, DeviceStateType.ENERGIZED,
-					time);
-			break;
+			return deviceService.setDeviceState(deviceId,
+					DeviceStateType.POWER_ON, time);
 		case DeviceOperationParam.OFF:
-			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED,
-					time);
-			break;
-		case DeviceOperationParam.ENABLE:
-			deviceService.setDeviceState(deviceId, DeviceStateType.IDLE, time);
-			break;
-		case DeviceOperationParam.DISABLE:
-			deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED,
-					time);
-			break;
+			return deviceService.setDeviceState(deviceId,
+					DeviceStateType.POWER_OFF, time);
+			// case DeviceOperationParam.ENABLE:
+			// deviceService.setDeviceState(deviceId, DeviceStateType.IDLE,
+			// time);
+			// break;
+			// case DeviceOperationParam.DISABLE:
+			// deviceService.setDeviceState(deviceId, DeviceStateType.RESERVED,
+			// time);
+			// break;
 		}
+		return false;
 	}
 
 	@RequestMapping("distanceOptions.action")
@@ -182,7 +186,7 @@ public class DeviceController extends AbstractController {
 			return createJsonResponse(ApiCode.ERR_DEVICE_NOT_FOUND, null,
 					"设备不存在，操作失败");
 		}
-		if (StringUtils.isBlank(param.getWechatId())) {
+		if (StringUtils.isNotBlank(param.getWechatId())) {
 			// wechatId为空为解绑
 			User user = userService.findUserByWechatId(param.getWechatId());
 			if (user == null) {
