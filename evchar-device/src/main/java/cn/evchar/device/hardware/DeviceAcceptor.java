@@ -216,7 +216,7 @@ public class DeviceAcceptor implements StatusHandler {
 	public void onDeviceConnection(ChannelHandlerContext ctx,
 			boolean isConnected) {
 		if (isConnected) {
-			ctx.write(new ReadSnCommand());
+			ctx.write(new ReadStatusCommand());
 		} else {
 			String sn = snMap.get(ctx);
 			liveDeviceMap.remove(sn);
