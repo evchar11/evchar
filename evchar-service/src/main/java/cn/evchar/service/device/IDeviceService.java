@@ -12,16 +12,18 @@ public interface IDeviceService {
 			Long carModelId);
 
 	Device getDevice(Long deviceId);
-	
+
 	Device getDeviceBySn(String sn);
 
 	List<Device> getDeviceListByOwner(Long id);
 
 	boolean setDeviceState(Long deviceId, DeviceStateType energized, Date time);
-	
+
 	List<Device> getDeviceListByAddr(String addr, Long carModelId);
 
 	void update(Device device);
 
 	String getDeviceTimer(Long id);
+
+	void setCapacity(Long deviceId, int capacity);
 }

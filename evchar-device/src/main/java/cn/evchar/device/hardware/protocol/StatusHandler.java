@@ -3,6 +3,7 @@ package cn.evchar.device.hardware.protocol;
 import io.netty.channel.ChannelHandlerContext;
 import cn.evchar.device.hardware.protocol.receive.BatteryStatus;
 import cn.evchar.device.hardware.protocol.receive.BootCompletedStatus;
+import cn.evchar.device.hardware.protocol.receive.CapacityStatus;
 import cn.evchar.device.hardware.protocol.receive.ModelStatus;
 import cn.evchar.device.hardware.protocol.receive.PheriStatus;
 import cn.evchar.device.hardware.protocol.receive.PowerStatus;
@@ -30,4 +31,6 @@ public interface StatusHandler {
 	void handle(StateStatus stateStatus, ChannelHandlerContext ctx);
 
 	void handle(SnStatus snStatus, ChannelHandlerContext ctx);
+	
+	void handle(CapacityStatus snStatus, ChannelHandlerContext ctx);
 }

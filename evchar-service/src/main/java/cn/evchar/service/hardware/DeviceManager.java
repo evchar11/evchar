@@ -158,6 +158,14 @@ public class DeviceManager {
 		return true;
 	}
 
+	/**
+	 * 设置设备功率
+	 * */
+	public void setCapacity(final long deviceId, final int capacity) {
+		final String sn = getDeviceSnById(deviceId);
+		acceptor.setCapcity(sn, capacity);
+	}
+
 	private String getDeviceSnById(Long deviceId) {
 		Device dev = deviceService.getDevice(deviceId);
 		if (dev == null) {

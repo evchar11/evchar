@@ -22,6 +22,7 @@ import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.entity.user.User;
 import cn.evchar.common.exception.EvcharException;
+import cn.evchar.common.requestparam.DeviceCapacityParam;
 import cn.evchar.common.requestparam.DeviceListByOwnerRequestParam;
 import cn.evchar.common.requestparam.DeviceListRequestParam;
 import cn.evchar.common.requestparam.DeviceOperationParam;
@@ -123,6 +124,19 @@ public class DeviceController extends AbstractController {
 			}
 
 		}
+	}
+
+	@RequestMapping("capacity.action")
+	@ResponseBody
+	public String capacity(final DeviceCapacityParam param,
+			HttpServletRequest request, HttpServletResponse response,
+			Errors errors) {
+		User user = userService.findUserByWechatId(param.getWechatId());
+		if (user == null) {
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户不存在");
+		}
+		deviceService.setCapacity(param.getDeviceId(), param.getCapacity());
+		return createJsonResponse(ApiCode.SUCCESS, null, "设备操作成功");
 	}
 
 	private boolean operate(String operate, Long deviceId, Date time) {

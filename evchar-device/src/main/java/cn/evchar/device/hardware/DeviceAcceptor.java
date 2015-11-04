@@ -34,6 +34,7 @@ import cn.evchar.device.hardware.protocol.netty.ProtocolEncoder;
 import cn.evchar.device.hardware.protocol.netty.ServerHandler;
 import cn.evchar.device.hardware.protocol.receive.BatteryStatus;
 import cn.evchar.device.hardware.protocol.receive.BootCompletedStatus;
+import cn.evchar.device.hardware.protocol.receive.CapacityStatus;
 import cn.evchar.device.hardware.protocol.receive.ModelStatus;
 import cn.evchar.device.hardware.protocol.receive.PheriStatus;
 import cn.evchar.device.hardware.protocol.receive.PowerStatus;
@@ -43,6 +44,7 @@ import cn.evchar.device.hardware.protocol.receive.SnStatus;
 import cn.evchar.device.hardware.protocol.receive.StateStatus;
 import cn.evchar.device.hardware.protocol.sent.ReadSnCommand;
 import cn.evchar.device.hardware.protocol.sent.ReadStatusCommand;
+import cn.evchar.device.hardware.protocol.sent.SetCapacityCommand;
 import cn.evchar.device.hardware.protocol.sent.SetStateCommand;
 import cn.evchar.device.hardware.protocol.types.DeviceStateType;
 
@@ -146,6 +148,12 @@ public class DeviceAcceptor implements StatusHandler {
 		ctx.flush();
 	}
 
+	public void setCapcity(String deviceSn, int capcity) {
+		ChannelHandlerContext ctx = deviceMap.get(deviceSn);
+		ctx.write(new SetCapacityCommand(capcity));
+		ctx.flush();
+	}
+
 	@Override
 	public void handle(BatteryStatus batteryStatus, ChannelHandlerContext ctx) {
 		// refreshDeviceMap(batteryStatus.getSn(), ctx);
@@ -227,5 +235,10 @@ public class DeviceAcceptor implements StatusHandler {
 
 	@Override
 	public void handle(SnStatus snStatus, ChannelHandlerContext ctx) {
+	}
+
+	@Override
+	public void handle(CapacityStatus snStatus, ChannelHandlerContext ctx) {
+		logger.info("收到设备状态:" + snStatus.getSn() + " " + snStatus.getCapacity());
 	}
 }

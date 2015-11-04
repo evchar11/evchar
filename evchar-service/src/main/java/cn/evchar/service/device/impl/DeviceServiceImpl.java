@@ -63,7 +63,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	@Override
 	public Device getDevice(Long deviceId) {
 		Device device = deviceDao.get(Device.class, deviceId);
-//		device.setStatus(deviceManager.getStatus(device.getSn()));
+		// device.setStatus(deviceManager.getStatus(device.getSn()));
 		return device;
 	}
 
@@ -136,5 +136,10 @@ public class DeviceServiceImpl implements IDeviceService {
 	@Override
 	public String getDeviceTimer(Long id) {
 		return deviceManager.getDeviceTimer(id);
+	}
+
+	@Override
+	public void setCapacity(Long deviceId, int capacity) {
+		deviceManager.setCapacity(deviceId, capacity);
 	}
 }

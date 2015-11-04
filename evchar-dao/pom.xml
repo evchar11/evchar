@@ -10,16 +10,16 @@
 
 
 	<dependencies>
-	<!--database -->
+		<!--database -->
 		<dependency>
-      		<groupId>com.alibaba</groupId>
-      		<artifactId>druid</artifactId>
-	  		</dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
@@ -60,7 +60,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
@@ -76,7 +76,7 @@
 			<artifactId>evchar-common</artifactId>
 			<version>${evchar.version}</version>
 		</dependency>
-		
+
 		<!-- testing begin -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -89,5 +89,10 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- testing end -->
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>
 	</dependencies>
 </project>
