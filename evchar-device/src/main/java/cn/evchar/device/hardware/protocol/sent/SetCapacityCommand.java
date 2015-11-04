@@ -8,7 +8,7 @@ import cn.evchar.device.hardware.protocol.types.DataType;
 public class SetCapacityCommand extends DefaultCommand {
 
 	public static void main(String[] args) {
-		System.out.println(Arrays.toString(new SetCapacityCommand().toBytes()));
+		//System.out.println(Arrays.toString(new SetCapacityCommand().toBytes()));
 	}
 
 	public SetCapacityCommand() {
