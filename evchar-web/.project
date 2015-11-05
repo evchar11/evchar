@@ -3,6 +3,7 @@
 	<name>evchar-web</name>
 	<comment></comment>
 	<projects>
+		<project>evchar-mDao</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
