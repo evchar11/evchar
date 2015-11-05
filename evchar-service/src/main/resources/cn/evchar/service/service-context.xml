@@ -11,7 +11,7 @@
        		 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
 
-	<import resource="classpath:mybatis-config.xml"/>
+	<import resource="classpath:cn/evchar.mDao/mybatis-config.xml"/>
 	<!-- json serializer -->
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
     
