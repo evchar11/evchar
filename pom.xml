@@ -349,5 +349,6 @@
 		<module>evchar-web</module>
 		<module>evchar-cms</module>
 		<module>evchar-device</module>
+		<module>evchar-mybatisDao</module>
 	</modules>
 </project>
