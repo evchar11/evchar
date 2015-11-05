@@ -4,6 +4,8 @@ import cn.evchar.common.entity.user.User;
 import cn.evchar.common.requestparam.InitUserRequestParam;
 import cn.evchar.common.view.UserInfoView;
 
+import java.util.List;
+
 /**
  * Created by wangfeng on 15-8-30.
  */
@@ -58,4 +60,7 @@ public interface IUserService {
 
 	void updateUser(User user);
 
+
+	User testGetUser(Long id);
+	List<User> testGetAllUser(Integer pageSize,Integer pageNum);
 }

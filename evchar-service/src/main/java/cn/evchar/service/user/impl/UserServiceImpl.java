@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import cn.evchar.mybatisDao.dao.UserMapper;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ import cn.evchar.service.user.IUserService;
  */
 @Service
 public class UserServiceImpl implements IUserService {
+	@Resource
+	private UserMapper userMapper;
 	@Resource
 	private UserDao userDao;
 
@@ -137,6 +141,17 @@ public class UserServiceImpl implements IUserService {
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void updateUser(User user) {
 		userDao.saveOrUpdate(user);
+	}
+
+	@Override
+	public User testGetUser(Long id) {
+		return userMapper.selectUserById(id);
+	}
+
+	@Override
+	public List<User> testGetAllUser(Integer pageSize,Integer pageNum) {
+		PageHelper.startPage(pageNum,pageSize);
+		return userMapper.getAllUser();
 	}
 
 }

@@ -135,4 +135,17 @@ public class UserController extends AbstractController {
 		return new String(bytes);
 	}
 
+
+	@RequestMapping("getTestUser.action")
+	@ResponseBody
+	public String getTestUser(Long id) {
+
+		return createJsonResponse("200",userService.testGetUser(id),"操作成功！");
+}
+	@RequestMapping("list.action")
+	@ResponseBody
+	public String list(Integer pageSize,Integer pageNum) {
+
+		return createJsonResponse("200",userService.testGetAllUser(pageSize,pageNum),"操作成功！");
+	}
 }

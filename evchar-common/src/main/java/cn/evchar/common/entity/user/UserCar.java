@@ -2,11 +2,7 @@ package cn.evchar.common.entity.user;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import cn.evchar.common.entity.AbstractEntity;
 import cn.evchar.common.util.serializer.CustomDateSerializer;

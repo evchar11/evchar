@@ -9,8 +9,10 @@
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util-4.0.xsd
        		 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
-       
-       <!-- json serializer -->
+
+
+	<import resource="classpath:mybatis-config.xml"/>
+	<!-- json serializer -->
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
     
 	<bean id="sessionFactory"
@@ -40,10 +42,12 @@
 	<!-- 事务管理器  -->
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<!--hibernate -->
 		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
+
+
 	 <!--启动注解用注解来管理事务-->  
     <tx:annotation-driven transaction-manager="transactionManager"/>   
 </beans>
