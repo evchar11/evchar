@@ -78,7 +78,7 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.evchar</groupId>
-			<artifactId>evchar-mybatisDao</artifactId>
+			<artifactId>evchar-mDao</artifactId>
 			<version>${evchar.version}</version>
 		</dependency>
 	</dependencies>
