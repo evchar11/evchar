@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import cn.evchar.mybatisDao.dao.UserMapper;
-import com.github.pagehelper.PageHelper;
+//import cn.evchar.mybatisDao.dao.UserMapper;
+//import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +27,8 @@ import cn.evchar.service.user.IUserService;
  */
 @Service
 public class UserServiceImpl implements IUserService {
-	@Resource
-	private UserMapper userMapper;
+//	@Resource
+//	private UserMapper userMapper;
 	@Resource
 	private UserDao userDao;
 
@@ -55,7 +55,8 @@ public class UserServiceImpl implements IUserService {
 		userCarService.saveUserCar(userCar);
 
 		// 初始化用户的账户信息
-		userAccountService.initUserAccount(userId);
+		userAccountService.initUserAccount(null);
+//		userAccountService.initUserAccount(userId);
 		return true;
 	}
 
@@ -145,13 +146,15 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public User testGetUser(Long id) {
-		return userMapper.selectUserById(id);
+//		return userMapper.selectUserById(id);
+	return null;
 	}
 
 	@Override
 	public List<User> testGetAllUser(Integer pageSize,Integer pageNum) {
-		PageHelper.startPage(pageNum,pageSize);
-		return userMapper.getAllUser();
+//		PageHelper.startPage(pageNum,pageSize);
+//		return userMapper.getAllUser();
+		return null;
 	}
 
 }
