@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import cn.evchar.common.ApiCode;
 import cn.evchar.common.entity.car.CarModel;
 import cn.evchar.common.entity.device.Device;
 import cn.evchar.common.entity.device.DeviceModel;

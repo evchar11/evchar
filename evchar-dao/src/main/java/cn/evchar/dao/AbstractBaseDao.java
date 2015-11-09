@@ -19,8 +19,6 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.util.Assert;
 
-import cn.evchar.common.entity.device.Device;
-
 public abstract class AbstractBaseDao<M extends Serializable, PK extends Serializable>
 		extends HibernateDaoSupport {
 	private Class<M> entityClass;

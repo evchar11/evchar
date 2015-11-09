@@ -106,6 +106,12 @@ public class UserAccountServiceImpl implements IUserAccountService{
 		}
 		userAccountDao.update(userAccount);
 	}
+
+	@Override
+	public void updateAccountIntgral(Long userId, Long intgral,
+			Integer eirStatus) {
+		
+	}
 	
 	
 }

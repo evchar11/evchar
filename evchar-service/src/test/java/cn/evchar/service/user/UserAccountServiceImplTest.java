@@ -1,7 +1,5 @@
 package cn.evchar.service.user;
 
-import static org.junit.Assert.fail;
-
 import javax.annotation.Resource;
 
 import org.junit.After;

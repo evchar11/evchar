@@ -1,7 +1,12 @@
 package cn.evchar.service.order.impl;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
@@ -272,4 +277,34 @@ public class OrderServiceImpl implements IOrderService {
 		return orderDao.getLastOrder(userId);
 	}
 
+	@Override
+	public Map<String, String> getConRecordsByMonth(String wechatId, String year) {
+		User user = userService.findUserByWechatId(wechatId);
+		if (user == null) {
+			throw new EvcharException(ApiCode.ERR_USER_NOT_FOUND, "用户未注册");
+		}
+		Long userId = user.getId();
+
+		Locale.setDefault(Locale.ENGLISH);// 推荐用英语地区的算法
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"),
+				Locale.ENGLISH);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		Date beginTime = calendar.getTime();
+		calendar.add(Calendar.MONTH, 1);
+		Date endTime = calendar.getTime();
+		System.out.println(beginTime + ":" + endTime);
+		// SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd");
+		List<Order> list = orderDao.getOrderByUserIdAndTime(userId, beginTime,
+				endTime);
+		Map<String, String> map = new HashMap<String, String>();
+
+		for (Order o : list) {
+			map.put(o.getUserId().toString(), o.getTotalPrice().toString());
+		}
+
+		return map;
+	}
 }

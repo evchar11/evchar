@@ -9,30 +9,36 @@ public interface IUserAccountService {
 
 	public static final byte BALANCE_TYPE = 0;
 	public static final byte POINT_TYPE = 1;
-    /**
-     * 初始化用户账户信息
-     * @param userId 用户id
-     * @return
-     */
-    void initUserAccount(Long userId);
-    
-    /**
-     * 获取用户账号信息
-     * @param userId
-     * @return
-     */
-    UserAccount findByUserId(Long userId);
+
+	/**
+	 * 初始化用户账户信息
+	 * 
+	 * @param userId
+	 *            用户id
+	 * @return
+	 */
+	void initUserAccount(Long userId);
+
+	/**
+	 * 获取用户账号信息
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	UserAccount findByUserId(Long userId);
 
 	/**
 	 * 校验用户帐户余额是否可用
+	 * 
 	 * @param userId
 	 * @param money
 	 * @return
 	 */
 	boolean checkAccount(Long userId, Long money);
-	
+
 	/**
 	 * 用户当前可用余额
+	 * 
 	 * @param userId
 	 * @return
 	 */
@@ -40,16 +46,21 @@ public interface IUserAccountService {
 
 	/**
 	 * 更新用户帐户余额
+	 * 
 	 * @param userId
-	 * @param money 更新金额
+	 * @param money
+	 *            更新金额
 	 * @param balanceType
 	 */
 	void updateAccountAdd(Long userId, Long money, byte balanceType);
-	
+
 	/**
 	 * 用户帐户扣除余额
+	 * 
 	 * @param userId
 	 * @param money
 	 */
 	void consumeAccount(Long userId, Long money);
+
+	void updateAccountIntgral(Long userId, Long intgral, Integer eirStatus);
 }

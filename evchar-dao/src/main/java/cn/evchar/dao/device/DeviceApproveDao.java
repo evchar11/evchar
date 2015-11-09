@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import cn.evchar.common.entity.device.DeviceApprove;
-import cn.evchar.common.util.StringUtils;
 import cn.evchar.dao.AbstractBaseDao;
 
 @Repository

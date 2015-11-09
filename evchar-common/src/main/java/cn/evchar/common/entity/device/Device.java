@@ -83,6 +83,20 @@ public class Device extends AbstractEntity {
 	@Column(name = "status")
 	private String status;
 
+	/**
+	 * 当前设备功率
+	 * */
+	@Column(name = "capacity")
+	private Integer capacity;
+
+	public Integer getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(Integer capacity) {
+		this.capacity = capacity;
+	}
+
 	public Long getId() {
 		return id;
 	}
