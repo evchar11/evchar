@@ -37,15 +37,17 @@ public class ExpensesServiceImpl implements ExpensesService{
             expensesPrice.setExpensesId(e.getId());
             List<ExpensesPrice> expensesPriceList=expensesPriceMapper.select(expensesPrice);
             for (ExpensesPrice ex:expensesPriceList){
-                if (start.getHours()>=ex.getStartTime().getHours()&&start.getHours()<ex.getEndTime().getHours()){
+                Date exStartTime=DateUtils.parseDateTime("0000-00-00 "+ex.getStartTime());
+                Date exEndTime=DateUtils.parseDateTime("0000-00-00 "+ex.getEndTime());
+                if (start.getHours()>=exStartTime.getHours()&&start.getHours()<exEndTime.getHours()){
                     ExpensesResponseBody expensesResponseBody=new ExpensesResponseBody();
                     expensesResponseBody.setId(e.getId());
                     expensesResponseBody.setName(e.getName());
                     expensesResponseBody.setParentId(e.getParentId());
                     Date endate=new Date();
                     endate.setTime(start.getTime());
-                    endate.setHours(ex.getEndTime().getHours());
-                    endate.setMinutes(ex.getEndTime().getMinutes());
+                    endate.setHours(exEndTime.getHours());
+                    endate.setMinutes(exEndTime.getMinutes());
                     Date starttime=new Date();
                     starttime.setTime(start.getTime());
                     expensesResponseBody.setStartTime(starttime);
@@ -62,15 +64,14 @@ public class ExpensesServiceImpl implements ExpensesService{
                         expensesResponseBody.setEndTime(endtime);
                     }
                     expensesResponseBody.setPrice(ex.getPrice());
-                    start.setHours(ex.getEndTime().getHours());
-                    start.setMinutes(ex.getEndTime().getMinutes());
+                    start.setHours(exEndTime.getHours());
+                    start.setMinutes(exEndTime.getMinutes());
                     expensesResponseBodyList.add(expensesResponseBody);
                 }
             }
         }
         return expensesResponseBodyList;
     }
-
     @Override
     public List<Expenses> findExpenses(Expenses expenses) {
         return expensesMapper.select(expenses);

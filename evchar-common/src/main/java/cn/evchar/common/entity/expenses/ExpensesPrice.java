@@ -23,9 +23,17 @@ public class ExpensesPrice extends AbstractEntity {
     private Long expensesId;
 
     @Column(name = "starttime")
-    @JsonSerialize(using = CustomDateSerializer.class)
-    private Date startTime;
+    private String startTime;
 
+    @Column(name = "endtime")
+    private String endTime;
+
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "createtime")
+    @JsonSerialize(using = CustomDateSerializer.class)
+    private Date createTime;
     public Long getId() {
         return id;
     }
@@ -40,22 +48,6 @@ public class ExpensesPrice extends AbstractEntity {
 
     public void setExpensesId(Long expensesId) {
         this.expensesId = expensesId;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
     }
 
     public Double getPrice() {
@@ -74,14 +66,19 @@ public class ExpensesPrice extends AbstractEntity {
         this.createTime = createTime;
     }
 
-    @Column(name = "endtime")
-    @JsonSerialize(using = CustomDateSerializer.class)
-    private Date endTime;
+    public String getStartTime() {
+        return startTime;
+    }
 
-    @Column(name = "price")
-    private Double price;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
 
-    @Column(name = "createtime")
-    @JsonSerialize(using = CustomDateSerializer.class)
-    private Date createTime;
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 }

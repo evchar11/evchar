@@ -1,6 +1,8 @@
 package cn.evchar.common.entity.expenses;
 
 import cn.evchar.common.entity.AbstractEntity;
+import cn.evchar.common.util.serializer.CustomDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,6 +21,7 @@ public class Expenses  extends AbstractEntity {
     @Column(name = "name")
     private String name;
     @Column(name = "createtime")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date createTime;
     @Column(name = "parentid")
     private Long parentId;
